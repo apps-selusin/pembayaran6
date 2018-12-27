@@ -5,9 +5,9 @@ ob_start(); // Turn on output buffering
 <?php include_once "ewcfg13.php" ?>
 <?php include_once ((EW_USE_ADODB) ? "adodb5/adodb.inc.php" : "ewmysql13.php") ?>
 <?php include_once "phpfn13.php" ?>
-<?php include_once "t04_siswainfo.php" ?>
+<?php include_once "t10_siswarutinbayarinfo.php" ?>
 <?php include_once "t96_employeesinfo.php" ?>
-<?php include_once "t08_siswasppgridcls.php" ?>
+<?php include_once "v01_siswarutininfo.php" ?>
 <?php include_once "userfn13.php" ?>
 <?php
 
@@ -15,9 +15,9 @@ ob_start(); // Turn on output buffering
 // Page class
 //
 
-$t04_siswa_edit = NULL; // Initialize page object first
+$t10_siswarutinbayar_edit = NULL; // Initialize page object first
 
-class ct04_siswa_edit extends ct04_siswa {
+class ct10_siswarutinbayar_edit extends ct10_siswarutinbayar {
 
 	// Page ID
 	var $PageID = 'edit';
@@ -26,10 +26,10 @@ class ct04_siswa_edit extends ct04_siswa {
 	var $ProjectID = "{699E0CB8-ECC6-4DDA-93F3-012C887E6B12}";
 
 	// Table name
-	var $TableName = 't04_siswa';
+	var $TableName = 't10_siswarutinbayar';
 
 	// Page object name
-	var $PageObjName = 't04_siswa_edit';
+	var $PageObjName = 't10_siswarutinbayar_edit';
 
 	// Page name
 	function PageName() {
@@ -227,14 +227,17 @@ class ct04_siswa_edit extends ct04_siswa {
 		// Parent constuctor
 		parent::__construct();
 
-		// Table object (t04_siswa)
-		if (!isset($GLOBALS["t04_siswa"]) || get_class($GLOBALS["t04_siswa"]) == "ct04_siswa") {
-			$GLOBALS["t04_siswa"] = &$this;
-			$GLOBALS["Table"] = &$GLOBALS["t04_siswa"];
+		// Table object (t10_siswarutinbayar)
+		if (!isset($GLOBALS["t10_siswarutinbayar"]) || get_class($GLOBALS["t10_siswarutinbayar"]) == "ct10_siswarutinbayar") {
+			$GLOBALS["t10_siswarutinbayar"] = &$this;
+			$GLOBALS["Table"] = &$GLOBALS["t10_siswarutinbayar"];
 		}
 
 		// Table object (t96_employees)
 		if (!isset($GLOBALS['t96_employees'])) $GLOBALS['t96_employees'] = new ct96_employees();
+
+		// Table object (v01_siswarutin)
+		if (!isset($GLOBALS['v01_siswarutin'])) $GLOBALS['v01_siswarutin'] = new cv01_siswarutin();
 
 		// Page ID
 		if (!defined("EW_PAGE_ID"))
@@ -242,7 +245,7 @@ class ct04_siswa_edit extends ct04_siswa {
 
 		// Table name (for backward compatibility)
 		if (!defined("EW_TABLE_NAME"))
-			define("EW_TABLE_NAME", 't04_siswa', TRUE);
+			define("EW_TABLE_NAME", 't10_siswarutinbayar', TRUE);
 
 		// Start timer
 		if (!isset($GLOBALS["gTimer"])) $GLOBALS["gTimer"] = new cTimer();
@@ -273,7 +276,7 @@ class ct04_siswa_edit extends ct04_siswa {
 			$Security->SaveLastUrl();
 			$this->setFailureMessage(ew_DeniedMsg()); // Set no permission
 			if ($Security->CanList())
-				$this->Page_Terminate(ew_GetUrl("t04_siswalist.php"));
+				$this->Page_Terminate(ew_GetUrl("t10_siswarutinbayarlist.php"));
 			else
 				$this->Page_Terminate(ew_GetUrl("login.php"));
 		}
@@ -286,8 +289,9 @@ class ct04_siswa_edit extends ct04_siswa {
 		// Create form object
 		$objForm = new cFormObj();
 		$this->CurrentAction = (@$_GET["a"] <> "") ? $_GET["a"] : @$_POST["a_list"]; // Set up current action
-		$this->NIS->SetVisibility();
-		$this->Nama->SetVisibility();
+		$this->Periode->SetVisibility();
+		$this->TanggalBayar->SetVisibility();
+		$this->JumlahBayar->SetVisibility();
 
 		// Global Page Loading event (in userfn*.php)
 		Page_Loading();
@@ -304,14 +308,6 @@ class ct04_siswa_edit extends ct04_siswa {
 
 		// Process auto fill
 		if (@$_POST["ajax"] == "autofill") {
-
-			// Process auto fill for detail table 't08_siswaspp'
-			if (@$_POST["grid"] == "ft08_siswasppgrid") {
-				if (!isset($GLOBALS["t08_siswaspp_grid"])) $GLOBALS["t08_siswaspp_grid"] = new ct08_siswaspp_grid;
-				$GLOBALS["t08_siswaspp_grid"]->Page_Init();
-				$this->Page_Terminate();
-				exit();
-			}
 			$results = $this->GetAutoFill(@$_POST["name"], @$_POST["q"]);
 			if ($results) {
 
@@ -341,13 +337,13 @@ class ct04_siswa_edit extends ct04_siswa {
 		Page_Unloaded();
 
 		// Export
-		global $EW_EXPORT, $t04_siswa;
+		global $EW_EXPORT, $t10_siswarutinbayar;
 		if ($this->CustomExport <> "" && $this->CustomExport == $this->Export && array_key_exists($this->CustomExport, $EW_EXPORT)) {
 				$sContent = ob_get_contents();
 			if ($gsExportFile == "") $gsExportFile = $this->TableVar;
 			$class = $EW_EXPORT[$this->CustomExport];
 			if (class_exists($class)) {
-				$doc = new $class($t04_siswa);
+				$doc = new $class($t10_siswarutinbayar);
 				$doc->Text = $sContent;
 				if ($this->Export == "email")
 					echo $this->ExportEmail($doc->Text);
@@ -417,6 +413,9 @@ class ct04_siswa_edit extends ct04_siswa {
 			$bLoadCurrentRecord = TRUE;
 		}
 
+		// Set up master detail parameters
+		$this->SetUpMasterParms();
+
 		// Load recordset
 		$this->StartRec = 1; // Initialize start position
 		if ($this->Recordset = $this->LoadRecordset()) // Load records
@@ -424,7 +423,7 @@ class ct04_siswa_edit extends ct04_siswa {
 		if ($this->TotalRecs <= 0) { // No record found
 			if ($this->getSuccessMessage() == "" && $this->getFailureMessage() == "")
 				$this->setFailureMessage($Language->Phrase("NoRecord")); // Set no record message
-			$this->Page_Terminate("t04_siswalist.php"); // Return to list page
+			$this->Page_Terminate("t10_siswarutinbayarlist.php"); // Return to list page
 		} elseif ($bLoadCurrentRecord) { // Load current record position
 			$this->SetUpStartRec(); // Set up start record position
 
@@ -450,9 +449,6 @@ class ct04_siswa_edit extends ct04_siswa {
 		if (@$_POST["a_edit"] <> "") {
 			$this->CurrentAction = $_POST["a_edit"]; // Get action code
 			$this->LoadFormValues(); // Get form values
-
-			// Set up detail parameters
-			$this->SetUpDetailParms();
 		} else {
 			$this->CurrentAction = "I"; // Default action is display
 		}
@@ -471,20 +467,14 @@ class ct04_siswa_edit extends ct04_siswa {
 				if (!$bMatchRecord) {
 					if ($this->getSuccessMessage() == "" && $this->getFailureMessage() == "")
 						$this->setFailureMessage($Language->Phrase("NoRecord")); // Set no record message
-					$this->Page_Terminate("t04_siswalist.php"); // Return to list page
+					$this->Page_Terminate("t10_siswarutinbayarlist.php"); // Return to list page
 				} else {
 					$this->LoadRowValues($this->Recordset); // Load row values
 				}
-
-				// Set up detail parameters
-				$this->SetUpDetailParms();
 				break;
 			Case "U": // Update
-				if ($this->getCurrentDetailTable() <> "") // Master/detail edit
-					$sReturnUrl = $this->GetViewUrl(EW_TABLE_SHOW_DETAIL . "=" . $this->getCurrentDetailTable()); // Master/Detail view page
-				else
-					$sReturnUrl = $this->getReturnUrl();
-				if (ew_GetPageName($sReturnUrl) == "t04_siswalist.php")
+				$sReturnUrl = $this->getReturnUrl();
+				if (ew_GetPageName($sReturnUrl) == "t10_siswarutinbayarlist.php")
 					$sReturnUrl = $this->AddMasterUrl($sReturnUrl); // List page, return to list page with correct master key if necessary
 				$this->SendEmail = TRUE; // Send email on update success
 				if ($this->EditRow()) { // Update record based on key
@@ -496,9 +486,6 @@ class ct04_siswa_edit extends ct04_siswa {
 				} else {
 					$this->EventCancelled = TRUE; // Event cancelled
 					$this->RestoreFormValues(); // Restore form values if update failed
-
-					// Set up detail parameters
-					$this->SetUpDetailParms();
 				}
 		}
 
@@ -559,11 +546,15 @@ class ct04_siswa_edit extends ct04_siswa {
 
 		// Load from form
 		global $objForm;
-		if (!$this->NIS->FldIsDetailKey) {
-			$this->NIS->setFormValue($objForm->GetValue("x_NIS"));
+		if (!$this->Periode->FldIsDetailKey) {
+			$this->Periode->setFormValue($objForm->GetValue("x_Periode"));
 		}
-		if (!$this->Nama->FldIsDetailKey) {
-			$this->Nama->setFormValue($objForm->GetValue("x_Nama"));
+		if (!$this->TanggalBayar->FldIsDetailKey) {
+			$this->TanggalBayar->setFormValue($objForm->GetValue("x_TanggalBayar"));
+			$this->TanggalBayar->CurrentValue = ew_UnFormatDateTime($this->TanggalBayar->CurrentValue, 0);
+		}
+		if (!$this->JumlahBayar->FldIsDetailKey) {
+			$this->JumlahBayar->setFormValue($objForm->GetValue("x_JumlahBayar"));
 		}
 		if (!$this->id->FldIsDetailKey)
 			$this->id->setFormValue($objForm->GetValue("x_id"));
@@ -574,8 +565,10 @@ class ct04_siswa_edit extends ct04_siswa {
 		global $objForm;
 		$this->LoadRow();
 		$this->id->CurrentValue = $this->id->FormValue;
-		$this->NIS->CurrentValue = $this->NIS->FormValue;
-		$this->Nama->CurrentValue = $this->Nama->FormValue;
+		$this->Periode->CurrentValue = $this->Periode->FormValue;
+		$this->TanggalBayar->CurrentValue = $this->TanggalBayar->FormValue;
+		$this->TanggalBayar->CurrentValue = ew_UnFormatDateTime($this->TanggalBayar->CurrentValue, 0);
+		$this->JumlahBayar->CurrentValue = $this->JumlahBayar->FormValue;
 	}
 
 	// Load recordset
@@ -634,8 +627,10 @@ class ct04_siswa_edit extends ct04_siswa {
 		$row = &$rs->fields;
 		$this->Row_Selected($row);
 		$this->id->setDbValue($rs->fields('id'));
-		$this->NIS->setDbValue($rs->fields('NIS'));
-		$this->Nama->setDbValue($rs->fields('Nama'));
+		$this->siswarutin_id->setDbValue($rs->fields('siswarutin_id'));
+		$this->Periode->setDbValue($rs->fields('Periode'));
+		$this->TanggalBayar->setDbValue($rs->fields('TanggalBayar'));
+		$this->JumlahBayar->setDbValue($rs->fields('JumlahBayar'));
 	}
 
 	// Load DbValue from recordset
@@ -643,8 +638,10 @@ class ct04_siswa_edit extends ct04_siswa {
 		if (!$rs || !is_array($rs) && $rs->EOF) return;
 		$row = is_array($rs) ? $rs : $rs->fields;
 		$this->id->DbValue = $row['id'];
-		$this->NIS->DbValue = $row['NIS'];
-		$this->Nama->DbValue = $row['Nama'];
+		$this->siswarutin_id->DbValue = $row['siswarutin_id'];
+		$this->Periode->DbValue = $row['Periode'];
+		$this->TanggalBayar->DbValue = $row['TanggalBayar'];
+		$this->JumlahBayar->DbValue = $row['JumlahBayar'];
 	}
 
 	// Render row values based on field settings
@@ -652,14 +649,20 @@ class ct04_siswa_edit extends ct04_siswa {
 		global $Security, $Language, $gsLanguage;
 
 		// Initialize URLs
-		// Call Row_Rendering event
+		// Convert decimal values if posted back
 
+		if ($this->JumlahBayar->FormValue == $this->JumlahBayar->CurrentValue && is_numeric(ew_StrToFloat($this->JumlahBayar->CurrentValue)))
+			$this->JumlahBayar->CurrentValue = ew_StrToFloat($this->JumlahBayar->CurrentValue);
+
+		// Call Row_Rendering event
 		$this->Row_Rendering();
 
 		// Common render codes for all row types
 		// id
-		// NIS
-		// Nama
+		// siswarutin_id
+		// Periode
+		// TanggalBayar
+		// JumlahBayar
 
 		if ($this->RowType == EW_ROWTYPE_VIEW) { // View row
 
@@ -667,46 +670,71 @@ class ct04_siswa_edit extends ct04_siswa {
 		$this->id->ViewValue = $this->id->CurrentValue;
 		$this->id->ViewCustomAttributes = "";
 
-		// NIS
-		$this->NIS->ViewValue = $this->NIS->CurrentValue;
-		$this->NIS->ViewCustomAttributes = "";
+		// siswarutin_id
+		$this->siswarutin_id->ViewValue = $this->siswarutin_id->CurrentValue;
+		$this->siswarutin_id->ViewCustomAttributes = "";
 
-		// Nama
-		$this->Nama->ViewValue = $this->Nama->CurrentValue;
-		$this->Nama->ViewCustomAttributes = "";
+		// Periode
+		$this->Periode->ViewValue = $this->Periode->CurrentValue;
+		$this->Periode->ViewCustomAttributes = "";
 
-			// NIS
-			$this->NIS->LinkCustomAttributes = "";
-			$this->NIS->HrefValue = "";
-			$this->NIS->TooltipValue = "";
+		// TanggalBayar
+		$this->TanggalBayar->ViewValue = $this->TanggalBayar->CurrentValue;
+		$this->TanggalBayar->ViewValue = ew_FormatDateTime($this->TanggalBayar->ViewValue, 0);
+		$this->TanggalBayar->ViewCustomAttributes = "";
 
-			// Nama
-			$this->Nama->LinkCustomAttributes = "";
-			$this->Nama->HrefValue = "";
-			$this->Nama->TooltipValue = "";
+		// JumlahBayar
+		$this->JumlahBayar->ViewValue = $this->JumlahBayar->CurrentValue;
+		$this->JumlahBayar->ViewCustomAttributes = "";
+
+			// Periode
+			$this->Periode->LinkCustomAttributes = "";
+			$this->Periode->HrefValue = "";
+			$this->Periode->TooltipValue = "";
+
+			// TanggalBayar
+			$this->TanggalBayar->LinkCustomAttributes = "";
+			$this->TanggalBayar->HrefValue = "";
+			$this->TanggalBayar->TooltipValue = "";
+
+			// JumlahBayar
+			$this->JumlahBayar->LinkCustomAttributes = "";
+			$this->JumlahBayar->HrefValue = "";
+			$this->JumlahBayar->TooltipValue = "";
 		} elseif ($this->RowType == EW_ROWTYPE_EDIT) { // Edit row
 
-			// NIS
-			$this->NIS->EditAttrs["class"] = "form-control";
-			$this->NIS->EditCustomAttributes = "";
-			$this->NIS->EditValue = ew_HtmlEncode($this->NIS->CurrentValue);
-			$this->NIS->PlaceHolder = ew_RemoveHtml($this->NIS->FldCaption());
+			// Periode
+			$this->Periode->EditAttrs["class"] = "form-control";
+			$this->Periode->EditCustomAttributes = "";
+			$this->Periode->EditValue = ew_HtmlEncode($this->Periode->CurrentValue);
+			$this->Periode->PlaceHolder = ew_RemoveHtml($this->Periode->FldCaption());
 
-			// Nama
-			$this->Nama->EditAttrs["class"] = "form-control";
-			$this->Nama->EditCustomAttributes = "";
-			$this->Nama->EditValue = ew_HtmlEncode($this->Nama->CurrentValue);
-			$this->Nama->PlaceHolder = ew_RemoveHtml($this->Nama->FldCaption());
+			// TanggalBayar
+			$this->TanggalBayar->EditAttrs["class"] = "form-control";
+			$this->TanggalBayar->EditCustomAttributes = "";
+			$this->TanggalBayar->EditValue = ew_HtmlEncode(ew_FormatDateTime($this->TanggalBayar->CurrentValue, 8));
+			$this->TanggalBayar->PlaceHolder = ew_RemoveHtml($this->TanggalBayar->FldCaption());
+
+			// JumlahBayar
+			$this->JumlahBayar->EditAttrs["class"] = "form-control";
+			$this->JumlahBayar->EditCustomAttributes = "";
+			$this->JumlahBayar->EditValue = ew_HtmlEncode($this->JumlahBayar->CurrentValue);
+			$this->JumlahBayar->PlaceHolder = ew_RemoveHtml($this->JumlahBayar->FldCaption());
+			if (strval($this->JumlahBayar->EditValue) <> "" && is_numeric($this->JumlahBayar->EditValue)) $this->JumlahBayar->EditValue = ew_FormatNumber($this->JumlahBayar->EditValue, -2, -1, -2, 0);
 
 			// Edit refer script
-			// NIS
+			// Periode
 
-			$this->NIS->LinkCustomAttributes = "";
-			$this->NIS->HrefValue = "";
+			$this->Periode->LinkCustomAttributes = "";
+			$this->Periode->HrefValue = "";
 
-			// Nama
-			$this->Nama->LinkCustomAttributes = "";
-			$this->Nama->HrefValue = "";
+			// TanggalBayar
+			$this->TanggalBayar->LinkCustomAttributes = "";
+			$this->TanggalBayar->HrefValue = "";
+
+			// JumlahBayar
+			$this->JumlahBayar->LinkCustomAttributes = "";
+			$this->JumlahBayar->HrefValue = "";
 		}
 		if ($this->RowType == EW_ROWTYPE_ADD ||
 			$this->RowType == EW_ROWTYPE_EDIT ||
@@ -729,18 +757,23 @@ class ct04_siswa_edit extends ct04_siswa {
 		// Check if validation required
 		if (!EW_SERVER_VALIDATE)
 			return ($gsFormError == "");
-		if (!$this->NIS->FldIsDetailKey && !is_null($this->NIS->FormValue) && $this->NIS->FormValue == "") {
-			ew_AddMessage($gsFormError, str_replace("%s", $this->NIS->FldCaption(), $this->NIS->ReqErrMsg));
+		if (!$this->Periode->FldIsDetailKey && !is_null($this->Periode->FormValue) && $this->Periode->FormValue == "") {
+			ew_AddMessage($gsFormError, str_replace("%s", $this->Periode->FldCaption(), $this->Periode->ReqErrMsg));
 		}
-		if (!$this->Nama->FldIsDetailKey && !is_null($this->Nama->FormValue) && $this->Nama->FormValue == "") {
-			ew_AddMessage($gsFormError, str_replace("%s", $this->Nama->FldCaption(), $this->Nama->ReqErrMsg));
+		if (!ew_CheckInteger($this->Periode->FormValue)) {
+			ew_AddMessage($gsFormError, $this->Periode->FldErrMsg());
 		}
-
-		// Validate detail grid
-		$DetailTblVar = explode(",", $this->getCurrentDetailTable());
-		if (in_array("t08_siswaspp", $DetailTblVar) && $GLOBALS["t08_siswaspp"]->DetailEdit) {
-			if (!isset($GLOBALS["t08_siswaspp_grid"])) $GLOBALS["t08_siswaspp_grid"] = new ct08_siswaspp_grid(); // get detail page object
-			$GLOBALS["t08_siswaspp_grid"]->ValidateGridForm();
+		if (!$this->TanggalBayar->FldIsDetailKey && !is_null($this->TanggalBayar->FormValue) && $this->TanggalBayar->FormValue == "") {
+			ew_AddMessage($gsFormError, str_replace("%s", $this->TanggalBayar->FldCaption(), $this->TanggalBayar->ReqErrMsg));
+		}
+		if (!ew_CheckDateDef($this->TanggalBayar->FormValue)) {
+			ew_AddMessage($gsFormError, $this->TanggalBayar->FldErrMsg());
+		}
+		if (!$this->JumlahBayar->FldIsDetailKey && !is_null($this->JumlahBayar->FormValue) && $this->JumlahBayar->FormValue == "") {
+			ew_AddMessage($gsFormError, str_replace("%s", $this->JumlahBayar->FldCaption(), $this->JumlahBayar->ReqErrMsg));
+		}
+		if (!ew_CheckNumber($this->JumlahBayar->FormValue)) {
+			ew_AddMessage($gsFormError, $this->JumlahBayar->FldErrMsg());
 		}
 
 		// Return validate result
@@ -773,20 +806,19 @@ class ct04_siswa_edit extends ct04_siswa {
 			$EditRow = FALSE; // Update Failed
 		} else {
 
-			// Begin transaction
-			if ($this->getCurrentDetailTable() <> "")
-				$conn->BeginTrans();
-
 			// Save old values
 			$rsold = &$rs->fields;
 			$this->LoadDbValues($rsold);
 			$rsnew = array();
 
-			// NIS
-			$this->NIS->SetDbValueDef($rsnew, $this->NIS->CurrentValue, "", $this->NIS->ReadOnly);
+			// Periode
+			$this->Periode->SetDbValueDef($rsnew, $this->Periode->CurrentValue, 0, $this->Periode->ReadOnly);
 
-			// Nama
-			$this->Nama->SetDbValueDef($rsnew, $this->Nama->CurrentValue, "", $this->Nama->ReadOnly);
+			// TanggalBayar
+			$this->TanggalBayar->SetDbValueDef($rsnew, ew_UnFormatDateTime($this->TanggalBayar->CurrentValue, 0), ew_CurrentDate(), $this->TanggalBayar->ReadOnly);
+
+			// JumlahBayar
+			$this->JumlahBayar->SetDbValueDef($rsnew, $this->JumlahBayar->CurrentValue, 0, $this->JumlahBayar->ReadOnly);
 
 			// Call Row Updating event
 			$bUpdateRow = $this->Row_Updating($rsold, $rsnew);
@@ -798,26 +830,6 @@ class ct04_siswa_edit extends ct04_siswa {
 					$EditRow = TRUE; // No field to update
 				$conn->raiseErrorFn = '';
 				if ($EditRow) {
-				}
-
-				// Update detail records
-				$DetailTblVar = explode(",", $this->getCurrentDetailTable());
-				if ($EditRow) {
-					if (in_array("t08_siswaspp", $DetailTblVar) && $GLOBALS["t08_siswaspp"]->DetailEdit) {
-						if (!isset($GLOBALS["t08_siswaspp_grid"])) $GLOBALS["t08_siswaspp_grid"] = new ct08_siswaspp_grid(); // Get detail page object
-						$Security->LoadCurrentUserLevel($this->ProjectID . "t08_siswaspp"); // Load user level of detail table
-						$EditRow = $GLOBALS["t08_siswaspp_grid"]->GridUpdate();
-						$Security->LoadCurrentUserLevel($this->ProjectID . $this->TableName); // Restore user level of master table
-					}
-				}
-
-				// Commit/Rollback transaction
-				if ($this->getCurrentDetailTable() <> "") {
-					if ($EditRow) {
-						$conn->CommitTrans(); // Commit transaction
-					} else {
-						$conn->RollbackTrans(); // Rollback transaction
-					}
 				}
 			} else {
 				if ($this->getSuccessMessage() <> "" || $this->getFailureMessage() <> "") {
@@ -840,34 +852,65 @@ class ct04_siswa_edit extends ct04_siswa {
 		return $EditRow;
 	}
 
-	// Set up detail parms based on QueryString
-	function SetUpDetailParms() {
+	// Set up master/detail based on QueryString
+	function SetUpMasterParms() {
+		$bValidMaster = FALSE;
 
 		// Get the keys for master table
-		if (isset($_GET[EW_TABLE_SHOW_DETAIL])) {
-			$sDetailTblVar = $_GET[EW_TABLE_SHOW_DETAIL];
-			$this->setCurrentDetailTable($sDetailTblVar);
-		} else {
-			$sDetailTblVar = $this->getCurrentDetailTable();
-		}
-		if ($sDetailTblVar <> "") {
-			$DetailTblVar = explode(",", $sDetailTblVar);
-			if (in_array("t08_siswaspp", $DetailTblVar)) {
-				if (!isset($GLOBALS["t08_siswaspp_grid"]))
-					$GLOBALS["t08_siswaspp_grid"] = new ct08_siswaspp_grid;
-				if ($GLOBALS["t08_siswaspp_grid"]->DetailEdit) {
-					$GLOBALS["t08_siswaspp_grid"]->CurrentMode = "edit";
-					$GLOBALS["t08_siswaspp_grid"]->CurrentAction = "gridedit";
-
-					// Save current master table to detail table
-					$GLOBALS["t08_siswaspp_grid"]->setCurrentMasterTable($this->TableVar);
-					$GLOBALS["t08_siswaspp_grid"]->setStartRecordNumber(1);
-					$GLOBALS["t08_siswaspp_grid"]->siswa_id->FldIsDetailKey = TRUE;
-					$GLOBALS["t08_siswaspp_grid"]->siswa_id->CurrentValue = $this->id->CurrentValue;
-					$GLOBALS["t08_siswaspp_grid"]->siswa_id->setSessionValue($GLOBALS["t08_siswaspp_grid"]->siswa_id->CurrentValue);
+		if (isset($_GET[EW_TABLE_SHOW_MASTER])) {
+			$sMasterTblVar = $_GET[EW_TABLE_SHOW_MASTER];
+			if ($sMasterTblVar == "") {
+				$bValidMaster = TRUE;
+				$this->DbMasterFilter = "";
+				$this->DbDetailFilter = "";
+			}
+			if ($sMasterTblVar == "v01_siswarutin") {
+				$bValidMaster = TRUE;
+				if (@$_GET["fk_id"] <> "") {
+					$GLOBALS["v01_siswarutin"]->id->setQueryStringValue($_GET["fk_id"]);
+					$this->siswarutin_id->setQueryStringValue($GLOBALS["v01_siswarutin"]->id->QueryStringValue);
+					$this->siswarutin_id->setSessionValue($this->siswarutin_id->QueryStringValue);
+					if (!is_numeric($GLOBALS["v01_siswarutin"]->id->QueryStringValue)) $bValidMaster = FALSE;
+				} else {
+					$bValidMaster = FALSE;
+				}
+			}
+		} elseif (isset($_POST[EW_TABLE_SHOW_MASTER])) {
+			$sMasterTblVar = $_POST[EW_TABLE_SHOW_MASTER];
+			if ($sMasterTblVar == "") {
+				$bValidMaster = TRUE;
+				$this->DbMasterFilter = "";
+				$this->DbDetailFilter = "";
+			}
+			if ($sMasterTblVar == "v01_siswarutin") {
+				$bValidMaster = TRUE;
+				if (@$_POST["fk_id"] <> "") {
+					$GLOBALS["v01_siswarutin"]->id->setFormValue($_POST["fk_id"]);
+					$this->siswarutin_id->setFormValue($GLOBALS["v01_siswarutin"]->id->FormValue);
+					$this->siswarutin_id->setSessionValue($this->siswarutin_id->FormValue);
+					if (!is_numeric($GLOBALS["v01_siswarutin"]->id->FormValue)) $bValidMaster = FALSE;
+				} else {
+					$bValidMaster = FALSE;
 				}
 			}
 		}
+		if ($bValidMaster) {
+
+			// Save current master table
+			$this->setCurrentMasterTable($sMasterTblVar);
+			$this->setSessionWhere($this->GetDetailFilter());
+
+			// Reset start record counter (new master key)
+			$this->StartRec = 1;
+			$this->setStartRecordNumber($this->StartRec);
+
+			// Clear previous master key from Session
+			if ($sMasterTblVar <> "v01_siswarutin") {
+				if ($this->siswarutin_id->CurrentValue == "") $this->siswarutin_id->setSessionValue("");
+			}
+		}
+		$this->DbMasterFilter = $this->GetMasterFilter(); // Get master filter
+		$this->DbDetailFilter = $this->GetDetailFilter(); // Get detail filter
 	}
 
 	// Set up Breadcrumb
@@ -875,7 +918,7 @@ class ct04_siswa_edit extends ct04_siswa {
 		global $Breadcrumb, $Language;
 		$Breadcrumb = new cBreadcrumb();
 		$url = substr(ew_CurrentUrl(), strrpos(ew_CurrentUrl(), "/")+1);
-		$Breadcrumb->Add("list", $this->TableVar, $this->AddMasterUrl("t04_siswalist.php"), "", $this->TableVar, TRUE);
+		$Breadcrumb->Add("list", $this->TableVar, $this->AddMasterUrl("t10_siswarutinbayarlist.php"), "", $this->TableVar, TRUE);
 		$PageId = "edit";
 		$Breadcrumb->Add("edit", $PageId, $url);
 	}
@@ -968,29 +1011,29 @@ class ct04_siswa_edit extends ct04_siswa {
 <?php
 
 // Create page object
-if (!isset($t04_siswa_edit)) $t04_siswa_edit = new ct04_siswa_edit();
+if (!isset($t10_siswarutinbayar_edit)) $t10_siswarutinbayar_edit = new ct10_siswarutinbayar_edit();
 
 // Page init
-$t04_siswa_edit->Page_Init();
+$t10_siswarutinbayar_edit->Page_Init();
 
 // Page main
-$t04_siswa_edit->Page_Main();
+$t10_siswarutinbayar_edit->Page_Main();
 
 // Global Page Rendering event (in userfn*.php)
 Page_Rendering();
 
 // Page Rendering event
-$t04_siswa_edit->Page_Render();
+$t10_siswarutinbayar_edit->Page_Render();
 ?>
 <?php include_once "header.php" ?>
 <script type="text/javascript">
 
 // Form object
 var CurrentPageID = EW_PAGE_ID = "edit";
-var CurrentForm = ft04_siswaedit = new ew_Form("ft04_siswaedit", "edit");
+var CurrentForm = ft10_siswarutinbayaredit = new ew_Form("ft10_siswarutinbayaredit", "edit");
 
 // Validate form
-ft04_siswaedit.Validate = function() {
+ft10_siswarutinbayaredit.Validate = function() {
 	if (!this.ValidateRequired)
 		return true; // Ignore validation
 	var $ = jQuery, fobj = this.GetForm(), $fobj = $(fobj);
@@ -1004,12 +1047,24 @@ ft04_siswaedit.Validate = function() {
 	for (var i = startcnt; i <= rowcnt; i++) {
 		var infix = ($k[0]) ? String(i) : "";
 		$fobj.data("rowindex", infix);
-			elm = this.GetElements("x" + infix + "_NIS");
+			elm = this.GetElements("x" + infix + "_Periode");
 			if (elm && !ew_IsHidden(elm) && !ew_HasValue(elm))
-				return this.OnError(elm, "<?php echo ew_JsEncode2(str_replace("%s", $t04_siswa->NIS->FldCaption(), $t04_siswa->NIS->ReqErrMsg)) ?>");
-			elm = this.GetElements("x" + infix + "_Nama");
+				return this.OnError(elm, "<?php echo ew_JsEncode2(str_replace("%s", $t10_siswarutinbayar->Periode->FldCaption(), $t10_siswarutinbayar->Periode->ReqErrMsg)) ?>");
+			elm = this.GetElements("x" + infix + "_Periode");
+			if (elm && !ew_CheckInteger(elm.value))
+				return this.OnError(elm, "<?php echo ew_JsEncode2($t10_siswarutinbayar->Periode->FldErrMsg()) ?>");
+			elm = this.GetElements("x" + infix + "_TanggalBayar");
 			if (elm && !ew_IsHidden(elm) && !ew_HasValue(elm))
-				return this.OnError(elm, "<?php echo ew_JsEncode2(str_replace("%s", $t04_siswa->Nama->FldCaption(), $t04_siswa->Nama->ReqErrMsg)) ?>");
+				return this.OnError(elm, "<?php echo ew_JsEncode2(str_replace("%s", $t10_siswarutinbayar->TanggalBayar->FldCaption(), $t10_siswarutinbayar->TanggalBayar->ReqErrMsg)) ?>");
+			elm = this.GetElements("x" + infix + "_TanggalBayar");
+			if (elm && !ew_CheckDateDef(elm.value))
+				return this.OnError(elm, "<?php echo ew_JsEncode2($t10_siswarutinbayar->TanggalBayar->FldErrMsg()) ?>");
+			elm = this.GetElements("x" + infix + "_JumlahBayar");
+			if (elm && !ew_IsHidden(elm) && !ew_HasValue(elm))
+				return this.OnError(elm, "<?php echo ew_JsEncode2(str_replace("%s", $t10_siswarutinbayar->JumlahBayar->FldCaption(), $t10_siswarutinbayar->JumlahBayar->ReqErrMsg)) ?>");
+			elm = this.GetElements("x" + infix + "_JumlahBayar");
+			if (elm && !ew_CheckNumber(elm.value))
+				return this.OnError(elm, "<?php echo ew_JsEncode2($t10_siswarutinbayar->JumlahBayar->FldErrMsg()) ?>");
 
 			// Fire Form_CustomValidate event
 			if (!this.Form_CustomValidate(fobj))
@@ -1028,7 +1083,7 @@ ft04_siswaedit.Validate = function() {
 }
 
 // Form_CustomValidate event
-ft04_siswaedit.Form_CustomValidate = 
+ft10_siswarutinbayaredit.Form_CustomValidate = 
  function(fobj) { // DO NOT CHANGE THIS LINE!
 
  	// Your custom validation code here, return false if invalid. 
@@ -1037,9 +1092,9 @@ ft04_siswaedit.Form_CustomValidate =
 
 // Use JavaScript validation or not
 <?php if (EW_CLIENT_VALIDATE) { ?>
-ft04_siswaedit.ValidateRequired = true;
+ft10_siswarutinbayaredit.ValidateRequired = true;
 <?php } else { ?>
-ft04_siswaedit.ValidateRequired = false; 
+ft10_siswarutinbayaredit.ValidateRequired = false; 
 <?php } ?>
 
 // Dynamic selection lists
@@ -1050,112 +1105,118 @@ ft04_siswaedit.ValidateRequired = false;
 
 // Write your client script here, no need to add script tags.
 </script>
-<?php if (!$t04_siswa_edit->IsModal) { ?>
+<?php if (!$t10_siswarutinbayar_edit->IsModal) { ?>
 <div class="ewToolbar">
 <?php $Breadcrumb->Render(); ?>
 <?php echo $Language->SelectionForm(); ?>
 <div class="clearfix"></div>
 </div>
 <?php } ?>
-<?php $t04_siswa_edit->ShowPageHeader(); ?>
+<?php $t10_siswarutinbayar_edit->ShowPageHeader(); ?>
 <?php
-$t04_siswa_edit->ShowMessage();
+$t10_siswarutinbayar_edit->ShowMessage();
 ?>
-<form name="ft04_siswaedit" id="ft04_siswaedit" class="<?php echo $t04_siswa_edit->FormClassName ?>" action="<?php echo ew_CurrentPage() ?>" method="post">
-<?php if ($t04_siswa_edit->CheckToken) { ?>
-<input type="hidden" name="<?php echo EW_TOKEN_NAME ?>" value="<?php echo $t04_siswa_edit->Token ?>">
+<form name="ft10_siswarutinbayaredit" id="ft10_siswarutinbayaredit" class="<?php echo $t10_siswarutinbayar_edit->FormClassName ?>" action="<?php echo ew_CurrentPage() ?>" method="post">
+<?php if ($t10_siswarutinbayar_edit->CheckToken) { ?>
+<input type="hidden" name="<?php echo EW_TOKEN_NAME ?>" value="<?php echo $t10_siswarutinbayar_edit->Token ?>">
 <?php } ?>
-<input type="hidden" name="t" value="t04_siswa">
+<input type="hidden" name="t" value="t10_siswarutinbayar">
 <input type="hidden" name="a_edit" id="a_edit" value="U">
-<?php if ($t04_siswa_edit->IsModal) { ?>
+<?php if ($t10_siswarutinbayar_edit->IsModal) { ?>
 <input type="hidden" name="modal" value="1">
 <?php } ?>
+<?php if ($t10_siswarutinbayar->getCurrentMasterTable() == "v01_siswarutin") { ?>
+<input type="hidden" name="<?php echo EW_TABLE_SHOW_MASTER ?>" value="v01_siswarutin">
+<input type="hidden" name="fk_id" value="<?php echo $t10_siswarutinbayar->siswarutin_id->getSessionValue() ?>">
+<?php } ?>
 <div>
-<?php if ($t04_siswa->NIS->Visible) { // NIS ?>
-	<div id="r_NIS" class="form-group">
-		<label id="elh_t04_siswa_NIS" for="x_NIS" class="col-sm-2 control-label ewLabel"><?php echo $t04_siswa->NIS->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></label>
-		<div class="col-sm-10"><div<?php echo $t04_siswa->NIS->CellAttributes() ?>>
-<span id="el_t04_siswa_NIS">
-<input type="text" data-table="t04_siswa" data-field="x_NIS" name="x_NIS" id="x_NIS" size="30" maxlength="100" placeholder="<?php echo ew_HtmlEncode($t04_siswa->NIS->getPlaceHolder()) ?>" value="<?php echo $t04_siswa->NIS->EditValue ?>"<?php echo $t04_siswa->NIS->EditAttributes() ?>>
+<?php if ($t10_siswarutinbayar->Periode->Visible) { // Periode ?>
+	<div id="r_Periode" class="form-group">
+		<label id="elh_t10_siswarutinbayar_Periode" for="x_Periode" class="col-sm-2 control-label ewLabel"><?php echo $t10_siswarutinbayar->Periode->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></label>
+		<div class="col-sm-10"><div<?php echo $t10_siswarutinbayar->Periode->CellAttributes() ?>>
+<span id="el_t10_siswarutinbayar_Periode">
+<input type="text" data-table="t10_siswarutinbayar" data-field="x_Periode" name="x_Periode" id="x_Periode" size="30" placeholder="<?php echo ew_HtmlEncode($t10_siswarutinbayar->Periode->getPlaceHolder()) ?>" value="<?php echo $t10_siswarutinbayar->Periode->EditValue ?>"<?php echo $t10_siswarutinbayar->Periode->EditAttributes() ?>>
 </span>
-<?php echo $t04_siswa->NIS->CustomMsg ?></div></div>
+<?php echo $t10_siswarutinbayar->Periode->CustomMsg ?></div></div>
 	</div>
 <?php } ?>
-<?php if ($t04_siswa->Nama->Visible) { // Nama ?>
-	<div id="r_Nama" class="form-group">
-		<label id="elh_t04_siswa_Nama" for="x_Nama" class="col-sm-2 control-label ewLabel"><?php echo $t04_siswa->Nama->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></label>
-		<div class="col-sm-10"><div<?php echo $t04_siswa->Nama->CellAttributes() ?>>
-<span id="el_t04_siswa_Nama">
-<input type="text" data-table="t04_siswa" data-field="x_Nama" name="x_Nama" id="x_Nama" size="30" maxlength="100" placeholder="<?php echo ew_HtmlEncode($t04_siswa->Nama->getPlaceHolder()) ?>" value="<?php echo $t04_siswa->Nama->EditValue ?>"<?php echo $t04_siswa->Nama->EditAttributes() ?>>
+<?php if ($t10_siswarutinbayar->TanggalBayar->Visible) { // TanggalBayar ?>
+	<div id="r_TanggalBayar" class="form-group">
+		<label id="elh_t10_siswarutinbayar_TanggalBayar" for="x_TanggalBayar" class="col-sm-2 control-label ewLabel"><?php echo $t10_siswarutinbayar->TanggalBayar->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></label>
+		<div class="col-sm-10"><div<?php echo $t10_siswarutinbayar->TanggalBayar->CellAttributes() ?>>
+<span id="el_t10_siswarutinbayar_TanggalBayar">
+<input type="text" data-table="t10_siswarutinbayar" data-field="x_TanggalBayar" name="x_TanggalBayar" id="x_TanggalBayar" placeholder="<?php echo ew_HtmlEncode($t10_siswarutinbayar->TanggalBayar->getPlaceHolder()) ?>" value="<?php echo $t10_siswarutinbayar->TanggalBayar->EditValue ?>"<?php echo $t10_siswarutinbayar->TanggalBayar->EditAttributes() ?>>
 </span>
-<?php echo $t04_siswa->Nama->CustomMsg ?></div></div>
+<?php echo $t10_siswarutinbayar->TanggalBayar->CustomMsg ?></div></div>
+	</div>
+<?php } ?>
+<?php if ($t10_siswarutinbayar->JumlahBayar->Visible) { // JumlahBayar ?>
+	<div id="r_JumlahBayar" class="form-group">
+		<label id="elh_t10_siswarutinbayar_JumlahBayar" for="x_JumlahBayar" class="col-sm-2 control-label ewLabel"><?php echo $t10_siswarutinbayar->JumlahBayar->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></label>
+		<div class="col-sm-10"><div<?php echo $t10_siswarutinbayar->JumlahBayar->CellAttributes() ?>>
+<span id="el_t10_siswarutinbayar_JumlahBayar">
+<input type="text" data-table="t10_siswarutinbayar" data-field="x_JumlahBayar" name="x_JumlahBayar" id="x_JumlahBayar" size="30" placeholder="<?php echo ew_HtmlEncode($t10_siswarutinbayar->JumlahBayar->getPlaceHolder()) ?>" value="<?php echo $t10_siswarutinbayar->JumlahBayar->EditValue ?>"<?php echo $t10_siswarutinbayar->JumlahBayar->EditAttributes() ?>>
+</span>
+<?php echo $t10_siswarutinbayar->JumlahBayar->CustomMsg ?></div></div>
 	</div>
 <?php } ?>
 </div>
-<input type="hidden" data-table="t04_siswa" data-field="x_id" name="x_id" id="x_id" value="<?php echo ew_HtmlEncode($t04_siswa->id->CurrentValue) ?>">
-<?php
-	if (in_array("t08_siswaspp", explode(",", $t04_siswa->getCurrentDetailTable())) && $t08_siswaspp->DetailEdit) {
-?>
-<?php if ($t04_siswa->getCurrentDetailTable() <> "") { ?>
-<h4 class="ewDetailCaption"><?php echo $Language->TablePhrase("t08_siswaspp", "TblCaption") ?></h4>
-<?php } ?>
-<?php include_once "t08_siswasppgrid.php" ?>
-<?php } ?>
-<?php if (!$t04_siswa_edit->IsModal) { ?>
+<input type="hidden" data-table="t10_siswarutinbayar" data-field="x_id" name="x_id" id="x_id" value="<?php echo ew_HtmlEncode($t10_siswarutinbayar->id->CurrentValue) ?>">
+<?php if (!$t10_siswarutinbayar_edit->IsModal) { ?>
 <div class="form-group">
 	<div class="col-sm-offset-2 col-sm-10">
 <button class="btn btn-primary ewButton" name="btnAction" id="btnAction" type="submit"><?php echo $Language->Phrase("SaveBtn") ?></button>
-<button class="btn btn-default ewButton" name="btnCancel" id="btnCancel" type="button" data-href="<?php echo $t04_siswa_edit->getReturnUrl() ?>"><?php echo $Language->Phrase("CancelBtn") ?></button>
+<button class="btn btn-default ewButton" name="btnCancel" id="btnCancel" type="button" data-href="<?php echo $t10_siswarutinbayar_edit->getReturnUrl() ?>"><?php echo $Language->Phrase("CancelBtn") ?></button>
 	</div>
 </div>
-<?php if (!isset($t04_siswa_edit->Pager)) $t04_siswa_edit->Pager = new cPrevNextPager($t04_siswa_edit->StartRec, $t04_siswa_edit->DisplayRecs, $t04_siswa_edit->TotalRecs) ?>
-<?php if ($t04_siswa_edit->Pager->RecordCount > 0 && $t04_siswa_edit->Pager->Visible) { ?>
+<?php if (!isset($t10_siswarutinbayar_edit->Pager)) $t10_siswarutinbayar_edit->Pager = new cPrevNextPager($t10_siswarutinbayar_edit->StartRec, $t10_siswarutinbayar_edit->DisplayRecs, $t10_siswarutinbayar_edit->TotalRecs) ?>
+<?php if ($t10_siswarutinbayar_edit->Pager->RecordCount > 0 && $t10_siswarutinbayar_edit->Pager->Visible) { ?>
 <div class="ewPager">
 <span><?php echo $Language->Phrase("Page") ?>&nbsp;</span>
 <div class="ewPrevNext"><div class="input-group">
 <div class="input-group-btn">
 <!--first page button-->
-	<?php if ($t04_siswa_edit->Pager->FirstButton->Enabled) { ?>
-	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerFirst") ?>" href="<?php echo $t04_siswa_edit->PageUrl() ?>start=<?php echo $t04_siswa_edit->Pager->FirstButton->Start ?>"><span class="icon-first ewIcon"></span></a>
+	<?php if ($t10_siswarutinbayar_edit->Pager->FirstButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerFirst") ?>" href="<?php echo $t10_siswarutinbayar_edit->PageUrl() ?>start=<?php echo $t10_siswarutinbayar_edit->Pager->FirstButton->Start ?>"><span class="icon-first ewIcon"></span></a>
 	<?php } else { ?>
 	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerFirst") ?>"><span class="icon-first ewIcon"></span></a>
 	<?php } ?>
 <!--previous page button-->
-	<?php if ($t04_siswa_edit->Pager->PrevButton->Enabled) { ?>
-	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerPrevious") ?>" href="<?php echo $t04_siswa_edit->PageUrl() ?>start=<?php echo $t04_siswa_edit->Pager->PrevButton->Start ?>"><span class="icon-prev ewIcon"></span></a>
+	<?php if ($t10_siswarutinbayar_edit->Pager->PrevButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerPrevious") ?>" href="<?php echo $t10_siswarutinbayar_edit->PageUrl() ?>start=<?php echo $t10_siswarutinbayar_edit->Pager->PrevButton->Start ?>"><span class="icon-prev ewIcon"></span></a>
 	<?php } else { ?>
 	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerPrevious") ?>"><span class="icon-prev ewIcon"></span></a>
 	<?php } ?>
 </div>
 <!--current page number-->
-	<input class="form-control input-sm" type="text" name="<?php echo EW_TABLE_PAGE_NO ?>" value="<?php echo $t04_siswa_edit->Pager->CurrentPage ?>">
+	<input class="form-control input-sm" type="text" name="<?php echo EW_TABLE_PAGE_NO ?>" value="<?php echo $t10_siswarutinbayar_edit->Pager->CurrentPage ?>">
 <div class="input-group-btn">
 <!--next page button-->
-	<?php if ($t04_siswa_edit->Pager->NextButton->Enabled) { ?>
-	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerNext") ?>" href="<?php echo $t04_siswa_edit->PageUrl() ?>start=<?php echo $t04_siswa_edit->Pager->NextButton->Start ?>"><span class="icon-next ewIcon"></span></a>
+	<?php if ($t10_siswarutinbayar_edit->Pager->NextButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerNext") ?>" href="<?php echo $t10_siswarutinbayar_edit->PageUrl() ?>start=<?php echo $t10_siswarutinbayar_edit->Pager->NextButton->Start ?>"><span class="icon-next ewIcon"></span></a>
 	<?php } else { ?>
 	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerNext") ?>"><span class="icon-next ewIcon"></span></a>
 	<?php } ?>
 <!--last page button-->
-	<?php if ($t04_siswa_edit->Pager->LastButton->Enabled) { ?>
-	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerLast") ?>" href="<?php echo $t04_siswa_edit->PageUrl() ?>start=<?php echo $t04_siswa_edit->Pager->LastButton->Start ?>"><span class="icon-last ewIcon"></span></a>
+	<?php if ($t10_siswarutinbayar_edit->Pager->LastButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerLast") ?>" href="<?php echo $t10_siswarutinbayar_edit->PageUrl() ?>start=<?php echo $t10_siswarutinbayar_edit->Pager->LastButton->Start ?>"><span class="icon-last ewIcon"></span></a>
 	<?php } else { ?>
 	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerLast") ?>"><span class="icon-last ewIcon"></span></a>
 	<?php } ?>
 </div>
 </div>
 </div>
-<span>&nbsp;<?php echo $Language->Phrase("of") ?>&nbsp;<?php echo $t04_siswa_edit->Pager->PageCount ?></span>
+<span>&nbsp;<?php echo $Language->Phrase("of") ?>&nbsp;<?php echo $t10_siswarutinbayar_edit->Pager->PageCount ?></span>
 </div>
 <?php } ?>
 <div class="clearfix"></div>
 <?php } ?>
 </form>
 <script type="text/javascript">
-ft04_siswaedit.Init();
+ft10_siswarutinbayaredit.Init();
 </script>
 <?php
-$t04_siswa_edit->ShowPageFooter();
+$t10_siswarutinbayar_edit->ShowPageFooter();
 if (EW_DEBUG_ENABLED)
 	echo ew_DebugMsg();
 ?>
@@ -1167,5 +1228,5 @@ if (EW_DEBUG_ENABLED)
 </script>
 <?php include_once "footer.php" ?>
 <?php
-$t04_siswa_edit->Page_Terminate();
+$t10_siswarutinbayar_edit->Page_Terminate();
 ?>

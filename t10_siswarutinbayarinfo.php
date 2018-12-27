@@ -1,12 +1,12 @@
 <?php
 
 // Global variable for table object
-$t04_siswa = NULL;
+$t10_siswarutinbayar = NULL;
 
 //
-// Table class for t04_siswa
+// Table class for t10_siswarutinbayar
 //
-class ct04_siswa extends cTable {
+class ct10_siswarutinbayar extends cTable {
 	var $AuditTrailOnAdd = TRUE;
 	var $AuditTrailOnEdit = TRUE;
 	var $AuditTrailOnDelete = TRUE;
@@ -14,8 +14,10 @@ class ct04_siswa extends cTable {
 	var $AuditTrailOnViewData = FALSE;
 	var $AuditTrailOnSearch = FALSE;
 	var $id;
-	var $NIS;
-	var $Nama;
+	var $siswarutin_id;
+	var $Periode;
+	var $TanggalBayar;
+	var $JumlahBayar;
 
 	//
 	// Table class constructor
@@ -25,12 +27,12 @@ class ct04_siswa extends cTable {
 
 		// Language object
 		if (!isset($Language)) $Language = new cLanguage();
-		$this->TableVar = 't04_siswa';
-		$this->TableName = 't04_siswa';
+		$this->TableVar = 't10_siswarutinbayar';
+		$this->TableName = 't10_siswarutinbayar';
 		$this->TableType = 'TABLE';
 
 		// Update Table
-		$this->UpdateTable = "`t04_siswa`";
+		$this->UpdateTable = "`t10_siswarutinbayar`";
 		$this->DBID = 'DB';
 		$this->ExportAll = TRUE;
 		$this->ExportPageBreakCount = 0; // Page break per every n record (PDF only)
@@ -38,9 +40,9 @@ class ct04_siswa extends cTable {
 		$this->ExportPageSize = "a4"; // Page size (PDF only)
 		$this->ExportExcelPageOrientation = ""; // Page orientation (PHPExcel only)
 		$this->ExportExcelPageSize = ""; // Page size (PHPExcel only)
-		$this->DetailAdd = FALSE; // Allow detail add
-		$this->DetailEdit = FALSE; // Allow detail edit
-		$this->DetailView = FALSE; // Allow detail view
+		$this->DetailAdd = TRUE; // Allow detail add
+		$this->DetailEdit = TRUE; // Allow detail edit
+		$this->DetailView = TRUE; // Allow detail view
 		$this->ShowMultipleDetails = FALSE; // Show multiple details
 		$this->GridAddRowCount = 1;
 		$this->AllowAddDeleteRow = ew_AllowAddDeleteRow(); // Allow add/delete row
@@ -48,20 +50,34 @@ class ct04_siswa extends cTable {
 		$this->BasicSearch = new cBasicSearch($this->TableVar);
 
 		// id
-		$this->id = new cField('t04_siswa', 't04_siswa', 'x_id', 'id', '`id`', '`id`', 3, -1, FALSE, '`id`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'NO');
+		$this->id = new cField('t10_siswarutinbayar', 't10_siswarutinbayar', 'x_id', 'id', '`id`', '`id`', 3, -1, FALSE, '`id`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'NO');
 		$this->id->Sortable = TRUE; // Allow sort
 		$this->id->FldDefaultErrMsg = $Language->Phrase("IncorrectInteger");
 		$this->fields['id'] = &$this->id;
 
-		// NIS
-		$this->NIS = new cField('t04_siswa', 't04_siswa', 'x_NIS', 'NIS', '`NIS`', '`NIS`', 200, -1, FALSE, '`NIS`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
-		$this->NIS->Sortable = TRUE; // Allow sort
-		$this->fields['NIS'] = &$this->NIS;
+		// siswarutin_id
+		$this->siswarutin_id = new cField('t10_siswarutinbayar', 't10_siswarutinbayar', 'x_siswarutin_id', 'siswarutin_id', '`siswarutin_id`', '`siswarutin_id`', 3, -1, FALSE, '`siswarutin_id`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->siswarutin_id->Sortable = TRUE; // Allow sort
+		$this->siswarutin_id->FldDefaultErrMsg = $Language->Phrase("IncorrectInteger");
+		$this->fields['siswarutin_id'] = &$this->siswarutin_id;
 
-		// Nama
-		$this->Nama = new cField('t04_siswa', 't04_siswa', 'x_Nama', 'Nama', '`Nama`', '`Nama`', 200, -1, FALSE, '`Nama`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
-		$this->Nama->Sortable = TRUE; // Allow sort
-		$this->fields['Nama'] = &$this->Nama;
+		// Periode
+		$this->Periode = new cField('t10_siswarutinbayar', 't10_siswarutinbayar', 'x_Periode', 'Periode', '`Periode`', '`Periode`', 16, -1, FALSE, '`Periode`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->Periode->Sortable = TRUE; // Allow sort
+		$this->Periode->FldDefaultErrMsg = $Language->Phrase("IncorrectInteger");
+		$this->fields['Periode'] = &$this->Periode;
+
+		// TanggalBayar
+		$this->TanggalBayar = new cField('t10_siswarutinbayar', 't10_siswarutinbayar', 'x_TanggalBayar', 'TanggalBayar', '`TanggalBayar`', ew_CastDateFieldForLike('`TanggalBayar`', 0, "DB"), 133, 0, FALSE, '`TanggalBayar`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->TanggalBayar->Sortable = TRUE; // Allow sort
+		$this->TanggalBayar->FldDefaultErrMsg = str_replace("%s", $GLOBALS["EW_DATE_FORMAT"], $Language->Phrase("IncorrectDate"));
+		$this->fields['TanggalBayar'] = &$this->TanggalBayar;
+
+		// JumlahBayar
+		$this->JumlahBayar = new cField('t10_siswarutinbayar', 't10_siswarutinbayar', 'x_JumlahBayar', 'JumlahBayar', '`JumlahBayar`', '`JumlahBayar`', 4, -1, FALSE, '`JumlahBayar`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->JumlahBayar->Sortable = TRUE; // Allow sort
+		$this->JumlahBayar->FldDefaultErrMsg = $Language->Phrase("IncorrectFloat");
+		$this->fields['JumlahBayar'] = &$this->JumlahBayar;
 	}
 
 	// Set Field Visibility
@@ -98,35 +114,58 @@ class ct04_siswa extends cTable {
 		}
 	}
 
-	// Current detail table name
-	function getCurrentDetailTable() {
-		return @$_SESSION[EW_PROJECT_NAME . "_" . $this->TableVar . "_" . EW_TABLE_DETAIL_TABLE];
+	// Current master table name
+	function getCurrentMasterTable() {
+		return @$_SESSION[EW_PROJECT_NAME . "_" . $this->TableVar . "_" . EW_TABLE_MASTER_TABLE];
 	}
 
-	function setCurrentDetailTable($v) {
-		$_SESSION[EW_PROJECT_NAME . "_" . $this->TableVar . "_" . EW_TABLE_DETAIL_TABLE] = $v;
+	function setCurrentMasterTable($v) {
+		$_SESSION[EW_PROJECT_NAME . "_" . $this->TableVar . "_" . EW_TABLE_MASTER_TABLE] = $v;
 	}
 
-	// Get detail url
-	function GetDetailUrl() {
+	// Session master WHERE clause
+	function GetMasterFilter() {
 
-		// Detail url
-		$sDetailUrl = "";
-		if ($this->getCurrentDetailTable() == "t08_siswaspp") {
-			$sDetailUrl = $GLOBALS["t08_siswaspp"]->GetListUrl() . "?" . EW_TABLE_SHOW_MASTER . "=" . $this->TableVar;
-			$sDetailUrl .= "&fk_id=" . urlencode($this->id->CurrentValue);
+		// Master filter
+		$sMasterFilter = "";
+		if ($this->getCurrentMasterTable() == "v01_siswarutin") {
+			if ($this->siswarutin_id->getSessionValue() <> "")
+				$sMasterFilter .= "`id`=" . ew_QuotedValue($this->siswarutin_id->getSessionValue(), EW_DATATYPE_NUMBER, "DB");
+			else
+				return "";
 		}
-		if ($sDetailUrl == "") {
-			$sDetailUrl = "t04_siswalist.php";
+		return $sMasterFilter;
+	}
+
+	// Session detail WHERE clause
+	function GetDetailFilter() {
+
+		// Detail filter
+		$sDetailFilter = "";
+		if ($this->getCurrentMasterTable() == "v01_siswarutin") {
+			if ($this->siswarutin_id->getSessionValue() <> "")
+				$sDetailFilter .= "`siswarutin_id`=" . ew_QuotedValue($this->siswarutin_id->getSessionValue(), EW_DATATYPE_NUMBER, "DB");
+			else
+				return "";
 		}
-		return $sDetailUrl;
+		return $sDetailFilter;
+	}
+
+	// Master filter
+	function SqlMasterFilter_v01_siswarutin() {
+		return "`id`=@id@";
+	}
+
+	// Detail filter
+	function SqlDetailFilter_v01_siswarutin() {
+		return "`siswarutin_id`=@siswarutin_id@";
 	}
 
 	// Table level SQL
 	var $_SqlFrom = "";
 
 	function getSqlFrom() { // From
-		return ($this->_SqlFrom <> "") ? $this->_SqlFrom : "`t04_siswa`";
+		return ($this->_SqlFrom <> "") ? $this->_SqlFrom : "`t10_siswarutinbayar`";
 	}
 
 	function SqlFrom() { // For backward compatibility
@@ -440,7 +479,7 @@ class ct04_siswa extends cTable {
 		if (@$_SESSION[$name] <> "") {
 			return $_SESSION[$name];
 		} else {
-			return "t04_siswalist.php";
+			return "t10_siswarutinbayarlist.php";
 		}
 	}
 
@@ -450,33 +489,30 @@ class ct04_siswa extends cTable {
 
 	// List URL
 	function GetListUrl() {
-		return "t04_siswalist.php";
+		return "t10_siswarutinbayarlist.php";
 	}
 
 	// View URL
 	function GetViewUrl($parm = "") {
 		if ($parm <> "")
-			$url = $this->KeyUrl("t04_siswaview.php", $this->UrlParm($parm));
+			$url = $this->KeyUrl("t10_siswarutinbayarview.php", $this->UrlParm($parm));
 		else
-			$url = $this->KeyUrl("t04_siswaview.php", $this->UrlParm(EW_TABLE_SHOW_DETAIL . "="));
+			$url = $this->KeyUrl("t10_siswarutinbayarview.php", $this->UrlParm(EW_TABLE_SHOW_DETAIL . "="));
 		return $this->AddMasterUrl($url);
 	}
 
 	// Add URL
 	function GetAddUrl($parm = "") {
 		if ($parm <> "")
-			$url = "t04_siswaadd.php?" . $this->UrlParm($parm);
+			$url = "t10_siswarutinbayaradd.php?" . $this->UrlParm($parm);
 		else
-			$url = "t04_siswaadd.php";
+			$url = "t10_siswarutinbayaradd.php";
 		return $this->AddMasterUrl($url);
 	}
 
 	// Edit URL
 	function GetEditUrl($parm = "") {
-		if ($parm <> "")
-			$url = $this->KeyUrl("t04_siswaedit.php", $this->UrlParm($parm));
-		else
-			$url = $this->KeyUrl("t04_siswaedit.php", $this->UrlParm(EW_TABLE_SHOW_DETAIL . "="));
+		$url = $this->KeyUrl("t10_siswarutinbayaredit.php", $this->UrlParm($parm));
 		return $this->AddMasterUrl($url);
 	}
 
@@ -488,10 +524,7 @@ class ct04_siswa extends cTable {
 
 	// Copy URL
 	function GetCopyUrl($parm = "") {
-		if ($parm <> "")
-			$url = $this->KeyUrl("t04_siswaadd.php", $this->UrlParm($parm));
-		else
-			$url = $this->KeyUrl("t04_siswaadd.php", $this->UrlParm(EW_TABLE_SHOW_DETAIL . "="));
+		$url = $this->KeyUrl("t10_siswarutinbayaradd.php", $this->UrlParm($parm));
 		return $this->AddMasterUrl($url);
 	}
 
@@ -503,11 +536,15 @@ class ct04_siswa extends cTable {
 
 	// Delete URL
 	function GetDeleteUrl() {
-		return $this->KeyUrl("t04_siswadelete.php", $this->UrlParm());
+		return $this->KeyUrl("t10_siswarutinbayardelete.php", $this->UrlParm());
 	}
 
 	// Add master url
 	function AddMasterUrl($url) {
+		if ($this->getCurrentMasterTable() == "v01_siswarutin" && strpos($url, EW_TABLE_SHOW_MASTER . "=") === FALSE) {
+			$url .= (strpos($url, "?") !== FALSE ? "&" : "?") . EW_TABLE_SHOW_MASTER . "=" . $this->getCurrentMasterTable();
+			$url .= "&fk_id=" . urlencode($this->siswarutin_id->CurrentValue);
+		}
 		return $url;
 	}
 
@@ -605,8 +642,10 @@ class ct04_siswa extends cTable {
 	// Load row values from recordset
 	function LoadListRowValues(&$rs) {
 		$this->id->setDbValue($rs->fields('id'));
-		$this->NIS->setDbValue($rs->fields('NIS'));
-		$this->Nama->setDbValue($rs->fields('Nama'));
+		$this->siswarutin_id->setDbValue($rs->fields('siswarutin_id'));
+		$this->Periode->setDbValue($rs->fields('Periode'));
+		$this->TanggalBayar->setDbValue($rs->fields('TanggalBayar'));
+		$this->JumlahBayar->setDbValue($rs->fields('JumlahBayar'));
 	}
 
 	// Render list row values
@@ -618,35 +657,56 @@ class ct04_siswa extends cTable {
 
    // Common render codes
 		// id
-		// NIS
-		// Nama
+		// siswarutin_id
+		// Periode
+		// TanggalBayar
+		// JumlahBayar
 		// id
 
 		$this->id->ViewValue = $this->id->CurrentValue;
 		$this->id->ViewCustomAttributes = "";
 
-		// NIS
-		$this->NIS->ViewValue = $this->NIS->CurrentValue;
-		$this->NIS->ViewCustomAttributes = "";
+		// siswarutin_id
+		$this->siswarutin_id->ViewValue = $this->siswarutin_id->CurrentValue;
+		$this->siswarutin_id->ViewCustomAttributes = "";
 
-		// Nama
-		$this->Nama->ViewValue = $this->Nama->CurrentValue;
-		$this->Nama->ViewCustomAttributes = "";
+		// Periode
+		$this->Periode->ViewValue = $this->Periode->CurrentValue;
+		$this->Periode->ViewCustomAttributes = "";
+
+		// TanggalBayar
+		$this->TanggalBayar->ViewValue = $this->TanggalBayar->CurrentValue;
+		$this->TanggalBayar->ViewValue = ew_FormatDateTime($this->TanggalBayar->ViewValue, 0);
+		$this->TanggalBayar->ViewCustomAttributes = "";
+
+		// JumlahBayar
+		$this->JumlahBayar->ViewValue = $this->JumlahBayar->CurrentValue;
+		$this->JumlahBayar->ViewCustomAttributes = "";
 
 		// id
 		$this->id->LinkCustomAttributes = "";
 		$this->id->HrefValue = "";
 		$this->id->TooltipValue = "";
 
-		// NIS
-		$this->NIS->LinkCustomAttributes = "";
-		$this->NIS->HrefValue = "";
-		$this->NIS->TooltipValue = "";
+		// siswarutin_id
+		$this->siswarutin_id->LinkCustomAttributes = "";
+		$this->siswarutin_id->HrefValue = "";
+		$this->siswarutin_id->TooltipValue = "";
 
-		// Nama
-		$this->Nama->LinkCustomAttributes = "";
-		$this->Nama->HrefValue = "";
-		$this->Nama->TooltipValue = "";
+		// Periode
+		$this->Periode->LinkCustomAttributes = "";
+		$this->Periode->HrefValue = "";
+		$this->Periode->TooltipValue = "";
+
+		// TanggalBayar
+		$this->TanggalBayar->LinkCustomAttributes = "";
+		$this->TanggalBayar->HrefValue = "";
+		$this->TanggalBayar->TooltipValue = "";
+
+		// JumlahBayar
+		$this->JumlahBayar->LinkCustomAttributes = "";
+		$this->JumlahBayar->HrefValue = "";
+		$this->JumlahBayar->TooltipValue = "";
 
 		// Call Row Rendered event
 		$this->Row_Rendered();
@@ -665,17 +725,36 @@ class ct04_siswa extends cTable {
 		$this->id->EditValue = $this->id->CurrentValue;
 		$this->id->ViewCustomAttributes = "";
 
-		// NIS
-		$this->NIS->EditAttrs["class"] = "form-control";
-		$this->NIS->EditCustomAttributes = "";
-		$this->NIS->EditValue = $this->NIS->CurrentValue;
-		$this->NIS->PlaceHolder = ew_RemoveHtml($this->NIS->FldCaption());
+		// siswarutin_id
+		$this->siswarutin_id->EditAttrs["class"] = "form-control";
+		$this->siswarutin_id->EditCustomAttributes = "";
+		if ($this->siswarutin_id->getSessionValue() <> "") {
+			$this->siswarutin_id->CurrentValue = $this->siswarutin_id->getSessionValue();
+		$this->siswarutin_id->ViewValue = $this->siswarutin_id->CurrentValue;
+		$this->siswarutin_id->ViewCustomAttributes = "";
+		} else {
+		$this->siswarutin_id->EditValue = $this->siswarutin_id->CurrentValue;
+		$this->siswarutin_id->PlaceHolder = ew_RemoveHtml($this->siswarutin_id->FldCaption());
+		}
 
-		// Nama
-		$this->Nama->EditAttrs["class"] = "form-control";
-		$this->Nama->EditCustomAttributes = "";
-		$this->Nama->EditValue = $this->Nama->CurrentValue;
-		$this->Nama->PlaceHolder = ew_RemoveHtml($this->Nama->FldCaption());
+		// Periode
+		$this->Periode->EditAttrs["class"] = "form-control";
+		$this->Periode->EditCustomAttributes = "";
+		$this->Periode->EditValue = $this->Periode->CurrentValue;
+		$this->Periode->PlaceHolder = ew_RemoveHtml($this->Periode->FldCaption());
+
+		// TanggalBayar
+		$this->TanggalBayar->EditAttrs["class"] = "form-control";
+		$this->TanggalBayar->EditCustomAttributes = "";
+		$this->TanggalBayar->EditValue = ew_FormatDateTime($this->TanggalBayar->CurrentValue, 8);
+		$this->TanggalBayar->PlaceHolder = ew_RemoveHtml($this->TanggalBayar->FldCaption());
+
+		// JumlahBayar
+		$this->JumlahBayar->EditAttrs["class"] = "form-control";
+		$this->JumlahBayar->EditCustomAttributes = "";
+		$this->JumlahBayar->EditValue = $this->JumlahBayar->CurrentValue;
+		$this->JumlahBayar->PlaceHolder = ew_RemoveHtml($this->JumlahBayar->FldCaption());
+		if (strval($this->JumlahBayar->EditValue) <> "" && is_numeric($this->JumlahBayar->EditValue)) $this->JumlahBayar->EditValue = ew_FormatNumber($this->JumlahBayar->EditValue, -2, -1, -2, 0);
 
 		// Call Row Rendered event
 		$this->Row_Rendered();
@@ -704,12 +783,15 @@ class ct04_siswa extends cTable {
 			if ($Doc->Horizontal) { // Horizontal format, write header
 				$Doc->BeginExportRow();
 				if ($ExportPageType == "view") {
-					if ($this->NIS->Exportable) $Doc->ExportCaption($this->NIS);
-					if ($this->Nama->Exportable) $Doc->ExportCaption($this->Nama);
+					if ($this->Periode->Exportable) $Doc->ExportCaption($this->Periode);
+					if ($this->TanggalBayar->Exportable) $Doc->ExportCaption($this->TanggalBayar);
+					if ($this->JumlahBayar->Exportable) $Doc->ExportCaption($this->JumlahBayar);
 				} else {
 					if ($this->id->Exportable) $Doc->ExportCaption($this->id);
-					if ($this->NIS->Exportable) $Doc->ExportCaption($this->NIS);
-					if ($this->Nama->Exportable) $Doc->ExportCaption($this->Nama);
+					if ($this->siswarutin_id->Exportable) $Doc->ExportCaption($this->siswarutin_id);
+					if ($this->Periode->Exportable) $Doc->ExportCaption($this->Periode);
+					if ($this->TanggalBayar->Exportable) $Doc->ExportCaption($this->TanggalBayar);
+					if ($this->JumlahBayar->Exportable) $Doc->ExportCaption($this->JumlahBayar);
 				}
 				$Doc->EndExportRow();
 			}
@@ -741,12 +823,15 @@ class ct04_siswa extends cTable {
 				if (!$Doc->ExportCustom) {
 					$Doc->BeginExportRow($RowCnt); // Allow CSS styles if enabled
 					if ($ExportPageType == "view") {
-						if ($this->NIS->Exportable) $Doc->ExportField($this->NIS);
-						if ($this->Nama->Exportable) $Doc->ExportField($this->Nama);
+						if ($this->Periode->Exportable) $Doc->ExportField($this->Periode);
+						if ($this->TanggalBayar->Exportable) $Doc->ExportField($this->TanggalBayar);
+						if ($this->JumlahBayar->Exportable) $Doc->ExportField($this->JumlahBayar);
 					} else {
 						if ($this->id->Exportable) $Doc->ExportField($this->id);
-						if ($this->NIS->Exportable) $Doc->ExportField($this->NIS);
-						if ($this->Nama->Exportable) $Doc->ExportField($this->Nama);
+						if ($this->siswarutin_id->Exportable) $Doc->ExportField($this->siswarutin_id);
+						if ($this->Periode->Exportable) $Doc->ExportField($this->Periode);
+						if ($this->TanggalBayar->Exportable) $Doc->ExportField($this->TanggalBayar);
+						if ($this->JumlahBayar->Exportable) $Doc->ExportField($this->JumlahBayar);
 					}
 					$Doc->EndExportRow();
 				}
@@ -790,7 +875,7 @@ class ct04_siswa extends cTable {
 
 	// Write Audit Trail start/end for grid update
 	function WriteAuditTrailDummy($typ) {
-		$table = 't04_siswa';
+		$table = 't10_siswarutinbayar';
 		$usr = CurrentUserID();
 		ew_WriteAuditTrail("log", ew_StdCurrentDateTime(), ew_ScriptName(), $usr, $typ, $table, "", "", "", "");
 	}
@@ -799,7 +884,7 @@ class ct04_siswa extends cTable {
 	function WriteAuditTrailOnAdd(&$rs) {
 		global $Language;
 		if (!$this->AuditTrailOnAdd) return;
-		$table = 't04_siswa';
+		$table = 't10_siswarutinbayar';
 
 		// Get key value
 		$key = "";
@@ -833,7 +918,7 @@ class ct04_siswa extends cTable {
 	function WriteAuditTrailOnEdit(&$rsold, &$rsnew) {
 		global $Language;
 		if (!$this->AuditTrailOnEdit) return;
-		$table = 't04_siswa';
+		$table = 't10_siswarutinbayar';
 
 		// Get key value
 		$key = "";
@@ -880,7 +965,7 @@ class ct04_siswa extends cTable {
 	function WriteAuditTrailOnDelete(&$rs) {
 		global $Language;
 		if (!$this->AuditTrailOnDelete) return;
-		$table = 't04_siswa';
+		$table = 't10_siswarutinbayar';
 
 		// Get key value
 		$key = "";

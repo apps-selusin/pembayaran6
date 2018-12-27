@@ -5,9 +5,8 @@ ob_start(); // Turn on output buffering
 <?php include_once "ewcfg13.php" ?>
 <?php include_once ((EW_USE_ADODB) ? "adodb5/adodb.inc.php" : "ewmysql13.php") ?>
 <?php include_once "phpfn13.php" ?>
-<?php include_once "t04_siswainfo.php" ?>
+<?php include_once "t08_nonrutininfo.php" ?>
 <?php include_once "t96_employeesinfo.php" ?>
-<?php include_once "t08_siswasppgridcls.php" ?>
 <?php include_once "userfn13.php" ?>
 <?php
 
@@ -15,9 +14,9 @@ ob_start(); // Turn on output buffering
 // Page class
 //
 
-$t04_siswa_add = NULL; // Initialize page object first
+$t08_nonrutin_add = NULL; // Initialize page object first
 
-class ct04_siswa_add extends ct04_siswa {
+class ct08_nonrutin_add extends ct08_nonrutin {
 
 	// Page ID
 	var $PageID = 'add';
@@ -26,10 +25,10 @@ class ct04_siswa_add extends ct04_siswa {
 	var $ProjectID = "{699E0CB8-ECC6-4DDA-93F3-012C887E6B12}";
 
 	// Table name
-	var $TableName = 't04_siswa';
+	var $TableName = 't08_nonrutin';
 
 	// Page object name
-	var $PageObjName = 't04_siswa_add';
+	var $PageObjName = 't08_nonrutin_add';
 
 	// Page name
 	function PageName() {
@@ -227,10 +226,10 @@ class ct04_siswa_add extends ct04_siswa {
 		// Parent constuctor
 		parent::__construct();
 
-		// Table object (t04_siswa)
-		if (!isset($GLOBALS["t04_siswa"]) || get_class($GLOBALS["t04_siswa"]) == "ct04_siswa") {
-			$GLOBALS["t04_siswa"] = &$this;
-			$GLOBALS["Table"] = &$GLOBALS["t04_siswa"];
+		// Table object (t08_nonrutin)
+		if (!isset($GLOBALS["t08_nonrutin"]) || get_class($GLOBALS["t08_nonrutin"]) == "ct08_nonrutin") {
+			$GLOBALS["t08_nonrutin"] = &$this;
+			$GLOBALS["Table"] = &$GLOBALS["t08_nonrutin"];
 		}
 
 		// Table object (t96_employees)
@@ -242,7 +241,7 @@ class ct04_siswa_add extends ct04_siswa {
 
 		// Table name (for backward compatibility)
 		if (!defined("EW_TABLE_NAME"))
-			define("EW_TABLE_NAME", 't04_siswa', TRUE);
+			define("EW_TABLE_NAME", 't08_nonrutin', TRUE);
 
 		// Start timer
 		if (!isset($GLOBALS["gTimer"])) $GLOBALS["gTimer"] = new cTimer();
@@ -273,7 +272,7 @@ class ct04_siswa_add extends ct04_siswa {
 			$Security->SaveLastUrl();
 			$this->setFailureMessage(ew_DeniedMsg()); // Set no permission
 			if ($Security->CanList())
-				$this->Page_Terminate(ew_GetUrl("t04_siswalist.php"));
+				$this->Page_Terminate(ew_GetUrl("t08_nonrutinlist.php"));
 			else
 				$this->Page_Terminate(ew_GetUrl("login.php"));
 		}
@@ -286,8 +285,7 @@ class ct04_siswa_add extends ct04_siswa {
 		// Create form object
 		$objForm = new cFormObj();
 		$this->CurrentAction = (@$_GET["a"] <> "") ? $_GET["a"] : @$_POST["a_list"]; // Set up current action
-		$this->NIS->SetVisibility();
-		$this->Nama->SetVisibility();
+		$this->Jenis->SetVisibility();
 
 		// Global Page Loading event (in userfn*.php)
 		Page_Loading();
@@ -304,14 +302,6 @@ class ct04_siswa_add extends ct04_siswa {
 
 		// Process auto fill
 		if (@$_POST["ajax"] == "autofill") {
-
-			// Process auto fill for detail table 't08_siswaspp'
-			if (@$_POST["grid"] == "ft08_siswasppgrid") {
-				if (!isset($GLOBALS["t08_siswaspp_grid"])) $GLOBALS["t08_siswaspp_grid"] = new ct08_siswaspp_grid;
-				$GLOBALS["t08_siswaspp_grid"]->Page_Init();
-				$this->Page_Terminate();
-				exit();
-			}
 			$results = $this->GetAutoFill(@$_POST["name"], @$_POST["q"]);
 			if ($results) {
 
@@ -341,13 +331,13 @@ class ct04_siswa_add extends ct04_siswa {
 		Page_Unloaded();
 
 		// Export
-		global $EW_EXPORT, $t04_siswa;
+		global $EW_EXPORT, $t08_nonrutin;
 		if ($this->CustomExport <> "" && $this->CustomExport == $this->Export && array_key_exists($this->CustomExport, $EW_EXPORT)) {
 				$sContent = ob_get_contents();
 			if ($gsExportFile == "") $gsExportFile = $this->TableVar;
 			$class = $EW_EXPORT[$this->CustomExport];
 			if (class_exists($class)) {
-				$doc = new $class($t04_siswa);
+				$doc = new $class($t08_nonrutin);
 				$doc->Text = $sContent;
 				if ($this->Export == "email")
 					echo $this->ExportEmail($doc->Text);
@@ -425,9 +415,6 @@ class ct04_siswa_add extends ct04_siswa {
 		// Set up Breadcrumb
 		$this->SetupBreadcrumb();
 
-		// Set up detail parameters
-		$this->SetUpDetailParms();
-
 		// Validate form if post back
 		if (@$_POST["a_add"] <> "") {
 			if (!$this->ValidateForm()) {
@@ -448,32 +435,23 @@ class ct04_siswa_add extends ct04_siswa {
 			case "C": // Copy an existing record
 				if (!$this->LoadRow()) { // Load record based on key
 					if ($this->getFailureMessage() == "") $this->setFailureMessage($Language->Phrase("NoRecord")); // No record found
-					$this->Page_Terminate("t04_siswalist.php"); // No matching record, return to list
+					$this->Page_Terminate("t08_nonrutinlist.php"); // No matching record, return to list
 				}
-
-				// Set up detail parameters
-				$this->SetUpDetailParms();
 				break;
 			case "A": // Add new record
 				$this->SendEmail = TRUE; // Send email on add success
 				if ($this->AddRow($this->OldRecordset)) { // Add successful
 					if ($this->getSuccessMessage() == "")
 						$this->setSuccessMessage($Language->Phrase("AddSuccess")); // Set up success message
-					if ($this->getCurrentDetailTable() <> "") // Master/detail add
-						$sReturnUrl = $this->GetDetailUrl();
-					else
-						$sReturnUrl = $this->getReturnUrl();
-					if (ew_GetPageName($sReturnUrl) == "t04_siswalist.php")
+					$sReturnUrl = $this->getReturnUrl();
+					if (ew_GetPageName($sReturnUrl) == "t08_nonrutinlist.php")
 						$sReturnUrl = $this->AddMasterUrl($sReturnUrl); // List page, return to list page with correct master key if necessary
-					elseif (ew_GetPageName($sReturnUrl) == "t04_siswaview.php")
+					elseif (ew_GetPageName($sReturnUrl) == "t08_nonrutinview.php")
 						$sReturnUrl = $this->GetViewUrl(); // View page, return to view page with keyurl directly
 					$this->Page_Terminate($sReturnUrl); // Clean up and return
 				} else {
 					$this->EventCancelled = TRUE; // Event cancelled
 					$this->RestoreFormValues(); // Add failed, restore form values
-
-					// Set up detail parameters
-					$this->SetUpDetailParms();
 				}
 		}
 
@@ -494,10 +472,8 @@ class ct04_siswa_add extends ct04_siswa {
 
 	// Load default values
 	function LoadDefaultValues() {
-		$this->NIS->CurrentValue = NULL;
-		$this->NIS->OldValue = $this->NIS->CurrentValue;
-		$this->Nama->CurrentValue = NULL;
-		$this->Nama->OldValue = $this->Nama->CurrentValue;
+		$this->Jenis->CurrentValue = NULL;
+		$this->Jenis->OldValue = $this->Jenis->CurrentValue;
 	}
 
 	// Load form values
@@ -505,11 +481,8 @@ class ct04_siswa_add extends ct04_siswa {
 
 		// Load from form
 		global $objForm;
-		if (!$this->NIS->FldIsDetailKey) {
-			$this->NIS->setFormValue($objForm->GetValue("x_NIS"));
-		}
-		if (!$this->Nama->FldIsDetailKey) {
-			$this->Nama->setFormValue($objForm->GetValue("x_Nama"));
+		if (!$this->Jenis->FldIsDetailKey) {
+			$this->Jenis->setFormValue($objForm->GetValue("x_Jenis"));
 		}
 	}
 
@@ -517,8 +490,7 @@ class ct04_siswa_add extends ct04_siswa {
 	function RestoreFormValues() {
 		global $objForm;
 		$this->LoadOldRecord();
-		$this->NIS->CurrentValue = $this->NIS->FormValue;
-		$this->Nama->CurrentValue = $this->Nama->FormValue;
+		$this->Jenis->CurrentValue = $this->Jenis->FormValue;
 	}
 
 	// Load row based on key values
@@ -551,8 +523,7 @@ class ct04_siswa_add extends ct04_siswa {
 		$row = &$rs->fields;
 		$this->Row_Selected($row);
 		$this->id->setDbValue($rs->fields('id'));
-		$this->NIS->setDbValue($rs->fields('NIS'));
-		$this->Nama->setDbValue($rs->fields('Nama'));
+		$this->Jenis->setDbValue($rs->fields('Jenis'));
 	}
 
 	// Load DbValue from recordset
@@ -560,8 +531,7 @@ class ct04_siswa_add extends ct04_siswa {
 		if (!$rs || !is_array($rs) && $rs->EOF) return;
 		$row = is_array($rs) ? $rs : $rs->fields;
 		$this->id->DbValue = $row['id'];
-		$this->NIS->DbValue = $row['NIS'];
-		$this->Nama->DbValue = $row['Nama'];
+		$this->Jenis->DbValue = $row['Jenis'];
 	}
 
 	// Load old record
@@ -598,8 +568,7 @@ class ct04_siswa_add extends ct04_siswa {
 
 		// Common render codes for all row types
 		// id
-		// NIS
-		// Nama
+		// Jenis
 
 		if ($this->RowType == EW_ROWTYPE_VIEW) { // View row
 
@@ -607,46 +576,27 @@ class ct04_siswa_add extends ct04_siswa {
 		$this->id->ViewValue = $this->id->CurrentValue;
 		$this->id->ViewCustomAttributes = "";
 
-		// NIS
-		$this->NIS->ViewValue = $this->NIS->CurrentValue;
-		$this->NIS->ViewCustomAttributes = "";
+		// Jenis
+		$this->Jenis->ViewValue = $this->Jenis->CurrentValue;
+		$this->Jenis->ViewCustomAttributes = "";
 
-		// Nama
-		$this->Nama->ViewValue = $this->Nama->CurrentValue;
-		$this->Nama->ViewCustomAttributes = "";
-
-			// NIS
-			$this->NIS->LinkCustomAttributes = "";
-			$this->NIS->HrefValue = "";
-			$this->NIS->TooltipValue = "";
-
-			// Nama
-			$this->Nama->LinkCustomAttributes = "";
-			$this->Nama->HrefValue = "";
-			$this->Nama->TooltipValue = "";
+			// Jenis
+			$this->Jenis->LinkCustomAttributes = "";
+			$this->Jenis->HrefValue = "";
+			$this->Jenis->TooltipValue = "";
 		} elseif ($this->RowType == EW_ROWTYPE_ADD) { // Add row
 
-			// NIS
-			$this->NIS->EditAttrs["class"] = "form-control";
-			$this->NIS->EditCustomAttributes = "";
-			$this->NIS->EditValue = ew_HtmlEncode($this->NIS->CurrentValue);
-			$this->NIS->PlaceHolder = ew_RemoveHtml($this->NIS->FldCaption());
-
-			// Nama
-			$this->Nama->EditAttrs["class"] = "form-control";
-			$this->Nama->EditCustomAttributes = "";
-			$this->Nama->EditValue = ew_HtmlEncode($this->Nama->CurrentValue);
-			$this->Nama->PlaceHolder = ew_RemoveHtml($this->Nama->FldCaption());
+			// Jenis
+			$this->Jenis->EditAttrs["class"] = "form-control";
+			$this->Jenis->EditCustomAttributes = "";
+			$this->Jenis->EditValue = ew_HtmlEncode($this->Jenis->CurrentValue);
+			$this->Jenis->PlaceHolder = ew_RemoveHtml($this->Jenis->FldCaption());
 
 			// Add refer script
-			// NIS
+			// Jenis
 
-			$this->NIS->LinkCustomAttributes = "";
-			$this->NIS->HrefValue = "";
-
-			// Nama
-			$this->Nama->LinkCustomAttributes = "";
-			$this->Nama->HrefValue = "";
+			$this->Jenis->LinkCustomAttributes = "";
+			$this->Jenis->HrefValue = "";
 		}
 		if ($this->RowType == EW_ROWTYPE_ADD ||
 			$this->RowType == EW_ROWTYPE_EDIT ||
@@ -669,18 +619,8 @@ class ct04_siswa_add extends ct04_siswa {
 		// Check if validation required
 		if (!EW_SERVER_VALIDATE)
 			return ($gsFormError == "");
-		if (!$this->NIS->FldIsDetailKey && !is_null($this->NIS->FormValue) && $this->NIS->FormValue == "") {
-			ew_AddMessage($gsFormError, str_replace("%s", $this->NIS->FldCaption(), $this->NIS->ReqErrMsg));
-		}
-		if (!$this->Nama->FldIsDetailKey && !is_null($this->Nama->FormValue) && $this->Nama->FormValue == "") {
-			ew_AddMessage($gsFormError, str_replace("%s", $this->Nama->FldCaption(), $this->Nama->ReqErrMsg));
-		}
-
-		// Validate detail grid
-		$DetailTblVar = explode(",", $this->getCurrentDetailTable());
-		if (in_array("t08_siswaspp", $DetailTblVar) && $GLOBALS["t08_siswaspp"]->DetailAdd) {
-			if (!isset($GLOBALS["t08_siswaspp_grid"])) $GLOBALS["t08_siswaspp_grid"] = new ct08_siswaspp_grid(); // get detail page object
-			$GLOBALS["t08_siswaspp_grid"]->ValidateGridForm();
+		if (!$this->Jenis->FldIsDetailKey && !is_null($this->Jenis->FormValue) && $this->Jenis->FormValue == "") {
+			ew_AddMessage($gsFormError, str_replace("%s", $this->Jenis->FldCaption(), $this->Jenis->ReqErrMsg));
 		}
 
 		// Return validate result
@@ -700,21 +640,14 @@ class ct04_siswa_add extends ct04_siswa {
 		global $Language, $Security;
 		$conn = &$this->Connection();
 
-		// Begin transaction
-		if ($this->getCurrentDetailTable() <> "")
-			$conn->BeginTrans();
-
 		// Load db values from rsold
 		if ($rsold) {
 			$this->LoadDbValues($rsold);
 		}
 		$rsnew = array();
 
-		// NIS
-		$this->NIS->SetDbValueDef($rsnew, $this->NIS->CurrentValue, "", FALSE);
-
-		// Nama
-		$this->Nama->SetDbValueDef($rsnew, $this->Nama->CurrentValue, "", FALSE);
+		// Jenis
+		$this->Jenis->SetDbValueDef($rsnew, $this->Jenis->CurrentValue, "", FALSE);
 
 		// Call Row Inserting event
 		$rs = ($rsold == NULL) ? NULL : $rsold->fields;
@@ -737,29 +670,6 @@ class ct04_siswa_add extends ct04_siswa {
 			}
 			$AddRow = FALSE;
 		}
-
-		// Add detail records
-		if ($AddRow) {
-			$DetailTblVar = explode(",", $this->getCurrentDetailTable());
-			if (in_array("t08_siswaspp", $DetailTblVar) && $GLOBALS["t08_siswaspp"]->DetailAdd) {
-				$GLOBALS["t08_siswaspp"]->siswa_id->setSessionValue($this->id->CurrentValue); // Set master key
-				if (!isset($GLOBALS["t08_siswaspp_grid"])) $GLOBALS["t08_siswaspp_grid"] = new ct08_siswaspp_grid(); // Get detail page object
-				$Security->LoadCurrentUserLevel($this->ProjectID . "t08_siswaspp"); // Load user level of detail table
-				$AddRow = $GLOBALS["t08_siswaspp_grid"]->GridInsert();
-				$Security->LoadCurrentUserLevel($this->ProjectID . $this->TableName); // Restore user level of master table
-				if (!$AddRow)
-					$GLOBALS["t08_siswaspp"]->siswa_id->setSessionValue(""); // Clear master key if insert failed
-			}
-		}
-
-		// Commit/Rollback transaction
-		if ($this->getCurrentDetailTable() <> "") {
-			if ($AddRow) {
-				$conn->CommitTrans(); // Commit transaction
-			} else {
-				$conn->RollbackTrans(); // Rollback transaction
-			}
-		}
 		if ($AddRow) {
 
 			// Call Row Inserted event
@@ -769,45 +679,12 @@ class ct04_siswa_add extends ct04_siswa {
 		return $AddRow;
 	}
 
-	// Set up detail parms based on QueryString
-	function SetUpDetailParms() {
-
-		// Get the keys for master table
-		if (isset($_GET[EW_TABLE_SHOW_DETAIL])) {
-			$sDetailTblVar = $_GET[EW_TABLE_SHOW_DETAIL];
-			$this->setCurrentDetailTable($sDetailTblVar);
-		} else {
-			$sDetailTblVar = $this->getCurrentDetailTable();
-		}
-		if ($sDetailTblVar <> "") {
-			$DetailTblVar = explode(",", $sDetailTblVar);
-			if (in_array("t08_siswaspp", $DetailTblVar)) {
-				if (!isset($GLOBALS["t08_siswaspp_grid"]))
-					$GLOBALS["t08_siswaspp_grid"] = new ct08_siswaspp_grid;
-				if ($GLOBALS["t08_siswaspp_grid"]->DetailAdd) {
-					if ($this->CopyRecord)
-						$GLOBALS["t08_siswaspp_grid"]->CurrentMode = "copy";
-					else
-						$GLOBALS["t08_siswaspp_grid"]->CurrentMode = "add";
-					$GLOBALS["t08_siswaspp_grid"]->CurrentAction = "gridadd";
-
-					// Save current master table to detail table
-					$GLOBALS["t08_siswaspp_grid"]->setCurrentMasterTable($this->TableVar);
-					$GLOBALS["t08_siswaspp_grid"]->setStartRecordNumber(1);
-					$GLOBALS["t08_siswaspp_grid"]->siswa_id->FldIsDetailKey = TRUE;
-					$GLOBALS["t08_siswaspp_grid"]->siswa_id->CurrentValue = $this->id->CurrentValue;
-					$GLOBALS["t08_siswaspp_grid"]->siswa_id->setSessionValue($GLOBALS["t08_siswaspp_grid"]->siswa_id->CurrentValue);
-				}
-			}
-		}
-	}
-
 	// Set up Breadcrumb
 	function SetupBreadcrumb() {
 		global $Breadcrumb, $Language;
 		$Breadcrumb = new cBreadcrumb();
 		$url = substr(ew_CurrentUrl(), strrpos(ew_CurrentUrl(), "/")+1);
-		$Breadcrumb->Add("list", $this->TableVar, $this->AddMasterUrl("t04_siswalist.php"), "", $this->TableVar, TRUE);
+		$Breadcrumb->Add("list", $this->TableVar, $this->AddMasterUrl("t08_nonrutinlist.php"), "", $this->TableVar, TRUE);
 		$PageId = ($this->CurrentAction == "C") ? "Copy" : "Add";
 		$Breadcrumb->Add("add", $PageId, $url);
 	}
@@ -900,29 +777,29 @@ class ct04_siswa_add extends ct04_siswa {
 <?php
 
 // Create page object
-if (!isset($t04_siswa_add)) $t04_siswa_add = new ct04_siswa_add();
+if (!isset($t08_nonrutin_add)) $t08_nonrutin_add = new ct08_nonrutin_add();
 
 // Page init
-$t04_siswa_add->Page_Init();
+$t08_nonrutin_add->Page_Init();
 
 // Page main
-$t04_siswa_add->Page_Main();
+$t08_nonrutin_add->Page_Main();
 
 // Global Page Rendering event (in userfn*.php)
 Page_Rendering();
 
 // Page Rendering event
-$t04_siswa_add->Page_Render();
+$t08_nonrutin_add->Page_Render();
 ?>
 <?php include_once "header.php" ?>
 <script type="text/javascript">
 
 // Form object
 var CurrentPageID = EW_PAGE_ID = "add";
-var CurrentForm = ft04_siswaadd = new ew_Form("ft04_siswaadd", "add");
+var CurrentForm = ft08_nonrutinadd = new ew_Form("ft08_nonrutinadd", "add");
 
 // Validate form
-ft04_siswaadd.Validate = function() {
+ft08_nonrutinadd.Validate = function() {
 	if (!this.ValidateRequired)
 		return true; // Ignore validation
 	var $ = jQuery, fobj = this.GetForm(), $fobj = $(fobj);
@@ -936,12 +813,9 @@ ft04_siswaadd.Validate = function() {
 	for (var i = startcnt; i <= rowcnt; i++) {
 		var infix = ($k[0]) ? String(i) : "";
 		$fobj.data("rowindex", infix);
-			elm = this.GetElements("x" + infix + "_NIS");
+			elm = this.GetElements("x" + infix + "_Jenis");
 			if (elm && !ew_IsHidden(elm) && !ew_HasValue(elm))
-				return this.OnError(elm, "<?php echo ew_JsEncode2(str_replace("%s", $t04_siswa->NIS->FldCaption(), $t04_siswa->NIS->ReqErrMsg)) ?>");
-			elm = this.GetElements("x" + infix + "_Nama");
-			if (elm && !ew_IsHidden(elm) && !ew_HasValue(elm))
-				return this.OnError(elm, "<?php echo ew_JsEncode2(str_replace("%s", $t04_siswa->Nama->FldCaption(), $t04_siswa->Nama->ReqErrMsg)) ?>");
+				return this.OnError(elm, "<?php echo ew_JsEncode2(str_replace("%s", $t08_nonrutin->Jenis->FldCaption(), $t08_nonrutin->Jenis->ReqErrMsg)) ?>");
 
 			// Fire Form_CustomValidate event
 			if (!this.Form_CustomValidate(fobj))
@@ -960,7 +834,7 @@ ft04_siswaadd.Validate = function() {
 }
 
 // Form_CustomValidate event
-ft04_siswaadd.Form_CustomValidate = 
+ft08_nonrutinadd.Form_CustomValidate = 
  function(fobj) { // DO NOT CHANGE THIS LINE!
 
  	// Your custom validation code here, return false if invalid. 
@@ -969,9 +843,9 @@ ft04_siswaadd.Form_CustomValidate =
 
 // Use JavaScript validation or not
 <?php if (EW_CLIENT_VALIDATE) { ?>
-ft04_siswaadd.ValidateRequired = true;
+ft08_nonrutinadd.ValidateRequired = true;
 <?php } else { ?>
-ft04_siswaadd.ValidateRequired = false; 
+ft08_nonrutinadd.ValidateRequired = false; 
 <?php } ?>
 
 // Dynamic selection lists
@@ -982,70 +856,52 @@ ft04_siswaadd.ValidateRequired = false;
 
 // Write your client script here, no need to add script tags.
 </script>
-<?php if (!$t04_siswa_add->IsModal) { ?>
+<?php if (!$t08_nonrutin_add->IsModal) { ?>
 <div class="ewToolbar">
 <?php $Breadcrumb->Render(); ?>
 <?php echo $Language->SelectionForm(); ?>
 <div class="clearfix"></div>
 </div>
 <?php } ?>
-<?php $t04_siswa_add->ShowPageHeader(); ?>
+<?php $t08_nonrutin_add->ShowPageHeader(); ?>
 <?php
-$t04_siswa_add->ShowMessage();
+$t08_nonrutin_add->ShowMessage();
 ?>
-<form name="ft04_siswaadd" id="ft04_siswaadd" class="<?php echo $t04_siswa_add->FormClassName ?>" action="<?php echo ew_CurrentPage() ?>" method="post">
-<?php if ($t04_siswa_add->CheckToken) { ?>
-<input type="hidden" name="<?php echo EW_TOKEN_NAME ?>" value="<?php echo $t04_siswa_add->Token ?>">
+<form name="ft08_nonrutinadd" id="ft08_nonrutinadd" class="<?php echo $t08_nonrutin_add->FormClassName ?>" action="<?php echo ew_CurrentPage() ?>" method="post">
+<?php if ($t08_nonrutin_add->CheckToken) { ?>
+<input type="hidden" name="<?php echo EW_TOKEN_NAME ?>" value="<?php echo $t08_nonrutin_add->Token ?>">
 <?php } ?>
-<input type="hidden" name="t" value="t04_siswa">
+<input type="hidden" name="t" value="t08_nonrutin">
 <input type="hidden" name="a_add" id="a_add" value="A">
-<?php if ($t04_siswa_add->IsModal) { ?>
+<?php if ($t08_nonrutin_add->IsModal) { ?>
 <input type="hidden" name="modal" value="1">
 <?php } ?>
 <div>
-<?php if ($t04_siswa->NIS->Visible) { // NIS ?>
-	<div id="r_NIS" class="form-group">
-		<label id="elh_t04_siswa_NIS" for="x_NIS" class="col-sm-2 control-label ewLabel"><?php echo $t04_siswa->NIS->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></label>
-		<div class="col-sm-10"><div<?php echo $t04_siswa->NIS->CellAttributes() ?>>
-<span id="el_t04_siswa_NIS">
-<input type="text" data-table="t04_siswa" data-field="x_NIS" name="x_NIS" id="x_NIS" size="30" maxlength="100" placeholder="<?php echo ew_HtmlEncode($t04_siswa->NIS->getPlaceHolder()) ?>" value="<?php echo $t04_siswa->NIS->EditValue ?>"<?php echo $t04_siswa->NIS->EditAttributes() ?>>
+<?php if ($t08_nonrutin->Jenis->Visible) { // Jenis ?>
+	<div id="r_Jenis" class="form-group">
+		<label id="elh_t08_nonrutin_Jenis" for="x_Jenis" class="col-sm-2 control-label ewLabel"><?php echo $t08_nonrutin->Jenis->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></label>
+		<div class="col-sm-10"><div<?php echo $t08_nonrutin->Jenis->CellAttributes() ?>>
+<span id="el_t08_nonrutin_Jenis">
+<input type="text" data-table="t08_nonrutin" data-field="x_Jenis" name="x_Jenis" id="x_Jenis" size="30" maxlength="50" placeholder="<?php echo ew_HtmlEncode($t08_nonrutin->Jenis->getPlaceHolder()) ?>" value="<?php echo $t08_nonrutin->Jenis->EditValue ?>"<?php echo $t08_nonrutin->Jenis->EditAttributes() ?>>
 </span>
-<?php echo $t04_siswa->NIS->CustomMsg ?></div></div>
-	</div>
-<?php } ?>
-<?php if ($t04_siswa->Nama->Visible) { // Nama ?>
-	<div id="r_Nama" class="form-group">
-		<label id="elh_t04_siswa_Nama" for="x_Nama" class="col-sm-2 control-label ewLabel"><?php echo $t04_siswa->Nama->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></label>
-		<div class="col-sm-10"><div<?php echo $t04_siswa->Nama->CellAttributes() ?>>
-<span id="el_t04_siswa_Nama">
-<input type="text" data-table="t04_siswa" data-field="x_Nama" name="x_Nama" id="x_Nama" size="30" maxlength="100" placeholder="<?php echo ew_HtmlEncode($t04_siswa->Nama->getPlaceHolder()) ?>" value="<?php echo $t04_siswa->Nama->EditValue ?>"<?php echo $t04_siswa->Nama->EditAttributes() ?>>
-</span>
-<?php echo $t04_siswa->Nama->CustomMsg ?></div></div>
+<?php echo $t08_nonrutin->Jenis->CustomMsg ?></div></div>
 	</div>
 <?php } ?>
 </div>
-<?php
-	if (in_array("t08_siswaspp", explode(",", $t04_siswa->getCurrentDetailTable())) && $t08_siswaspp->DetailAdd) {
-?>
-<?php if ($t04_siswa->getCurrentDetailTable() <> "") { ?>
-<h4 class="ewDetailCaption"><?php echo $Language->TablePhrase("t08_siswaspp", "TblCaption") ?></h4>
-<?php } ?>
-<?php include_once "t08_siswasppgrid.php" ?>
-<?php } ?>
-<?php if (!$t04_siswa_add->IsModal) { ?>
+<?php if (!$t08_nonrutin_add->IsModal) { ?>
 <div class="form-group">
 	<div class="col-sm-offset-2 col-sm-10">
 <button class="btn btn-primary ewButton" name="btnAction" id="btnAction" type="submit"><?php echo $Language->Phrase("AddBtn") ?></button>
-<button class="btn btn-default ewButton" name="btnCancel" id="btnCancel" type="button" data-href="<?php echo $t04_siswa_add->getReturnUrl() ?>"><?php echo $Language->Phrase("CancelBtn") ?></button>
+<button class="btn btn-default ewButton" name="btnCancel" id="btnCancel" type="button" data-href="<?php echo $t08_nonrutin_add->getReturnUrl() ?>"><?php echo $Language->Phrase("CancelBtn") ?></button>
 	</div>
 </div>
 <?php } ?>
 </form>
 <script type="text/javascript">
-ft04_siswaadd.Init();
+ft08_nonrutinadd.Init();
 </script>
 <?php
-$t04_siswa_add->ShowPageFooter();
+$t08_nonrutin_add->ShowPageFooter();
 if (EW_DEBUG_ENABLED)
 	echo ew_DebugMsg();
 ?>
@@ -1057,5 +913,5 @@ if (EW_DEBUG_ENABLED)
 </script>
 <?php include_once "footer.php" ?>
 <?php
-$t04_siswa_add->Page_Terminate();
+$t08_nonrutin_add->Page_Terminate();
 ?>
