@@ -1,0 +1,6 @@
+2:27 PM 12/29/2018
+untuk startup awal atau ganti tahun ajaran :: "tabel" yang perlu digenerate otomatis adalah ::
+- periode
+- daftarsiswamaster
+- daftarsiswadetail
+- tahunajaran

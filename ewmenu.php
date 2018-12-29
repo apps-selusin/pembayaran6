@@ -4,6 +4,7 @@
 
 // Generate all menu items
 $RootMenu->IsRoot = TRUE;
+$RootMenu->AddMenuItem(55, "mi_v03_kartuspp", $Language->MenuPhrase("55", "MenuText"), "v03_kartuspplist.php", -1, "", AllowListMenu('{699E0CB8-ECC6-4DDA-93F3-012C887E6B12}v03_kartuspp'), FALSE, FALSE);
 $RootMenu->AddMenuItem(13, "mci_Menu_Utama", $Language->MenuPhrase("13", "MenuText"), "", -1, "", TRUE, TRUE, TRUE);
 $RootMenu->AddMenuItem(6, "mi_cf01_home_php", $Language->MenuPhrase("6", "MenuText"), "cf01_home.php", 13, "", AllowListMenu('{699E0CB8-ECC6-4DDA-93F3-012C887E6B12}cf01_home.php'), FALSE, TRUE);
 $RootMenu->AddMenuItem(52, "mi_t09_bayarmaster", $Language->MenuPhrase("52", "MenuText"), "t09_bayarmasterlist.php", 13, "", AllowListMenu('{699E0CB8-ECC6-4DDA-93F3-012C887E6B12}t09_bayarmaster'), FALSE, FALSE);

@@ -404,7 +404,7 @@ class ct10_bayardetail_grid extends ct10_bayardetail {
 	var $SelectedCount = 0;
 	var $SelectedIndex = 0;
 	var $ShowOtherOptions = FALSE;
-	var $DisplayRecs = 20;
+	var $DisplayRecs = 50;
 	var $StartRec;
 	var $StopRec;
 	var $TotalRecs = 0;
@@ -486,7 +486,7 @@ class ct10_bayardetail_grid extends ct10_bayardetail {
 		if ($this->getRecordsPerPage() <> "") {
 			$this->DisplayRecs = $this->getRecordsPerPage(); // Restore from Session
 		} else {
-			$this->DisplayRecs = 20; // Load default
+			$this->DisplayRecs = 50; // Load default
 		}
 
 		// Load Sorting Order
@@ -545,7 +545,7 @@ class ct10_bayardetail_grid extends ct10_bayardetail {
 				if (strtolower($sWrk) == "all") { // Display all records
 					$this->DisplayRecs = -1;
 				} else {
-					$this->DisplayRecs = 20; // Non-numeric, load default
+					$this->DisplayRecs = 50; // Non-numeric, load default
 				}
 			}
 			$this->setRecordsPerPage($this->DisplayRecs); // Save to Session
