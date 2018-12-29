@@ -1,12 +1,12 @@
 <?php
 
 // Global variable for table object
-$t05_daftarsiswamaster = NULL;
+$t10_bayardetail = NULL;
 
 //
-// Table class for t05_daftarsiswamaster
+// Table class for t10_bayardetail
 //
-class ct05_daftarsiswamaster extends cTable {
+class ct10_bayardetail extends cTable {
 	var $AuditTrailOnAdd = TRUE;
 	var $AuditTrailOnEdit = TRUE;
 	var $AuditTrailOnDelete = TRUE;
@@ -14,9 +14,12 @@ class ct05_daftarsiswamaster extends cTable {
 	var $AuditTrailOnViewData = FALSE;
 	var $AuditTrailOnSearch = FALSE;
 	var $id;
-	var $tahunajaran_id;
-	var $sekolah_id;
-	var $kelas_id;
+	var $bayarmaster_id;
+	var $siswaspp_id;
+	var $Keterangan;
+	var $Keterangan2;
+	var $Keterangan3;
+	var $Jumlah;
 
 	//
 	// Table class constructor
@@ -26,12 +29,12 @@ class ct05_daftarsiswamaster extends cTable {
 
 		// Language object
 		if (!isset($Language)) $Language = new cLanguage();
-		$this->TableVar = 't05_daftarsiswamaster';
-		$this->TableName = 't05_daftarsiswamaster';
+		$this->TableVar = 't10_bayardetail';
+		$this->TableName = 't10_bayardetail';
 		$this->TableType = 'TABLE';
 
 		// Update Table
-		$this->UpdateTable = "`t05_daftarsiswamaster`";
+		$this->UpdateTable = "`t10_bayardetail`";
 		$this->DBID = 'DB';
 		$this->ExportAll = TRUE;
 		$this->ExportPageBreakCount = 0; // Page break per every n record (PDF only)
@@ -39,9 +42,9 @@ class ct05_daftarsiswamaster extends cTable {
 		$this->ExportPageSize = "a4"; // Page size (PDF only)
 		$this->ExportExcelPageOrientation = ""; // Page orientation (PHPExcel only)
 		$this->ExportExcelPageSize = ""; // Page size (PHPExcel only)
-		$this->DetailAdd = FALSE; // Allow detail add
-		$this->DetailEdit = FALSE; // Allow detail edit
-		$this->DetailView = FALSE; // Allow detail view
+		$this->DetailAdd = TRUE; // Allow detail add
+		$this->DetailEdit = TRUE; // Allow detail edit
+		$this->DetailView = TRUE; // Allow detail view
 		$this->ShowMultipleDetails = FALSE; // Show multiple details
 		$this->GridAddRowCount = 1;
 		$this->AllowAddDeleteRow = ew_AllowAddDeleteRow(); // Allow add/delete row
@@ -49,34 +52,47 @@ class ct05_daftarsiswamaster extends cTable {
 		$this->BasicSearch = new cBasicSearch($this->TableVar);
 
 		// id
-		$this->id = new cField('t05_daftarsiswamaster', 't05_daftarsiswamaster', 'x_id', 'id', '`id`', '`id`', 3, -1, FALSE, '`id`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'NO');
+		$this->id = new cField('t10_bayardetail', 't10_bayardetail', 'x_id', 'id', '`id`', '`id`', 3, -1, FALSE, '`id`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'NO');
 		$this->id->Sortable = TRUE; // Allow sort
 		$this->id->FldDefaultErrMsg = $Language->Phrase("IncorrectInteger");
 		$this->fields['id'] = &$this->id;
 
-		// tahunajaran_id
-		$this->tahunajaran_id = new cField('t05_daftarsiswamaster', 't05_daftarsiswamaster', 'x_tahunajaran_id', 'tahunajaran_id', '`tahunajaran_id`', '`tahunajaran_id`', 3, -1, FALSE, '`tahunajaran_id`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'SELECT');
-		$this->tahunajaran_id->Sortable = TRUE; // Allow sort
-		$this->tahunajaran_id->UsePleaseSelect = TRUE; // Use PleaseSelect by default
-		$this->tahunajaran_id->PleaseSelectText = $Language->Phrase("PleaseSelect"); // PleaseSelect text
-		$this->tahunajaran_id->FldDefaultErrMsg = $Language->Phrase("IncorrectInteger");
-		$this->fields['tahunajaran_id'] = &$this->tahunajaran_id;
+		// bayarmaster_id
+		$this->bayarmaster_id = new cField('t10_bayardetail', 't10_bayardetail', 'x_bayarmaster_id', 'bayarmaster_id', '`bayarmaster_id`', '`bayarmaster_id`', 3, -1, FALSE, '`bayarmaster_id`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->bayarmaster_id->Sortable = TRUE; // Allow sort
+		$this->bayarmaster_id->FldDefaultErrMsg = $Language->Phrase("IncorrectInteger");
+		$this->fields['bayarmaster_id'] = &$this->bayarmaster_id;
 
-		// sekolah_id
-		$this->sekolah_id = new cField('t05_daftarsiswamaster', 't05_daftarsiswamaster', 'x_sekolah_id', 'sekolah_id', '`sekolah_id`', '`sekolah_id`', 3, -1, FALSE, '`sekolah_id`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'SELECT');
-		$this->sekolah_id->Sortable = TRUE; // Allow sort
-		$this->sekolah_id->UsePleaseSelect = TRUE; // Use PleaseSelect by default
-		$this->sekolah_id->PleaseSelectText = $Language->Phrase("PleaseSelect"); // PleaseSelect text
-		$this->sekolah_id->FldDefaultErrMsg = $Language->Phrase("IncorrectInteger");
-		$this->fields['sekolah_id'] = &$this->sekolah_id;
+		// siswaspp_id
+		$this->siswaspp_id = new cField('t10_bayardetail', 't10_bayardetail', 'x_siswaspp_id', 'siswaspp_id', '`siswaspp_id`', '`siswaspp_id`', 3, -1, FALSE, '`siswaspp_id`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'SELECT');
+		$this->siswaspp_id->Sortable = TRUE; // Allow sort
+		$this->siswaspp_id->UsePleaseSelect = TRUE; // Use PleaseSelect by default
+		$this->siswaspp_id->PleaseSelectText = $Language->Phrase("PleaseSelect"); // PleaseSelect text
+		$this->siswaspp_id->FldDefaultErrMsg = $Language->Phrase("IncorrectInteger");
+		$this->fields['siswaspp_id'] = &$this->siswaspp_id;
 
-		// kelas_id
-		$this->kelas_id = new cField('t05_daftarsiswamaster', 't05_daftarsiswamaster', 'x_kelas_id', 'kelas_id', '`kelas_id`', '`kelas_id`', 3, -1, FALSE, '`kelas_id`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'SELECT');
-		$this->kelas_id->Sortable = TRUE; // Allow sort
-		$this->kelas_id->UsePleaseSelect = TRUE; // Use PleaseSelect by default
-		$this->kelas_id->PleaseSelectText = $Language->Phrase("PleaseSelect"); // PleaseSelect text
-		$this->kelas_id->FldDefaultErrMsg = $Language->Phrase("IncorrectInteger");
-		$this->fields['kelas_id'] = &$this->kelas_id;
+		// Keterangan
+		$this->Keterangan = new cField('t10_bayardetail', 't10_bayardetail', 'x_Keterangan', 'Keterangan', '`Keterangan`', '`Keterangan`', 200, -1, FALSE, '`Keterangan`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->Keterangan->Sortable = TRUE; // Allow sort
+		$this->fields['Keterangan'] = &$this->Keterangan;
+
+		// Keterangan2
+		$this->Keterangan2 = new cField('t10_bayardetail', 't10_bayardetail', 'x_Keterangan2', 'Keterangan2', '`Keterangan2`', '`Keterangan2`', 200, -1, FALSE, '`Keterangan2`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'SELECT');
+		$this->Keterangan2->Sortable = TRUE; // Allow sort
+		$this->Keterangan2->UsePleaseSelect = TRUE; // Use PleaseSelect by default
+		$this->Keterangan2->PleaseSelectText = $Language->Phrase("PleaseSelect"); // PleaseSelect text
+		$this->fields['Keterangan2'] = &$this->Keterangan2;
+
+		// Keterangan3
+		$this->Keterangan3 = new cField('t10_bayardetail', 't10_bayardetail', 'x_Keterangan3', 'Keterangan3', '`Keterangan3`', '`Keterangan3`', 200, -1, FALSE, '`Keterangan3`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->Keterangan3->Sortable = TRUE; // Allow sort
+		$this->fields['Keterangan3'] = &$this->Keterangan3;
+
+		// Jumlah
+		$this->Jumlah = new cField('t10_bayardetail', 't10_bayardetail', 'x_Jumlah', 'Jumlah', '`Jumlah`', '`Jumlah`', 4, -1, FALSE, '`Jumlah`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->Jumlah->Sortable = TRUE; // Allow sort
+		$this->Jumlah->FldDefaultErrMsg = $Language->Phrase("IncorrectFloat");
+		$this->fields['Jumlah'] = &$this->Jumlah;
 	}
 
 	// Set Field Visibility
@@ -113,35 +129,58 @@ class ct05_daftarsiswamaster extends cTable {
 		}
 	}
 
-	// Current detail table name
-	function getCurrentDetailTable() {
-		return @$_SESSION[EW_PROJECT_NAME . "_" . $this->TableVar . "_" . EW_TABLE_DETAIL_TABLE];
+	// Current master table name
+	function getCurrentMasterTable() {
+		return @$_SESSION[EW_PROJECT_NAME . "_" . $this->TableVar . "_" . EW_TABLE_MASTER_TABLE];
 	}
 
-	function setCurrentDetailTable($v) {
-		$_SESSION[EW_PROJECT_NAME . "_" . $this->TableVar . "_" . EW_TABLE_DETAIL_TABLE] = $v;
+	function setCurrentMasterTable($v) {
+		$_SESSION[EW_PROJECT_NAME . "_" . $this->TableVar . "_" . EW_TABLE_MASTER_TABLE] = $v;
 	}
 
-	// Get detail url
-	function GetDetailUrl() {
+	// Session master WHERE clause
+	function GetMasterFilter() {
 
-		// Detail url
-		$sDetailUrl = "";
-		if ($this->getCurrentDetailTable() == "t06_daftarsiswadetail") {
-			$sDetailUrl = $GLOBALS["t06_daftarsiswadetail"]->GetListUrl() . "?" . EW_TABLE_SHOW_MASTER . "=" . $this->TableVar;
-			$sDetailUrl .= "&fk_id=" . urlencode($this->id->CurrentValue);
+		// Master filter
+		$sMasterFilter = "";
+		if ($this->getCurrentMasterTable() == "t09_bayarmaster") {
+			if ($this->bayarmaster_id->getSessionValue() <> "")
+				$sMasterFilter .= "`id`=" . ew_QuotedValue($this->bayarmaster_id->getSessionValue(), EW_DATATYPE_NUMBER, "DB");
+			else
+				return "";
 		}
-		if ($sDetailUrl == "") {
-			$sDetailUrl = "t05_daftarsiswamasterlist.php";
+		return $sMasterFilter;
+	}
+
+	// Session detail WHERE clause
+	function GetDetailFilter() {
+
+		// Detail filter
+		$sDetailFilter = "";
+		if ($this->getCurrentMasterTable() == "t09_bayarmaster") {
+			if ($this->bayarmaster_id->getSessionValue() <> "")
+				$sDetailFilter .= "`bayarmaster_id`=" . ew_QuotedValue($this->bayarmaster_id->getSessionValue(), EW_DATATYPE_NUMBER, "DB");
+			else
+				return "";
 		}
-		return $sDetailUrl;
+		return $sDetailFilter;
+	}
+
+	// Master filter
+	function SqlMasterFilter_t09_bayarmaster() {
+		return "`id`=@id@";
+	}
+
+	// Detail filter
+	function SqlDetailFilter_t09_bayarmaster() {
+		return "`bayarmaster_id`=@bayarmaster_id@";
 	}
 
 	// Table level SQL
 	var $_SqlFrom = "";
 
 	function getSqlFrom() { // From
-		return ($this->_SqlFrom <> "") ? $this->_SqlFrom : "`t05_daftarsiswamaster`";
+		return ($this->_SqlFrom <> "") ? $this->_SqlFrom : "`t10_bayardetail`";
 	}
 
 	function SqlFrom() { // For backward compatibility
@@ -455,7 +494,7 @@ class ct05_daftarsiswamaster extends cTable {
 		if (@$_SESSION[$name] <> "") {
 			return $_SESSION[$name];
 		} else {
-			return "t05_daftarsiswamasterlist.php";
+			return "t10_bayardetaillist.php";
 		}
 	}
 
@@ -465,33 +504,30 @@ class ct05_daftarsiswamaster extends cTable {
 
 	// List URL
 	function GetListUrl() {
-		return "t05_daftarsiswamasterlist.php";
+		return "t10_bayardetaillist.php";
 	}
 
 	// View URL
 	function GetViewUrl($parm = "") {
 		if ($parm <> "")
-			$url = $this->KeyUrl("t05_daftarsiswamasterview.php", $this->UrlParm($parm));
+			$url = $this->KeyUrl("t10_bayardetailview.php", $this->UrlParm($parm));
 		else
-			$url = $this->KeyUrl("t05_daftarsiswamasterview.php", $this->UrlParm(EW_TABLE_SHOW_DETAIL . "="));
+			$url = $this->KeyUrl("t10_bayardetailview.php", $this->UrlParm(EW_TABLE_SHOW_DETAIL . "="));
 		return $this->AddMasterUrl($url);
 	}
 
 	// Add URL
 	function GetAddUrl($parm = "") {
 		if ($parm <> "")
-			$url = "t05_daftarsiswamasteradd.php?" . $this->UrlParm($parm);
+			$url = "t10_bayardetailadd.php?" . $this->UrlParm($parm);
 		else
-			$url = "t05_daftarsiswamasteradd.php";
+			$url = "t10_bayardetailadd.php";
 		return $this->AddMasterUrl($url);
 	}
 
 	// Edit URL
 	function GetEditUrl($parm = "") {
-		if ($parm <> "")
-			$url = $this->KeyUrl("t05_daftarsiswamasteredit.php", $this->UrlParm($parm));
-		else
-			$url = $this->KeyUrl("t05_daftarsiswamasteredit.php", $this->UrlParm(EW_TABLE_SHOW_DETAIL . "="));
+		$url = $this->KeyUrl("t10_bayardetailedit.php", $this->UrlParm($parm));
 		return $this->AddMasterUrl($url);
 	}
 
@@ -503,10 +539,7 @@ class ct05_daftarsiswamaster extends cTable {
 
 	// Copy URL
 	function GetCopyUrl($parm = "") {
-		if ($parm <> "")
-			$url = $this->KeyUrl("t05_daftarsiswamasteradd.php", $this->UrlParm($parm));
-		else
-			$url = $this->KeyUrl("t05_daftarsiswamasteradd.php", $this->UrlParm(EW_TABLE_SHOW_DETAIL . "="));
+		$url = $this->KeyUrl("t10_bayardetailadd.php", $this->UrlParm($parm));
 		return $this->AddMasterUrl($url);
 	}
 
@@ -518,11 +551,15 @@ class ct05_daftarsiswamaster extends cTable {
 
 	// Delete URL
 	function GetDeleteUrl() {
-		return $this->KeyUrl("t05_daftarsiswamasterdelete.php", $this->UrlParm());
+		return $this->KeyUrl("t10_bayardetaildelete.php", $this->UrlParm());
 	}
 
 	// Add master url
 	function AddMasterUrl($url) {
+		if ($this->getCurrentMasterTable() == "t09_bayarmaster" && strpos($url, EW_TABLE_SHOW_MASTER . "=") === FALSE) {
+			$url .= (strpos($url, "?") !== FALSE ? "&" : "?") . EW_TABLE_SHOW_MASTER . "=" . $this->getCurrentMasterTable();
+			$url .= "&fk_id=" . urlencode($this->bayarmaster_id->CurrentValue);
+		}
 		return $url;
 	}
 
@@ -620,9 +657,12 @@ class ct05_daftarsiswamaster extends cTable {
 	// Load row values from recordset
 	function LoadListRowValues(&$rs) {
 		$this->id->setDbValue($rs->fields('id'));
-		$this->tahunajaran_id->setDbValue($rs->fields('tahunajaran_id'));
-		$this->sekolah_id->setDbValue($rs->fields('sekolah_id'));
-		$this->kelas_id->setDbValue($rs->fields('kelas_id'));
+		$this->bayarmaster_id->setDbValue($rs->fields('bayarmaster_id'));
+		$this->siswaspp_id->setDbValue($rs->fields('siswaspp_id'));
+		$this->Keterangan->setDbValue($rs->fields('Keterangan'));
+		$this->Keterangan2->setDbValue($rs->fields('Keterangan2'));
+		$this->Keterangan3->setDbValue($rs->fields('Keterangan3'));
+		$this->Jumlah->setDbValue($rs->fields('Jumlah'));
 	}
 
 	// Render list row values
@@ -634,102 +674,95 @@ class ct05_daftarsiswamaster extends cTable {
 
    // Common render codes
 		// id
-		// tahunajaran_id
-		// sekolah_id
-		// kelas_id
+		// bayarmaster_id
+		// siswaspp_id
+		// Keterangan
+		// Keterangan2
+		// Keterangan3
+		// Jumlah
 		// id
 
 		$this->id->ViewValue = $this->id->CurrentValue;
 		$this->id->ViewCustomAttributes = "";
 
-		// tahunajaran_id
-		if (strval($this->tahunajaran_id->CurrentValue) <> "") {
-			$sFilterWrk = "`id`" . ew_SearchString("=", $this->tahunajaran_id->CurrentValue, EW_DATATYPE_NUMBER, "");
-		$sSqlWrk = "SELECT `id`, `TahunAjaran` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `t01_tahunajaran`";
-		$sWhereWrk = "";
-		$this->tahunajaran_id->LookupFilters = array();
-		ew_AddFilter($sWhereWrk, $sFilterWrk);
-		$this->Lookup_Selecting($this->tahunajaran_id, $sWhereWrk); // Call Lookup selecting
-		if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
-			$rswrk = Conn()->Execute($sSqlWrk);
-			if ($rswrk && !$rswrk->EOF) { // Lookup values found
-				$arwrk = array();
-				$arwrk[1] = $rswrk->fields('DispFld');
-				$this->tahunajaran_id->ViewValue = $this->tahunajaran_id->DisplayValue($arwrk);
-				$rswrk->Close();
-			} else {
-				$this->tahunajaran_id->ViewValue = $this->tahunajaran_id->CurrentValue;
-			}
-		} else {
-			$this->tahunajaran_id->ViewValue = NULL;
-		}
-		$this->tahunajaran_id->ViewCustomAttributes = "";
+		// bayarmaster_id
+		$this->bayarmaster_id->ViewValue = $this->bayarmaster_id->CurrentValue;
+		$this->bayarmaster_id->ViewCustomAttributes = "";
 
-		// sekolah_id
-		if (strval($this->sekolah_id->CurrentValue) <> "") {
-			$sFilterWrk = "`id`" . ew_SearchString("=", $this->sekolah_id->CurrentValue, EW_DATATYPE_NUMBER, "");
-		$sSqlWrk = "SELECT `id`, `Sekolah` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `t02_sekolah`";
+		// siswaspp_id
+		if (strval($this->siswaspp_id->CurrentValue) <> "") {
+			$sFilterWrk = "`id`" . ew_SearchString("=", $this->siswaspp_id->CurrentValue, EW_DATATYPE_NUMBER, "");
+		$sSqlWrk = "SELECT `id`, `SPP` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `v01_siswaspp`";
 		$sWhereWrk = "";
-		$this->sekolah_id->LookupFilters = array();
+		$this->siswaspp_id->LookupFilters = array();
 		ew_AddFilter($sWhereWrk, $sFilterWrk);
-		$this->Lookup_Selecting($this->sekolah_id, $sWhereWrk); // Call Lookup selecting
+		$this->Lookup_Selecting($this->siswaspp_id, $sWhereWrk); // Call Lookup selecting
 		if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
 			$rswrk = Conn()->Execute($sSqlWrk);
 			if ($rswrk && !$rswrk->EOF) { // Lookup values found
 				$arwrk = array();
 				$arwrk[1] = $rswrk->fields('DispFld');
-				$this->sekolah_id->ViewValue = $this->sekolah_id->DisplayValue($arwrk);
+				$this->siswaspp_id->ViewValue = $this->siswaspp_id->DisplayValue($arwrk);
 				$rswrk->Close();
 			} else {
-				$this->sekolah_id->ViewValue = $this->sekolah_id->CurrentValue;
+				$this->siswaspp_id->ViewValue = $this->siswaspp_id->CurrentValue;
 			}
 		} else {
-			$this->sekolah_id->ViewValue = NULL;
+			$this->siswaspp_id->ViewValue = NULL;
 		}
-		$this->sekolah_id->ViewCustomAttributes = "";
+		$this->siswaspp_id->ViewCustomAttributes = "";
 
-		// kelas_id
-		if (strval($this->kelas_id->CurrentValue) <> "") {
-			$sFilterWrk = "`id`" . ew_SearchString("=", $this->kelas_id->CurrentValue, EW_DATATYPE_NUMBER, "");
-		$sSqlWrk = "SELECT `id`, `Kelas` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `t03_kelas`";
-		$sWhereWrk = "";
-		$this->kelas_id->LookupFilters = array();
-		ew_AddFilter($sWhereWrk, $sFilterWrk);
-		$this->Lookup_Selecting($this->kelas_id, $sWhereWrk); // Call Lookup selecting
-		if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
-			$rswrk = Conn()->Execute($sSqlWrk);
-			if ($rswrk && !$rswrk->EOF) { // Lookup values found
-				$arwrk = array();
-				$arwrk[1] = $rswrk->fields('DispFld');
-				$this->kelas_id->ViewValue = $this->kelas_id->DisplayValue($arwrk);
-				$rswrk->Close();
-			} else {
-				$this->kelas_id->ViewValue = $this->kelas_id->CurrentValue;
-			}
-		} else {
-			$this->kelas_id->ViewValue = NULL;
-		}
-		$this->kelas_id->ViewCustomAttributes = "";
+		// Keterangan
+		$this->Keterangan->ViewValue = $this->Keterangan->CurrentValue;
+		$this->Keterangan->ViewCustomAttributes = "";
+
+		// Keterangan2
+		$this->Keterangan2->ViewCustomAttributes = "";
+
+		// Keterangan3
+		$this->Keterangan3->ViewValue = $this->Keterangan3->CurrentValue;
+		$this->Keterangan3->ViewCustomAttributes = "";
+
+		// Jumlah
+		$this->Jumlah->ViewValue = $this->Jumlah->CurrentValue;
+		$this->Jumlah->ViewValue = ew_FormatNumber($this->Jumlah->ViewValue, 2, -2, -2, -2);
+		$this->Jumlah->CellCssStyle .= "text-align: right;";
+		$this->Jumlah->ViewCustomAttributes = "";
 
 		// id
 		$this->id->LinkCustomAttributes = "";
 		$this->id->HrefValue = "";
 		$this->id->TooltipValue = "";
 
-		// tahunajaran_id
-		$this->tahunajaran_id->LinkCustomAttributes = "";
-		$this->tahunajaran_id->HrefValue = "";
-		$this->tahunajaran_id->TooltipValue = "";
+		// bayarmaster_id
+		$this->bayarmaster_id->LinkCustomAttributes = "";
+		$this->bayarmaster_id->HrefValue = "";
+		$this->bayarmaster_id->TooltipValue = "";
 
-		// sekolah_id
-		$this->sekolah_id->LinkCustomAttributes = "";
-		$this->sekolah_id->HrefValue = "";
-		$this->sekolah_id->TooltipValue = "";
+		// siswaspp_id
+		$this->siswaspp_id->LinkCustomAttributes = "";
+		$this->siswaspp_id->HrefValue = "";
+		$this->siswaspp_id->TooltipValue = "";
 
-		// kelas_id
-		$this->kelas_id->LinkCustomAttributes = "";
-		$this->kelas_id->HrefValue = "";
-		$this->kelas_id->TooltipValue = "";
+		// Keterangan
+		$this->Keterangan->LinkCustomAttributes = "";
+		$this->Keterangan->HrefValue = "";
+		$this->Keterangan->TooltipValue = "";
+
+		// Keterangan2
+		$this->Keterangan2->LinkCustomAttributes = "";
+		$this->Keterangan2->HrefValue = "";
+		$this->Keterangan2->TooltipValue = "";
+
+		// Keterangan3
+		$this->Keterangan3->LinkCustomAttributes = "";
+		$this->Keterangan3->HrefValue = "";
+		$this->Keterangan3->TooltipValue = "";
+
+		// Jumlah
+		$this->Jumlah->LinkCustomAttributes = "";
+		$this->Jumlah->HrefValue = "";
+		$this->Jumlah->TooltipValue = "";
 
 		// Call Row Rendered event
 		$this->Row_Rendered();
@@ -748,17 +781,44 @@ class ct05_daftarsiswamaster extends cTable {
 		$this->id->EditValue = $this->id->CurrentValue;
 		$this->id->ViewCustomAttributes = "";
 
-		// tahunajaran_id
-		$this->tahunajaran_id->EditAttrs["class"] = "form-control";
-		$this->tahunajaran_id->EditCustomAttributes = "";
+		// bayarmaster_id
+		$this->bayarmaster_id->EditAttrs["class"] = "form-control";
+		$this->bayarmaster_id->EditCustomAttributes = "";
+		if ($this->bayarmaster_id->getSessionValue() <> "") {
+			$this->bayarmaster_id->CurrentValue = $this->bayarmaster_id->getSessionValue();
+		$this->bayarmaster_id->ViewValue = $this->bayarmaster_id->CurrentValue;
+		$this->bayarmaster_id->ViewCustomAttributes = "";
+		} else {
+		$this->bayarmaster_id->EditValue = $this->bayarmaster_id->CurrentValue;
+		$this->bayarmaster_id->PlaceHolder = ew_RemoveHtml($this->bayarmaster_id->FldCaption());
+		}
 
-		// sekolah_id
-		$this->sekolah_id->EditAttrs["class"] = "form-control";
-		$this->sekolah_id->EditCustomAttributes = "";
+		// siswaspp_id
+		$this->siswaspp_id->EditAttrs["class"] = "form-control";
+		$this->siswaspp_id->EditCustomAttributes = "";
 
-		// kelas_id
-		$this->kelas_id->EditAttrs["class"] = "form-control";
-		$this->kelas_id->EditCustomAttributes = "";
+		// Keterangan
+		$this->Keterangan->EditAttrs["class"] = "form-control";
+		$this->Keterangan->EditCustomAttributes = "";
+		$this->Keterangan->EditValue = $this->Keterangan->CurrentValue;
+		$this->Keterangan->PlaceHolder = ew_RemoveHtml($this->Keterangan->FldCaption());
+
+		// Keterangan2
+		$this->Keterangan2->EditAttrs["class"] = "form-control";
+		$this->Keterangan2->EditCustomAttributes = "";
+
+		// Keterangan3
+		$this->Keterangan3->EditAttrs["class"] = "form-control";
+		$this->Keterangan3->EditCustomAttributes = "";
+		$this->Keterangan3->EditValue = $this->Keterangan3->CurrentValue;
+		$this->Keterangan3->PlaceHolder = ew_RemoveHtml($this->Keterangan3->FldCaption());
+
+		// Jumlah
+		$this->Jumlah->EditAttrs["class"] = "form-control";
+		$this->Jumlah->EditCustomAttributes = "";
+		$this->Jumlah->EditValue = $this->Jumlah->CurrentValue;
+		$this->Jumlah->PlaceHolder = ew_RemoveHtml($this->Jumlah->FldCaption());
+		if (strval($this->Jumlah->EditValue) <> "" && is_numeric($this->Jumlah->EditValue)) $this->Jumlah->EditValue = ew_FormatNumber($this->Jumlah->EditValue, -2, -2, -2, -2);
 
 		// Call Row Rendered event
 		$this->Row_Rendered();
@@ -787,14 +847,19 @@ class ct05_daftarsiswamaster extends cTable {
 			if ($Doc->Horizontal) { // Horizontal format, write header
 				$Doc->BeginExportRow();
 				if ($ExportPageType == "view") {
-					if ($this->tahunajaran_id->Exportable) $Doc->ExportCaption($this->tahunajaran_id);
-					if ($this->sekolah_id->Exportable) $Doc->ExportCaption($this->sekolah_id);
-					if ($this->kelas_id->Exportable) $Doc->ExportCaption($this->kelas_id);
+					if ($this->siswaspp_id->Exportable) $Doc->ExportCaption($this->siswaspp_id);
+					if ($this->Keterangan->Exportable) $Doc->ExportCaption($this->Keterangan);
+					if ($this->Keterangan2->Exportable) $Doc->ExportCaption($this->Keterangan2);
+					if ($this->Keterangan3->Exportable) $Doc->ExportCaption($this->Keterangan3);
+					if ($this->Jumlah->Exportable) $Doc->ExportCaption($this->Jumlah);
 				} else {
 					if ($this->id->Exportable) $Doc->ExportCaption($this->id);
-					if ($this->tahunajaran_id->Exportable) $Doc->ExportCaption($this->tahunajaran_id);
-					if ($this->sekolah_id->Exportable) $Doc->ExportCaption($this->sekolah_id);
-					if ($this->kelas_id->Exportable) $Doc->ExportCaption($this->kelas_id);
+					if ($this->bayarmaster_id->Exportable) $Doc->ExportCaption($this->bayarmaster_id);
+					if ($this->siswaspp_id->Exportable) $Doc->ExportCaption($this->siswaspp_id);
+					if ($this->Keterangan->Exportable) $Doc->ExportCaption($this->Keterangan);
+					if ($this->Keterangan2->Exportable) $Doc->ExportCaption($this->Keterangan2);
+					if ($this->Keterangan3->Exportable) $Doc->ExportCaption($this->Keterangan3);
+					if ($this->Jumlah->Exportable) $Doc->ExportCaption($this->Jumlah);
 				}
 				$Doc->EndExportRow();
 			}
@@ -826,14 +891,19 @@ class ct05_daftarsiswamaster extends cTable {
 				if (!$Doc->ExportCustom) {
 					$Doc->BeginExportRow($RowCnt); // Allow CSS styles if enabled
 					if ($ExportPageType == "view") {
-						if ($this->tahunajaran_id->Exportable) $Doc->ExportField($this->tahunajaran_id);
-						if ($this->sekolah_id->Exportable) $Doc->ExportField($this->sekolah_id);
-						if ($this->kelas_id->Exportable) $Doc->ExportField($this->kelas_id);
+						if ($this->siswaspp_id->Exportable) $Doc->ExportField($this->siswaspp_id);
+						if ($this->Keterangan->Exportable) $Doc->ExportField($this->Keterangan);
+						if ($this->Keterangan2->Exportable) $Doc->ExportField($this->Keterangan2);
+						if ($this->Keterangan3->Exportable) $Doc->ExportField($this->Keterangan3);
+						if ($this->Jumlah->Exportable) $Doc->ExportField($this->Jumlah);
 					} else {
 						if ($this->id->Exportable) $Doc->ExportField($this->id);
-						if ($this->tahunajaran_id->Exportable) $Doc->ExportField($this->tahunajaran_id);
-						if ($this->sekolah_id->Exportable) $Doc->ExportField($this->sekolah_id);
-						if ($this->kelas_id->Exportable) $Doc->ExportField($this->kelas_id);
+						if ($this->bayarmaster_id->Exportable) $Doc->ExportField($this->bayarmaster_id);
+						if ($this->siswaspp_id->Exportable) $Doc->ExportField($this->siswaspp_id);
+						if ($this->Keterangan->Exportable) $Doc->ExportField($this->Keterangan);
+						if ($this->Keterangan2->Exportable) $Doc->ExportField($this->Keterangan2);
+						if ($this->Keterangan3->Exportable) $Doc->ExportField($this->Keterangan3);
+						if ($this->Jumlah->Exportable) $Doc->ExportField($this->Jumlah);
 					}
 					$Doc->EndExportRow();
 				}
@@ -853,6 +923,27 @@ class ct05_daftarsiswamaster extends cTable {
 	function GetAutoFill($id, $val) {
 		$rsarr = array();
 		$rowcnt = 0;
+		if (preg_match('/^x(\d)*_siswaspp_id$/', $id)) {
+			$conn = &$this->Connection();
+			$sSqlWrk = "SELECT `Nilai` AS FIELD0 FROM `v01_siswaspp`";
+			$sWhereWrk = "(`id` = " . ew_QuotedValue($val, EW_DATATYPE_NUMBER, $this->DBID) . ")";
+			$this->siswaspp_id->LookupFilters = array();
+			$this->Lookup_Selecting($this->siswaspp_id, $sWhereWrk); // Call Lookup selecting
+			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
+			if ($rs = ew_LoadRecordset($sSqlWrk, $conn)) {
+				while ($rs && !$rs->EOF) {
+					$ar = array();
+					$this->Jumlah->setDbValue($rs->fields[0]);
+					$this->RowType == EW_ROWTYPE_EDIT;
+					$this->RenderEditRow();
+					$ar[] = ($this->Jumlah->AutoFillOriginalValue) ? $this->Jumlah->CurrentValue : $this->Jumlah->EditValue;
+					$rowcnt += 1;
+					$rsarr[] = $ar;
+					$rs->MoveNext();
+				}
+				$rs->Close();
+			}
+		}
 
 		// Output
 		if (is_array($rsarr) && $rowcnt > 0) {
@@ -877,7 +968,7 @@ class ct05_daftarsiswamaster extends cTable {
 
 	// Write Audit Trail start/end for grid update
 	function WriteAuditTrailDummy($typ) {
-		$table = 't05_daftarsiswamaster';
+		$table = 't10_bayardetail';
 		$usr = CurrentUserID();
 		ew_WriteAuditTrail("log", ew_StdCurrentDateTime(), ew_ScriptName(), $usr, $typ, $table, "", "", "", "");
 	}
@@ -886,7 +977,7 @@ class ct05_daftarsiswamaster extends cTable {
 	function WriteAuditTrailOnAdd(&$rs) {
 		global $Language;
 		if (!$this->AuditTrailOnAdd) return;
-		$table = 't05_daftarsiswamaster';
+		$table = 't10_bayardetail';
 
 		// Get key value
 		$key = "";
@@ -920,7 +1011,7 @@ class ct05_daftarsiswamaster extends cTable {
 	function WriteAuditTrailOnEdit(&$rsold, &$rsnew) {
 		global $Language;
 		if (!$this->AuditTrailOnEdit) return;
-		$table = 't05_daftarsiswamaster';
+		$table = 't10_bayardetail';
 
 		// Get key value
 		$key = "";
@@ -967,7 +1058,7 @@ class ct05_daftarsiswamaster extends cTable {
 	function WriteAuditTrailOnDelete(&$rs) {
 		global $Language;
 		if (!$this->AuditTrailOnDelete) return;
-		$table = 't05_daftarsiswamaster';
+		$table = 't10_bayardetail';
 
 		// Get key value
 		$key = "";

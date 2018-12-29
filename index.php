@@ -280,18 +280,14 @@ class cdefault {
 			$this->Page_Terminate("t05_daftarsiswamasterlist.php");
 		if ($Security->AllowList(CurrentProjectID() . 't06_daftarsiswadetail'))
 			$this->Page_Terminate("t06_daftarsiswadetaillist.php");
-		if ($Security->AllowList(CurrentProjectID() . 't07_rutin'))
-			$this->Page_Terminate("t07_rutinlist.php");
 		if ($Security->AllowList(CurrentProjectID() . 't07_spp'))
 			$this->Page_Terminate("t07_spplist.php");
-		if ($Security->AllowList(CurrentProjectID() . 't08_nonrutin'))
-			$this->Page_Terminate("t08_nonrutinlist.php");
 		if ($Security->AllowList(CurrentProjectID() . 't08_siswaspp'))
 			$this->Page_Terminate("t08_siswaspplist.php");
-		if ($Security->AllowList(CurrentProjectID() . 't09_siswarutin'))
-			$this->Page_Terminate("t09_siswarutinlist.php");
-		if ($Security->AllowList(CurrentProjectID() . 't10_siswarutinbayar'))
-			$this->Page_Terminate("t10_siswarutinbayarlist.php");
+		if ($Security->AllowList(CurrentProjectID() . 't09_bayarmaster'))
+			$this->Page_Terminate("t09_bayarmasterlist.php");
+		if ($Security->AllowList(CurrentProjectID() . 't10_bayardetail'))
+			$this->Page_Terminate("t10_bayardetaillist.php");
 		if ($Security->AllowList(CurrentProjectID() . 't96_employees'))
 			$this->Page_Terminate("t96_employeeslist.php");
 		if ($Security->AllowList(CurrentProjectID() . 't97_userlevels'))
@@ -300,8 +296,6 @@ class cdefault {
 			$this->Page_Terminate("t98_userlevelpermissionslist.php");
 		if ($Security->AllowList(CurrentProjectID() . 't99_audittrail'))
 			$this->Page_Terminate("t99_audittraillist.php");
-		if ($Security->AllowList(CurrentProjectID() . 'v01_siswarutin'))
-			$this->Page_Terminate("v01_siswarutinlist.php");
 		if ($Security->IsLoggedIn()) {
 			$this->setFailureMessage(ew_DeniedMsg() . "<br><br><a href=\"logout.php\">" . $Language->Phrase("BackToLogin") . "</a>");
 		} else {

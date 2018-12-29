@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<ew-language date="2018/12/27" version="13.0.0" id="en" name="English" desc="English" author="e.World Technology Ltd.">
+<ew-language date="2018/12/29" version="13.0.0" id="en" name="English" desc="English" author="e.World Technology Ltd.">
   <!-- 
 	*** Important Notes:
 	1. Language ID should follow: https://developers.google.com/recaptcha/docs/language,
@@ -582,17 +582,20 @@
   </global>
   <project>
     <phrase id="footertext" value="&amp;copy;2018 Selaras Solusindo. All rights reserved." />
+    <menu id="54">
+      <phrase id="menutext" value="v 01 siswaspp" />
+    </menu>
     <menu id="13">
       <phrase id="menutext" value="Menu Utama" />
     </menu>
     <menu id="6">
       <phrase id="menutext" value="Home" />
     </menu>
-    <menu id="31">
-      <phrase id="menutext" value="Bayar" />
+    <menu id="52">
+      <phrase id="menutext" value="Pembayaran" />
     </menu>
-    <menu id="30">
-      <phrase id="menutext" value="Detail" />
+    <menu id="53">
+      <phrase id="menutext" value="Rincian" />
     </menu>
     <menu id="12">
       <phrase id="menutext" value="Setup" />
@@ -602,9 +605,6 @@
     </menu>
     <menu id="51">
       <phrase id="menutext" value="Detail SPP" />
-    </menu>
-    <menu id="29">
-      <phrase id="menutext" value="Rutin" />
     </menu>
     <menu id="49">
       <phrase id="menutext" value="Sekolah" />
@@ -629,12 +629,6 @@
     </menu>
     <menu id="48">
       <phrase id="menutext" value="Pembayaran" />
-    </menu>
-    <menu id="27">
-      <phrase id="menutext" value="Rutin" />
-    </menu>
-    <menu id="28">
-      <phrase id="menutext" value="Non-Rutin" />
     </menu>
     <menu id="24">
       <phrase id="menutext" value="Aplikasi" />
@@ -787,15 +781,6 @@
         <phrase id="fldcaption" value="Siswa" />
       </field>
     </table>
-    <table id="t07_rutin">
-      <phrase id="tblcaption" value="Rutin" />
-      <field id="id">
-        <phrase id="fldcaption" value="id" />
-      </field>
-      <field id="jenis">
-        <phrase id="fldcaption" value="Jenis Pembayaran" />
-      </field>
-    </table>
     <table id="t07_spp">
       <phrase id="tblcaption" value="SPP" />
       <field id="id">
@@ -810,15 +795,6 @@
         <phrase id="fldtagcaption1" value="Rutin" />
         <phrase id="fldtagvalue2" value="Non-Rutin" />
         <phrase id="fldtagcaption2" value="Non-Rutin" />
-      </field>
-    </table>
-    <table id="t08_nonrutin">
-      <phrase id="tblcaption" value="Non-Rutin" />
-      <field id="id">
-        <phrase id="fldcaption" value="id" />
-      </field>
-      <field id="jenis">
-        <phrase id="fldcaption" value="Jenis Pembayaran" />
       </field>
     </table>
     <table id="t08_siswaspp">
@@ -845,43 +821,49 @@
         <phrase id="fldcaption" value="Potensi" />
       </field>
     </table>
-    <table id="t09_siswarutin">
-      <phrase id="tblcaption" value="Rutin" />
+    <table id="t09_bayarmaster">
+      <phrase id="tblcaption" value="Pembayaran" />
       <field id="id">
         <phrase id="fldcaption" value="id" />
       </field>
       <field id="siswa_id">
-        <phrase id="fldcaption" value="Siswa" />
-      </field>
-      <field id="rutin_id">
-        <phrase id="fldcaption" value="Jenis Pembayaran" />
+        <phrase id="fldcaption" value="NIS / Nama" />
       </field>
       <field id="tahunajaran_id">
         <phrase id="fldcaption" value="Tahun Ajaran" />
       </field>
-      <field id="nilai">
-        <phrase id="fldcaption" value="Nilai" />
+      <field id="tanggal">
+        <phrase id="fldcaption" value="Tanggal" />
       </field>
-      <field id="total">
-        <phrase id="fldcaption" value="Total" />
+      <field id="nomorbayar">
+        <phrase id="fldcaption" value="Nomor Bayar" />
+      </field>
+      <field id="jumlah">
+        <phrase id="fldcaption" value="Jumlah" />
       </field>
     </table>
-    <table id="t10_siswarutinbayar">
-      <phrase id="tblcaption" value="Detail" />
+    <table id="t10_bayardetail">
+      <phrase id="tblcaption" value="Rincian" />
       <field id="id">
         <phrase id="fldcaption" value="id" />
       </field>
-      <field id="siswarutin_id">
-        <phrase id="fldcaption" value="siswarutin id" />
+      <field id="bayarmaster_id">
+        <phrase id="fldcaption" value="bayarmaster id" />
       </field>
-      <field id="periode">
-        <phrase id="fldcaption" value="Periode" />
+      <field id="siswaspp_id">
+        <phrase id="fldcaption" value="SPP" />
       </field>
-      <field id="tanggalbayar">
-        <phrase id="fldcaption" value="Tanggal Bayar" />
+      <field id="keterangan">
+        <phrase id="fldcaption" value="Keterangan" />
       </field>
-      <field id="jumlahbayar">
-        <phrase id="fldcaption" value="Jumlah Bayar" />
+      <field id="keterangan2">
+        <phrase id="fldcaption" value="Keterangan 2" />
+      </field>
+      <field id="keterangan3">
+        <phrase id="fldcaption" value="Keterangan 3" />
+      </field>
+      <field id="jumlah">
+        <phrase id="fldcaption" value="Jumlah" />
       </field>
     </table>
     <table id="t96_employees">
@@ -1014,31 +996,38 @@
         <phrase id="fldcaption" value="newvalue" />
       </field>
     </table>
-    <table id="v01_siswarutin">
-      <phrase id="tblcaption" value="Bayar" />
+    <table id="v01_siswaspp">
+      <phrase id="tblcaption" value="v 01 siswaspp" />
       <field id="id">
         <phrase id="fldcaption" value="id" />
       </field>
       <field id="siswa_id">
         <phrase id="fldcaption" value="siswa id" />
       </field>
-      <field id="nis">
-        <phrase id="fldcaption" value="nis" />
-      </field>
-      <field id="nama">
-        <phrase id="fldcaption" value="nama" />
-      </field>
-      <field id="rutin_id">
-        <phrase id="fldcaption" value="rutin id" />
-      </field>
       <field id="tahunajaran_id">
         <phrase id="fldcaption" value="tahunajaran id" />
       </field>
-      <field id="nilai">
-        <phrase id="fldcaption" value="nilai" />
+      <field id="spp_id">
+        <phrase id="fldcaption" value="spp id" />
       </field>
-      <field id="total">
-        <phrase id="fldcaption" value="total" />
+      <field id="nilai">
+        <phrase id="fldcaption" value="Nilai" />
+      </field>
+      <field id="terbayar">
+        <phrase id="fldcaption" value="Terbayar" />
+      </field>
+      <field id="potensi">
+        <phrase id="fldcaption" value="Potensi" />
+      </field>
+      <field id="spp">
+        <phrase id="fldcaption" value="SPP" />
+      </field>
+      <field id="jenis">
+        <phrase id="fldcaption" value="Jenis" />
+        <phrase id="fldtagvalue1" value="Rutin" />
+        <phrase id="fldtagcaption1" value="Rutin" />
+        <phrase id="fldtagvalue2" value="Non-Rutin" />
+        <phrase id="fldtagcaption2" value="Non-Rutin" />
       </field>
     </table>
   </project>

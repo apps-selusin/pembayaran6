@@ -898,6 +898,9 @@ function MenuItem_Adding(&$Item) {
 	//var_dump($Item);
 	// Return FALSE if menu item not allowed
 
+	if ($Item->Url == "t09_bayarmasterlist.php") {
+		$Item->Url = "t09_bayarmasteradd.php?showdetail=t10_bayardetail";
+	}
 	return TRUE;
 }
 
