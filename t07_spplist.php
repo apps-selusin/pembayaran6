@@ -511,7 +511,7 @@ class ct07_spp_list extends ct07_spp {
 	var $ListActions; // List actions
 	var $SelectedCount = 0;
 	var $SelectedIndex = 0;
-	var $DisplayRecs = 20;
+	var $DisplayRecs = 50;
 	var $StartRec;
 	var $StopRec;
 	var $TotalRecs = 0;
@@ -605,7 +605,7 @@ class ct07_spp_list extends ct07_spp {
 		if ($this->getRecordsPerPage() <> "") {
 			$this->DisplayRecs = $this->getRecordsPerPage(); // Restore from Session
 		} else {
-			$this->DisplayRecs = 20; // Load default
+			$this->DisplayRecs = 50; // Load default
 		}
 
 		// Load Sorting Order
@@ -654,7 +654,7 @@ class ct07_spp_list extends ct07_spp {
 				if (strtolower($sWrk) == "all") { // Display all records
 					$this->DisplayRecs = -1;
 				} else {
-					$this->DisplayRecs = 20; // Non-numeric, load default
+					$this->DisplayRecs = 50; // Non-numeric, load default
 				}
 			}
 			$this->setRecordsPerPage($this->DisplayRecs); // Save to Session

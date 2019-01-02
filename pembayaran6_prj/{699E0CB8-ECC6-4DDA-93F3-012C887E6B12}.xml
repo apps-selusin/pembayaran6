@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<configuration date="2018/12/29" author="e.World Technology Ltd.">
-  <project id="{699E0CB8-ECC6-4DDA-93F3-012C887E6B12}" file="C:\xampp\htdocs\pembayaran6\pembayaran6_prj.pmp" name="pembayaran6_prj" product="PHPMaker" version="13.0" datetime="2018/12/29 15:31:47" languagefolder="phplang" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0">
+<configuration date="2018/12/30" author="e.World Technology Ltd.">
+  <project id="{699E0CB8-ECC6-4DDA-93F3-012C887E6B12}" file="C:\xampp\htdocs\pembayaran6\pembayaran6_prj.pmp" name="pembayaran6_prj" product="PHPMaker" version="13.0" datetime="2018/12/30 14:24:39" languagefolder="phplang" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0">
     <table id="cf01_home_php" name="cf01_home.php" caption="Home" userlevel="-2,&quot;Anonymous&quot;,8;0,&quot;Default&quot;,0" priv="1" />
     <table id="t01_tahunajaran" name="t01_tahunajaran" caption="Tahun Ajaran" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
     <table id="t02_sekolah" name="t02_sekolah" caption="Sekolah" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
@@ -12,11 +12,13 @@
     <table id="t08_siswaspp" name="t08_siswaspp" caption="Detail SPP" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
     <table id="t09_bayarmaster" name="t09_bayarmaster" caption="Pembayaran" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
     <table id="t10_bayardetail" name="t10_bayardetail" caption="Rincian" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
+    <table id="t95_periode" name="t95_periode" caption="t 95 periode" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
     <table id="t96_employees" name="t96_employees" caption="List User" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
     <table id="t97_userlevels" name="t97_userlevels" caption="Level User" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
     <table id="t98_userlevelpermissions" name="t98_userlevelpermissions" caption="Hak Akses" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
     <table id="t99_audittrail" name="t99_audittrail" caption="Log" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
     <table id="v01_siswaspp" name="v01_siswaspp" caption="v 01 siswaspp" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
-    <table id="v03_kartuspp" name="v03_kartuspp" caption="v 03 kartuspp" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
+    <table id="v02_pembayaran" name="v02_pembayaran" caption="v 02 pembayaran" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
+    <table id="v03_kartuspp" name="v03_kartuspp" caption="Kartu Iuran" userlevel="-2,&quot;Anonymous&quot;,8;0,&quot;Default&quot;,0" priv="1" />
   </project>
 </configuration>

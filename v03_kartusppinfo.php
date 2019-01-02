@@ -56,22 +56,24 @@ class cv03_kartuspp extends cTable {
 		$this->fields['tahunajaran_id'] = &$this->tahunajaran_id;
 
 		// siswa_id
-		$this->siswa_id = new cField('v03_kartuspp', 'v03_kartuspp', 'x_siswa_id', 'siswa_id', '`siswa_id`', '`siswa_id`', 3, -1, FALSE, '`EV__siswa_id`', TRUE, TRUE, TRUE, 'FORMATTED TEXT', 'TEXT');
+		$this->siswa_id = new cField('v03_kartuspp', 'v03_kartuspp', 'x_siswa_id', 'siswa_id', '`siswa_id`', '`siswa_id`', 3, -1, FALSE, '`siswa_id`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'SELECT');
 		$this->siswa_id->Sortable = TRUE; // Allow sort
+		$this->siswa_id->UsePleaseSelect = TRUE; // Use PleaseSelect by default
+		$this->siswa_id->PleaseSelectText = $Language->Phrase("PleaseSelect"); // PleaseSelect text
 		$this->siswa_id->FldDefaultErrMsg = $Language->Phrase("IncorrectInteger");
 		$this->fields['siswa_id'] = &$this->siswa_id;
 
 		// siswaspp_id
-		$this->siswaspp_id = new cField('v03_kartuspp', 'v03_kartuspp', 'x_siswaspp_id', 'siswaspp_id', '`siswaspp_id`', '`siswaspp_id`', 3, -1, FALSE, '`siswaspp_id`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'NO');
+		$this->siswaspp_id = new cField('v03_kartuspp', 'v03_kartuspp', 'x_siswaspp_id', 'siswaspp_id', '`siswaspp_id`', '`siswaspp_id`', 3, -1, FALSE, '`siswaspp_id`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'SELECT');
 		$this->siswaspp_id->Sortable = TRUE; // Allow sort
+		$this->siswaspp_id->UsePleaseSelect = TRUE; // Use PleaseSelect by default
+		$this->siswaspp_id->PleaseSelectText = $Language->Phrase("PleaseSelect"); // PleaseSelect text
 		$this->siswaspp_id->FldDefaultErrMsg = $Language->Phrase("IncorrectInteger");
 		$this->fields['siswaspp_id'] = &$this->siswaspp_id;
 
 		// spp_id
-		$this->spp_id = new cField('v03_kartuspp', 'v03_kartuspp', 'x_spp_id', 'spp_id', '`spp_id`', '`spp_id`', 3, -1, FALSE, '`spp_id`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'SELECT');
+		$this->spp_id = new cField('v03_kartuspp', 'v03_kartuspp', 'x_spp_id', 'spp_id', '`spp_id`', '`spp_id`', 3, -1, FALSE, '`spp_id`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
 		$this->spp_id->Sortable = TRUE; // Allow sort
-		$this->spp_id->UsePleaseSelect = TRUE; // Use PleaseSelect by default
-		$this->spp_id->PleaseSelectText = $Language->Phrase("PleaseSelect"); // PleaseSelect text
 		$this->spp_id->FldDefaultErrMsg = $Language->Phrase("IncorrectInteger");
 		$this->fields['spp_id'] = &$this->spp_id;
 
@@ -93,9 +95,9 @@ class cv03_kartuspp extends cTable {
 		$this->fields['Periode'] = &$this->Periode;
 
 		// Tanggal
-		$this->Tanggal = new cField('v03_kartuspp', 'v03_kartuspp', 'x_Tanggal', 'Tanggal', '`Tanggal`', ew_CastDateFieldForLike('`Tanggal`', 0, "DB"), 133, 0, FALSE, '`Tanggal`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->Tanggal = new cField('v03_kartuspp', 'v03_kartuspp', 'x_Tanggal', 'Tanggal', '`Tanggal`', ew_CastDateFieldForLike('`Tanggal`', 7, "DB"), 133, 7, FALSE, '`Tanggal`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
 		$this->Tanggal->Sortable = TRUE; // Allow sort
-		$this->Tanggal->FldDefaultErrMsg = str_replace("%s", $GLOBALS["EW_DATE_FORMAT"], $Language->Phrase("IncorrectDate"));
+		$this->Tanggal->FldDefaultErrMsg = str_replace("%s", $GLOBALS["EW_DATE_SEPARATOR"], $Language->Phrase("IncorrectDateDMY"));
 		$this->fields['Tanggal'] = &$this->Tanggal;
 
 		// bayardetail_Jumlah
@@ -134,31 +136,9 @@ class cv03_kartuspp extends cTable {
 			} else {
 				$this->setSessionOrderBy($sSortField . " " . $sThisSort); // Save to Session
 			}
-			$sSortFieldList = ($ofld->FldVirtualExpression <> "") ? $ofld->FldVirtualExpression : $sSortField;
-			if ($ctrl) {
-				$sOrderByList = $this->getSessionOrderByList();
-				if (strpos($sOrderByList, $sSortFieldList . " " . $sLastSort) !== FALSE) {
-					$sOrderByList = str_replace($sSortFieldList . " " . $sLastSort, $sSortFieldList . " " . $sThisSort, $sOrderByList);
-				} else {
-					if ($sOrderByList <> "") $sOrderByList .= ", ";
-					$sOrderByList .= $sSortFieldList . " " . $sThisSort;
-				}
-				$this->setSessionOrderByList($sOrderByList); // Save to Session
-			} else {
-				$this->setSessionOrderByList($sSortFieldList . " " . $sThisSort); // Save to Session
-			}
 		} else {
 			if (!$ctrl) $ofld->setSort("");
 		}
-	}
-
-	// Session ORDER BY for List page
-	function getSessionOrderByList() {
-		return @$_SESSION[EW_PROJECT_NAME . "_" . $this->TableVar . "_" . EW_TABLE_ORDER_BY_LIST];
-	}
-
-	function setSessionOrderByList($v) {
-		$_SESSION[EW_PROJECT_NAME . "_" . $this->TableVar . "_" . EW_TABLE_ORDER_BY_LIST] = $v;
 	}
 
 	// Table level SQL
@@ -187,23 +167,6 @@ class cv03_kartuspp extends cTable {
 
 	function setSqlSelect($v) {
 		$this->_SqlSelect = $v;
-	}
-	var $_SqlSelectList = "";
-
-	function getSqlSelectList() { // Select for List page
-		$select = "";
-		$select = "SELECT * FROM (" .
-			"SELECT *, (SELECT CONCAT(`NIS`,'" . ew_ValueSeparator(1, $this->siswa_id) . "',`Nama`) FROM `t04_siswa` `EW_TMP_LOOKUPTABLE` WHERE `EW_TMP_LOOKUPTABLE`.`id` = `v03_kartuspp`.`siswa_id` LIMIT 1) AS `EV__siswa_id` FROM `v03_kartuspp`" .
-			") `EW_TMP_TABLE`";
-		return ($this->_SqlSelectList <> "") ? $this->_SqlSelectList : $select;
-	}
-
-	function SqlSelectList() { // For backward compatibility
-		return $this->getSqlSelectList();
-	}
-
-	function setSqlSelectList($v) {
-		$this->_SqlSelectList = $v;
 	}
 	var $_SqlWhere = "";
 
@@ -316,38 +279,15 @@ class cv03_kartuspp extends cTable {
 		ew_AddFilter($sFilter, $this->CurrentFilter);
 		$sFilter = $this->ApplyUserIDFilters($sFilter);
 		$this->Recordset_Selecting($sFilter);
-		if ($this->UseVirtualFields()) {
-			$sSort = $this->getSessionOrderByList();
-			return ew_BuildSelectSql($this->getSqlSelectList(), $this->getSqlWhere(), $this->getSqlGroupBy(),
-				$this->getSqlHaving(), $this->getSqlOrderBy(), $sFilter, $sSort);
-		} else {
-			$sSort = $this->getSessionOrderBy();
-			return ew_BuildSelectSql($this->getSqlSelect(), $this->getSqlWhere(), $this->getSqlGroupBy(),
-				$this->getSqlHaving(), $this->getSqlOrderBy(), $sFilter, $sSort);
-		}
+		$sSort = $this->getSessionOrderBy();
+		return ew_BuildSelectSql($this->getSqlSelect(), $this->getSqlWhere(), $this->getSqlGroupBy(),
+			$this->getSqlHaving(), $this->getSqlOrderBy(), $sFilter, $sSort);
 	}
 
 	// Get ORDER BY clause
 	function GetOrderBy() {
-		$sSort = ($this->UseVirtualFields()) ? $this->getSessionOrderByList() : $this->getSessionOrderBy();
+		$sSort = $this->getSessionOrderBy();
 		return ew_BuildSelectSql("", "", "", "", $this->getSqlOrderBy(), "", $sSort);
-	}
-
-	// Check if virtual fields is used in SQL
-	function UseVirtualFields() {
-		$sWhere = $this->getSessionWhere();
-		$sOrderBy = $this->getSessionOrderByList();
-		if ($sWhere <> "")
-			$sWhere = " " . str_replace(array("(",")"), array("",""), $sWhere) . " ";
-		if ($sOrderBy <> "")
-			$sOrderBy = " " . str_replace(array("(",")"), array("",""), $sOrderBy) . " ";
-		if ($this->siswa_id->AdvancedSearch->SearchValue <> "" ||
-			$this->siswa_id->AdvancedSearch->SearchValue2 <> "" ||
-			strpos($sWhere, " " . $this->siswa_id->FldVirtualExpression . " ") !== FALSE)
-			return TRUE;
-		if (strpos($sOrderBy, " " . $this->siswa_id->FldVirtualExpression . " ") !== FALSE)
-			return TRUE;
-		return FALSE;
 	}
 
 	// Try to get record count
@@ -775,15 +715,13 @@ class cv03_kartuspp extends cTable {
 		$this->tahunajaran_id->ViewCustomAttributes = "";
 
 		// siswa_id
-		if ($this->siswa_id->VirtualValue <> "") {
-			$this->siswa_id->ViewValue = $this->siswa_id->VirtualValue;
-		} else {
-			$this->siswa_id->ViewValue = $this->siswa_id->CurrentValue;
 		if (strval($this->siswa_id->CurrentValue) <> "") {
 			$sFilterWrk = "`id`" . ew_SearchString("=", $this->siswa_id->CurrentValue, EW_DATATYPE_NUMBER, "");
 		$sSqlWrk = "SELECT `id`, `NIS` AS `DispFld`, `Nama` AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `t04_siswa`";
 		$sWhereWrk = "";
-		$this->siswa_id->LookupFilters = array();
+		$this->siswa_id->LookupFilters = array("dx1" => '`NIS`', "dx2" => '`Nama`');
+		$lookuptblfilter = "`id` in (select siswa_id from v03_kartuspp where tahunajaran_id = ".CurrentPage()->tahunajaran_id->CurrentValue.")";
+		ew_AddFilter($sWhereWrk, $lookuptblfilter);
 		ew_AddFilter($sWhereWrk, $sFilterWrk);
 		$this->Lookup_Selecting($this->siswa_id, $sWhereWrk); // Call Lookup selecting
 		if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
@@ -800,34 +738,33 @@ class cv03_kartuspp extends cTable {
 		} else {
 			$this->siswa_id->ViewValue = NULL;
 		}
-		}
 		$this->siswa_id->ViewCustomAttributes = "";
 
 		// siswaspp_id
-		$this->siswaspp_id->ViewValue = $this->siswaspp_id->CurrentValue;
-		$this->siswaspp_id->ViewCustomAttributes = "";
-
-		// spp_id
-		if (strval($this->spp_id->CurrentValue) <> "") {
-			$sFilterWrk = "`id`" . ew_SearchString("=", $this->spp_id->CurrentValue, EW_DATATYPE_NUMBER, "");
-		$sSqlWrk = "SELECT `id`, `SPP` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `t07_spp`";
+		if (strval($this->siswaspp_id->CurrentValue) <> "") {
+			$sFilterWrk = "`id`" . ew_SearchString("=", $this->siswaspp_id->CurrentValue, EW_DATATYPE_NUMBER, "");
+		$sSqlWrk = "SELECT `id`, `SPP` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `v01_siswaspp`";
 		$sWhereWrk = "";
-		$this->spp_id->LookupFilters = array();
+		$this->siswaspp_id->LookupFilters = array();
 		ew_AddFilter($sWhereWrk, $sFilterWrk);
-		$this->Lookup_Selecting($this->spp_id, $sWhereWrk); // Call Lookup selecting
+		$this->Lookup_Selecting($this->siswaspp_id, $sWhereWrk); // Call Lookup selecting
 		if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
 			$rswrk = Conn()->Execute($sSqlWrk);
 			if ($rswrk && !$rswrk->EOF) { // Lookup values found
 				$arwrk = array();
 				$arwrk[1] = $rswrk->fields('DispFld');
-				$this->spp_id->ViewValue = $this->spp_id->DisplayValue($arwrk);
+				$this->siswaspp_id->ViewValue = $this->siswaspp_id->DisplayValue($arwrk);
 				$rswrk->Close();
 			} else {
-				$this->spp_id->ViewValue = $this->spp_id->CurrentValue;
+				$this->siswaspp_id->ViewValue = $this->siswaspp_id->CurrentValue;
 			}
 		} else {
-			$this->spp_id->ViewValue = NULL;
+			$this->siswaspp_id->ViewValue = NULL;
 		}
+		$this->siswaspp_id->ViewCustomAttributes = "";
+
+		// spp_id
+		$this->spp_id->ViewValue = $this->spp_id->CurrentValue;
 		$this->spp_id->ViewCustomAttributes = "";
 
 		// periode_id
@@ -844,11 +781,13 @@ class cv03_kartuspp extends cTable {
 
 		// Tanggal
 		$this->Tanggal->ViewValue = $this->Tanggal->CurrentValue;
-		$this->Tanggal->ViewValue = ew_FormatDateTime($this->Tanggal->ViewValue, 0);
+		$this->Tanggal->ViewValue = ew_FormatDateTime($this->Tanggal->ViewValue, 7);
 		$this->Tanggal->ViewCustomAttributes = "";
 
 		// bayardetail_Jumlah
 		$this->bayardetail_Jumlah->ViewValue = $this->bayardetail_Jumlah->CurrentValue;
+		$this->bayardetail_Jumlah->ViewValue = ew_FormatNumber($this->bayardetail_Jumlah->ViewValue, 2, -2, -2, -2);
+		$this->bayardetail_Jumlah->CellCssStyle .= "text-align: right;";
 		$this->bayardetail_Jumlah->ViewCustomAttributes = "";
 
 		// tahunajaran_id
@@ -935,18 +874,37 @@ class cv03_kartuspp extends cTable {
 		// siswa_id
 		$this->siswa_id->EditAttrs["class"] = "form-control";
 		$this->siswa_id->EditCustomAttributes = "";
-		$this->siswa_id->EditValue = $this->siswa_id->CurrentValue;
-		$this->siswa_id->PlaceHolder = ew_RemoveHtml($this->siswa_id->FldCaption());
 
 		// siswaspp_id
 		$this->siswaspp_id->EditAttrs["class"] = "form-control";
 		$this->siswaspp_id->EditCustomAttributes = "";
-		$this->siswaspp_id->EditValue = $this->siswaspp_id->CurrentValue;
+		if (strval($this->siswaspp_id->CurrentValue) <> "") {
+			$sFilterWrk = "`id`" . ew_SearchString("=", $this->siswaspp_id->CurrentValue, EW_DATATYPE_NUMBER, "");
+		$sSqlWrk = "SELECT `id`, `SPP` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `v01_siswaspp`";
+		$sWhereWrk = "";
+		$this->siswaspp_id->LookupFilters = array();
+		ew_AddFilter($sWhereWrk, $sFilterWrk);
+		$this->Lookup_Selecting($this->siswaspp_id, $sWhereWrk); // Call Lookup selecting
+		if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
+			$rswrk = Conn()->Execute($sSqlWrk);
+			if ($rswrk && !$rswrk->EOF) { // Lookup values found
+				$arwrk = array();
+				$arwrk[1] = $rswrk->fields('DispFld');
+				$this->siswaspp_id->EditValue = $this->siswaspp_id->DisplayValue($arwrk);
+				$rswrk->Close();
+			} else {
+				$this->siswaspp_id->EditValue = $this->siswaspp_id->CurrentValue;
+			}
+		} else {
+			$this->siswaspp_id->EditValue = NULL;
+		}
 		$this->siswaspp_id->ViewCustomAttributes = "";
 
 		// spp_id
 		$this->spp_id->EditAttrs["class"] = "form-control";
 		$this->spp_id->EditCustomAttributes = "";
+		$this->spp_id->EditValue = $this->spp_id->CurrentValue;
+		$this->spp_id->PlaceHolder = ew_RemoveHtml($this->spp_id->FldCaption());
 
 		// periode_id
 		$this->periode_id->EditAttrs["class"] = "form-control";
@@ -969,7 +927,7 @@ class cv03_kartuspp extends cTable {
 		// Tanggal
 		$this->Tanggal->EditAttrs["class"] = "form-control";
 		$this->Tanggal->EditCustomAttributes = "";
-		$this->Tanggal->EditValue = ew_FormatDateTime($this->Tanggal->CurrentValue, 8);
+		$this->Tanggal->EditValue = ew_FormatDateTime($this->Tanggal->CurrentValue, 7);
 		$this->Tanggal->PlaceHolder = ew_RemoveHtml($this->Tanggal->FldCaption());
 
 		// bayardetail_Jumlah
@@ -977,7 +935,7 @@ class cv03_kartuspp extends cTable {
 		$this->bayardetail_Jumlah->EditCustomAttributes = "";
 		$this->bayardetail_Jumlah->EditValue = $this->bayardetail_Jumlah->CurrentValue;
 		$this->bayardetail_Jumlah->PlaceHolder = ew_RemoveHtml($this->bayardetail_Jumlah->FldCaption());
-		if (strval($this->bayardetail_Jumlah->EditValue) <> "" && is_numeric($this->bayardetail_Jumlah->EditValue)) $this->bayardetail_Jumlah->EditValue = ew_FormatNumber($this->bayardetail_Jumlah->EditValue, -2, -1, -2, 0);
+		if (strval($this->bayardetail_Jumlah->EditValue) <> "" && is_numeric($this->bayardetail_Jumlah->EditValue)) $this->bayardetail_Jumlah->EditValue = ew_FormatNumber($this->bayardetail_Jumlah->EditValue, -2, -2, -2, -2);
 
 		// Call Row Rendered event
 		$this->Row_Rendered();
