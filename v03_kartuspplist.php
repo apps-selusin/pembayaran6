@@ -1656,12 +1656,13 @@ class cv03_kartuspp_list extends cv03_kartuspp {
 		$this->tahunajaran_id->ViewCustomAttributes = "";
 
 		// siswa_id
+		$this->siswa_id->ViewValue = $this->siswa_id->CurrentValue;
 		if (strval($this->siswa_id->CurrentValue) <> "") {
-			$sFilterWrk = "`id`" . ew_SearchString("=", $this->siswa_id->CurrentValue, EW_DATATYPE_NUMBER, "");
-		$sSqlWrk = "SELECT `id`, `NIS` AS `DispFld`, `Nama` AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `t04_siswa`";
+			$sFilterWrk = "`siswa_id`" . ew_SearchString("=", $this->siswa_id->CurrentValue, EW_DATATYPE_NUMBER, "");
+		$sSqlWrk = "SELECT `siswa_id`, `NIS` AS `DispFld`, `Nama` AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `v04_daftarsiswa`";
 		$sWhereWrk = "";
 		$this->siswa_id->LookupFilters = array("dx1" => '`NIS`', "dx2" => '`Nama`');
-		$lookuptblfilter = "`id` in (select siswa_id from v03_kartuspp where tahunajaran_id = ".CurrentPage()->tahunajaran_id->CurrentValue.")";
+		$lookuptblfilter = "`siswa_id` is not null";
 		ew_AddFilter($sWhereWrk, $lookuptblfilter);
 		ew_AddFilter($sWhereWrk, $sFilterWrk);
 		$this->Lookup_Selecting($this->siswa_id, $sWhereWrk); // Call Lookup selecting
@@ -1782,32 +1783,33 @@ class cv03_kartuspp_list extends cv03_kartuspp {
 			$this->tahunajaran_id->EditValue = $arwrk;
 
 			// siswa_id
+			$this->siswa_id->EditAttrs["class"] = "form-control";
 			$this->siswa_id->EditCustomAttributes = "";
-			if (trim(strval($this->siswa_id->AdvancedSearch->SearchValue)) == "") {
-				$sFilterWrk = "0=1";
-			} else {
-				$sFilterWrk = "`id`" . ew_SearchString("=", $this->siswa_id->AdvancedSearch->SearchValue, EW_DATATYPE_NUMBER, "");
-			}
-			$sSqlWrk = "SELECT `id`, `NIS` AS `DispFld`, `Nama` AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld`, '' AS `SelectFilterFld`, '' AS `SelectFilterFld2`, '' AS `SelectFilterFld3`, '' AS `SelectFilterFld4` FROM `t04_siswa`";
+			$this->siswa_id->EditValue = ew_HtmlEncode($this->siswa_id->AdvancedSearch->SearchValue);
+			if (strval($this->siswa_id->AdvancedSearch->SearchValue) <> "") {
+				$sFilterWrk = "`siswa_id`" . ew_SearchString("=", $this->siswa_id->AdvancedSearch->SearchValue, EW_DATATYPE_NUMBER, "");
+			$sSqlWrk = "SELECT `siswa_id`, `NIS` AS `DispFld`, `Nama` AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `v04_daftarsiswa`";
 			$sWhereWrk = "";
 			$this->siswa_id->LookupFilters = array("dx1" => '`NIS`', "dx2" => '`Nama`');
-			$lookuptblfilter = "`id` in (select siswa_id from v03_kartuspp where tahunajaran_id = ".CurrentPage()->tahunajaran_id->CurrentValue.")";
+			$lookuptblfilter = "`siswa_id` is not null";
 			ew_AddFilter($sWhereWrk, $lookuptblfilter);
 			ew_AddFilter($sWhereWrk, $sFilterWrk);
 			$this->Lookup_Selecting($this->siswa_id, $sWhereWrk); // Call Lookup selecting
 			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
-			$rswrk = Conn()->Execute($sSqlWrk);
-			if ($rswrk && !$rswrk->EOF) { // Lookup values found
-				$arwrk = array();
-				$arwrk[1] = ew_HtmlEncode($rswrk->fields('DispFld'));
-				$arwrk[2] = ew_HtmlEncode($rswrk->fields('Disp2Fld'));
-				$this->siswa_id->AdvancedSearch->ViewValue = $this->siswa_id->DisplayValue($arwrk);
+				$rswrk = Conn()->Execute($sSqlWrk);
+				if ($rswrk && !$rswrk->EOF) { // Lookup values found
+					$arwrk = array();
+					$arwrk[1] = ew_HtmlEncode($rswrk->fields('DispFld'));
+					$arwrk[2] = ew_HtmlEncode($rswrk->fields('Disp2Fld'));
+					$this->siswa_id->EditValue = $this->siswa_id->DisplayValue($arwrk);
+					$rswrk->Close();
+				} else {
+					$this->siswa_id->EditValue = ew_HtmlEncode($this->siswa_id->AdvancedSearch->SearchValue);
+				}
 			} else {
-				$this->siswa_id->AdvancedSearch->ViewValue = $Language->Phrase("PleaseSelect");
+				$this->siswa_id->EditValue = NULL;
 			}
-			$arwrk = ($rswrk) ? $rswrk->GetRows() : array();
-			if ($rswrk) $rswrk->Close();
-			$this->siswa_id->EditValue = $arwrk;
+			$this->siswa_id->PlaceHolder = ew_RemoveHtml($this->siswa_id->FldCaption());
 
 			// siswaspp_id
 			$this->siswaspp_id->EditAttrs["class"] = "form-control";
@@ -1867,6 +1869,9 @@ class cv03_kartuspp_list extends cv03_kartuspp {
 		// Check if validation required
 		if (!EW_SERVER_VALIDATE)
 			return TRUE;
+		if (!ew_CheckInteger($this->siswa_id->AdvancedSearch->SearchValue)) {
+			ew_AddMessage($gsSearchError, $this->siswa_id->FldErrMsg());
+		}
 
 		// Return validate result
 		$ValidateSearch = ($gsSearchError == "");
@@ -2205,12 +2210,12 @@ class cv03_kartuspp_list extends cv03_kartuspp {
 			break;
 		case "x_siswa_id":
 			$sSqlWrk = "";
-			$sSqlWrk = "SELECT `id` AS `LinkFld`, `NIS` AS `DispFld`, `Nama` AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `t04_siswa`";
+			$sSqlWrk = "SELECT `siswa_id` AS `LinkFld`, `NIS` AS `DispFld`, `Nama` AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `v04_daftarsiswa`";
 			$sWhereWrk = "{filter}";
 			$this->siswa_id->LookupFilters = array("dx1" => '`NIS`', "dx2" => '`Nama`');
-			$lookuptblfilter = "`id` in (select siswa_id from v03_kartuspp where tahunajaran_id = ".CurrentPage()->tahunajaran_id->CurrentValue.")";
+			$lookuptblfilter = "`siswa_id` is not null";
 			ew_AddFilter($sWhereWrk, $lookuptblfilter);
-			$fld->LookupFilters += array("s" => $sSqlWrk, "d" => "", "f0" => '`id` = {filter_value}', "t0" => "3", "fn0" => "");
+			$fld->LookupFilters += array("s" => $sSqlWrk, "d" => "", "f0" => '`siswa_id` = {filter_value}', "t0" => "3", "fn0" => "", "f1" => '`tahunajaran_id` IN ({filter_value})', "t1" => "3", "fn1" => "");
 			$sSqlWrk = "";
 			$this->Lookup_Selecting($this->siswa_id, $sWhereWrk); // Call Lookup selecting
 			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
@@ -2242,6 +2247,21 @@ class cv03_kartuspp_list extends cv03_kartuspp {
 			}
 		} elseif ($pageId == "extbs") {
 			switch ($fld->FldVar) {
+		case "x_siswa_id":
+			$sSqlWrk = "";
+			$sSqlWrk = "SELECT `siswa_id`, `NIS` AS `DispFld`, `Nama` AS `Disp2Fld` FROM `v04_daftarsiswa`";
+			$sWhereWrk = "(`NIS` LIKE '{query_value}%' OR CONCAT(`NIS`,'" . ew_ValueSeparator(1, $this->siswa_id) . "',`Nama`) LIKE '{query_value}%') AND ({filter})";
+			$this->siswa_id->LookupFilters = array("dx1" => '`NIS`', "dx2" => '`Nama`');
+			$lookuptblfilter = "`siswa_id` is not null";
+			ew_AddFilter($sWhereWrk, $lookuptblfilter);
+			$fld->LookupFilters += array("s" => $sSqlWrk, "d" => "", "f1" => "`tahunajaran_id` IN ({filter_value})", "t1" => "3", "fn1" => "");
+			$sSqlWrk = "";
+			$this->Lookup_Selecting($this->siswa_id, $sWhereWrk); // Call Lookup selecting
+			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
+			$sSqlWrk .= " LIMIT " . EW_AUTO_SUGGEST_MAX_ENTRIES;
+			if ($sSqlWrk <> "")
+				$fld->LookupFilters["s"] .= $sSqlWrk;
+			break;
 			}
 		} 
 	}
@@ -2410,8 +2430,8 @@ fv03_kartuspplist.ValidateRequired = false;
 <?php } ?>
 
 // Dynamic selection lists
-fv03_kartuspplist.Lists["x_tahunajaran_id"] = {"LinkField":"x_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_TahunAjaran","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":"","LinkTable":"t01_tahunajaran"};
-fv03_kartuspplist.Lists["x_siswa_id"] = {"LinkField":"x_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_NIS","x_Nama","",""],"ParentFields":[],"ChildFields":["x_siswaspp_id","x_spp_id"],"FilterFields":[],"Options":[],"Template":"","LinkTable":"t04_siswa"};
+fv03_kartuspplist.Lists["x_tahunajaran_id"] = {"LinkField":"x_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_TahunAjaran","","",""],"ParentFields":[],"ChildFields":["x_siswa_id"],"FilterFields":[],"Options":[],"Template":"","LinkTable":"t01_tahunajaran"};
+fv03_kartuspplist.Lists["x_siswa_id"] = {"LinkField":"x_siswa_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_NIS","x_Nama","",""],"ParentFields":[],"ChildFields":["x_siswaspp_id","x_spp_id"],"FilterFields":[],"Options":[],"Template":"","LinkTable":"v04_daftarsiswa"};
 fv03_kartuspplist.Lists["x_siswaspp_id"] = {"LinkField":"x_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_SPP","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":"","LinkTable":"v01_siswaspp"};
 
 // Form object for search
@@ -2423,6 +2443,9 @@ fv03_kartuspplistsrch.Validate = function(fobj) {
 		return true; // Ignore validation
 	fobj = fobj || this.Form;
 	var infix = "";
+	elm = this.GetElements("x" + infix + "_siswa_id");
+	if (elm && !ew_CheckInteger(elm.value))
+		return this.OnError(elm, "<?php echo ew_JsEncode2($v03_kartuspp->siswa_id->FldErrMsg()) ?>");
 
 	// Fire Form_CustomValidate event
 	if (!this.Form_CustomValidate(fobj))
@@ -2446,8 +2469,8 @@ fv03_kartuspplistsrch.ValidateRequired = false; // No JavaScript validation
 <?php } ?>
 
 // Dynamic selection lists
-fv03_kartuspplistsrch.Lists["x_tahunajaran_id"] = {"LinkField":"x_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_TahunAjaran","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":"","LinkTable":"t01_tahunajaran"};
-fv03_kartuspplistsrch.Lists["x_siswa_id"] = {"LinkField":"x_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_NIS","x_Nama","",""],"ParentFields":[],"ChildFields":["x_siswaspp_id","x_spp_id"],"FilterFields":[],"Options":[],"Template":"","LinkTable":"t04_siswa"};
+fv03_kartuspplistsrch.Lists["x_tahunajaran_id"] = {"LinkField":"x_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_TahunAjaran","","",""],"ParentFields":[],"ChildFields":["x_siswa_id"],"FilterFields":[],"Options":[],"Template":"","LinkTable":"t01_tahunajaran"};
+fv03_kartuspplistsrch.Lists["x_siswa_id"] = {"LinkField":"x_siswa_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_NIS","x_Nama","",""],"ParentFields":["x_tahunajaran_id"],"ChildFields":["x_siswaspp_id","x_spp_id"],"FilterFields":["x_tahunajaran_id"],"Options":[],"Template":"","LinkTable":"v04_daftarsiswa"};
 fv03_kartuspplistsrch.Lists["x_siswaspp_id"] = {"LinkField":"x_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_SPP","","",""],"ParentFields":["x_siswa_id"],"ChildFields":[],"FilterFields":["x_siswa_id"],"Options":[],"Template":"","LinkTable":"v01_siswaspp"};
 </script>
 <script type="text/javascript">
@@ -2528,6 +2551,7 @@ $v03_kartuspp_list->RenderRow();
 		<label for="x_tahunajaran_id" class="ewSearchCaption ewLabel"><?php echo $v03_kartuspp->tahunajaran_id->FldCaption() ?></label>
 		<span class="ewSearchOperator"><?php echo $Language->Phrase("=") ?><input type="hidden" name="z_tahunajaran_id" id="z_tahunajaran_id" value="="></span>
 		<span class="ewSearchField">
+<?php $v03_kartuspp->tahunajaran_id->EditAttrs["onchange"] = "ew_UpdateOpt.call(this); " . @$v03_kartuspp->tahunajaran_id->EditAttrs["onchange"]; ?>
 <select data-table="v03_kartuspp" data-field="x_tahunajaran_id" data-value-separator="<?php echo $v03_kartuspp->tahunajaran_id->DisplayValueSeparatorAttribute() ?>" id="x_tahunajaran_id" name="x_tahunajaran_id"<?php echo $v03_kartuspp->tahunajaran_id->EditAttributes() ?>>
 <?php echo $v03_kartuspp->tahunajaran_id->SelectOptionListHtml("x_tahunajaran_id") ?>
 </select>
@@ -2539,15 +2563,23 @@ $v03_kartuspp_list->RenderRow();
 <div id="xsr_2" class="ewRow">
 <?php if ($v03_kartuspp->siswa_id->Visible) { // siswa_id ?>
 	<div id="xsc_siswa_id" class="ewCell form-group">
-		<label for="x_siswa_id" class="ewSearchCaption ewLabel"><?php echo $v03_kartuspp->siswa_id->FldCaption() ?></label>
+		<label class="ewSearchCaption ewLabel"><?php echo $v03_kartuspp->siswa_id->FldCaption() ?></label>
 		<span class="ewSearchOperator"><?php echo $Language->Phrase("=") ?><input type="hidden" name="z_siswa_id" id="z_siswa_id" value="="></span>
 		<span class="ewSearchField">
-<?php $v03_kartuspp->siswa_id->EditAttrs["onchange"] = "ew_UpdateOpt.call(this); " . @$v03_kartuspp->siswa_id->EditAttrs["onchange"]; ?>
-<span class="ewLookupList">
-	<span onclick="jQuery(this).parent().next().click();" tabindex="-1" class="form-control ewLookupText" id="lu_x_siswa_id"><?php echo (strval($v03_kartuspp->siswa_id->AdvancedSearch->ViewValue) == "" ? $Language->Phrase("PleaseSelect") : $v03_kartuspp->siswa_id->AdvancedSearch->ViewValue); ?></span>
+<?php
+$wrkonchange = trim("ew_UpdateOpt.call(this); " . @$v03_kartuspp->siswa_id->EditAttrs["onchange"]);
+if ($wrkonchange <> "") $wrkonchange = " onchange=\"" . ew_JsEncode2($wrkonchange) . "\"";
+$v03_kartuspp->siswa_id->EditAttrs["onchange"] = "";
+?>
+<span id="as_x_siswa_id" style="white-space: nowrap; z-index: 8980">
+	<input type="text" name="sv_x_siswa_id" id="sv_x_siswa_id" value="<?php echo $v03_kartuspp->siswa_id->EditValue ?>" size="30" placeholder="<?php echo ew_HtmlEncode($v03_kartuspp->siswa_id->getPlaceHolder()) ?>" data-placeholder="<?php echo ew_HtmlEncode($v03_kartuspp->siswa_id->getPlaceHolder()) ?>"<?php echo $v03_kartuspp->siswa_id->EditAttributes() ?>>
 </span>
-<button type="button" title="<?php echo ew_HtmlEncode(str_replace("%s", ew_RemoveHtml($v03_kartuspp->siswa_id->FldCaption()), $Language->Phrase("LookupLink", TRUE))) ?>" onclick="ew_ModalLookupShow({lnk:this,el:'x_siswa_id',m:0,n:10});" class="ewLookupBtn btn btn-default btn-sm"><span class="glyphicon glyphicon-search ewIcon"></span></button>
-<input type="hidden" data-table="v03_kartuspp" data-field="x_siswa_id" data-multiple="0" data-lookup="1" data-value-separator="<?php echo $v03_kartuspp->siswa_id->DisplayValueSeparatorAttribute() ?>" name="x_siswa_id" id="x_siswa_id" value="<?php echo $v03_kartuspp->siswa_id->AdvancedSearch->SearchValue ?>"<?php echo $v03_kartuspp->siswa_id->EditAttributes() ?>>
+<input type="hidden" data-table="v03_kartuspp" data-field="x_siswa_id" data-multiple="0" data-lookup="1" data-value-separator="<?php echo $v03_kartuspp->siswa_id->DisplayValueSeparatorAttribute() ?>" name="x_siswa_id" id="x_siswa_id" value="<?php echo ew_HtmlEncode($v03_kartuspp->siswa_id->AdvancedSearch->SearchValue) ?>"<?php echo $wrkonchange ?>>
+<input type="hidden" name="q_x_siswa_id" id="q_x_siswa_id" value="<?php echo $v03_kartuspp->siswa_id->LookupFilterQuery(true, "extbs") ?>">
+<script type="text/javascript">
+fv03_kartuspplistsrch.CreateAutoSuggest({"id":"x_siswa_id","forceSelect":true});
+</script>
+<button type="button" title="<?php echo ew_HtmlEncode(str_replace("%s", ew_RemoveHtml($v03_kartuspp->siswa_id->FldCaption()), $Language->Phrase("LookupLink", TRUE))) ?>" onclick="ew_ModalLookupShow({lnk:this,el:'x_siswa_id',m:0,n:10,srch:false});" class="ewLookupBtn btn btn-default btn-sm"><span class="glyphicon glyphicon-search ewIcon"></span></button>
 <input type="hidden" name="s_x_siswa_id" id="s_x_siswa_id" value="<?php echo $v03_kartuspp->siswa_id->LookupFilterQuery(false, "extbs") ?>">
 </span>
 	</div>

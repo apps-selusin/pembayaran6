@@ -56,10 +56,8 @@ class cv03_kartuspp extends cTable {
 		$this->fields['tahunajaran_id'] = &$this->tahunajaran_id;
 
 		// siswa_id
-		$this->siswa_id = new cField('v03_kartuspp', 'v03_kartuspp', 'x_siswa_id', 'siswa_id', '`siswa_id`', '`siswa_id`', 3, -1, FALSE, '`siswa_id`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'SELECT');
+		$this->siswa_id = new cField('v03_kartuspp', 'v03_kartuspp', 'x_siswa_id', 'siswa_id', '`siswa_id`', '`siswa_id`', 3, -1, FALSE, '`siswa_id`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
 		$this->siswa_id->Sortable = TRUE; // Allow sort
-		$this->siswa_id->UsePleaseSelect = TRUE; // Use PleaseSelect by default
-		$this->siswa_id->PleaseSelectText = $Language->Phrase("PleaseSelect"); // PleaseSelect text
 		$this->siswa_id->FldDefaultErrMsg = $Language->Phrase("IncorrectInteger");
 		$this->fields['siswa_id'] = &$this->siswa_id;
 
@@ -715,12 +713,13 @@ class cv03_kartuspp extends cTable {
 		$this->tahunajaran_id->ViewCustomAttributes = "";
 
 		// siswa_id
+		$this->siswa_id->ViewValue = $this->siswa_id->CurrentValue;
 		if (strval($this->siswa_id->CurrentValue) <> "") {
-			$sFilterWrk = "`id`" . ew_SearchString("=", $this->siswa_id->CurrentValue, EW_DATATYPE_NUMBER, "");
-		$sSqlWrk = "SELECT `id`, `NIS` AS `DispFld`, `Nama` AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `t04_siswa`";
+			$sFilterWrk = "`siswa_id`" . ew_SearchString("=", $this->siswa_id->CurrentValue, EW_DATATYPE_NUMBER, "");
+		$sSqlWrk = "SELECT `siswa_id`, `NIS` AS `DispFld`, `Nama` AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `v04_daftarsiswa`";
 		$sWhereWrk = "";
 		$this->siswa_id->LookupFilters = array("dx1" => '`NIS`', "dx2" => '`Nama`');
-		$lookuptblfilter = "`id` in (select siswa_id from v03_kartuspp where tahunajaran_id = ".CurrentPage()->tahunajaran_id->CurrentValue.")";
+		$lookuptblfilter = "`siswa_id` is not null";
 		ew_AddFilter($sWhereWrk, $lookuptblfilter);
 		ew_AddFilter($sWhereWrk, $sFilterWrk);
 		$this->Lookup_Selecting($this->siswa_id, $sWhereWrk); // Call Lookup selecting
@@ -874,6 +873,8 @@ class cv03_kartuspp extends cTable {
 		// siswa_id
 		$this->siswa_id->EditAttrs["class"] = "form-control";
 		$this->siswa_id->EditCustomAttributes = "";
+		$this->siswa_id->EditValue = $this->siswa_id->CurrentValue;
+		$this->siswa_id->PlaceHolder = ew_RemoveHtml($this->siswa_id->FldCaption());
 
 		// siswaspp_id
 		$this->siswaspp_id->EditAttrs["class"] = "form-control";

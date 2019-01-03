@@ -582,6 +582,9 @@
   </global>
   <project>
     <phrase id="footertext" value="&amp;copy;2018 Selaras Solusindo. All rights reserved." />
+    <menu id="81">
+      <phrase id="menutext" value="v 04 daftarsiswa" />
+    </menu>
     <menu id="56">
       <phrase id="menutext" value="t 95 periode" />
     </menu>
@@ -1124,6 +1127,42 @@
       </field>
       <field id="bayardetail_jumlah">
         <phrase id="fldcaption" value="Jumlah" />
+      </field>
+    </table>
+    <table id="v04_daftarsiswa">
+      <phrase id="tblcaption" value="v 04 daftarsiswa" />
+      <field id="master_id">
+        <phrase id="fldcaption" value="master id" />
+      </field>
+      <field id="tahunajaran_id">
+        <phrase id="fldcaption" value="tahunajaran id" />
+      </field>
+      <field id="sekolah_id">
+        <phrase id="fldcaption" value="sekolah id" />
+      </field>
+      <field id="kelas_id">
+        <phrase id="fldcaption" value="kelas id" />
+      </field>
+      <field id="detail_id">
+        <phrase id="fldcaption" value="detail id" />
+      </field>
+      <field id="siswa_id">
+        <phrase id="fldcaption" value="siswa id" />
+      </field>
+      <field id="tahunajaran">
+        <phrase id="fldcaption" value="Tahun Ajaran" />
+      </field>
+      <field id="sekolah">
+        <phrase id="fldcaption" value="Sekolah" />
+      </field>
+      <field id="kelas">
+        <phrase id="fldcaption" value="Kelas" />
+      </field>
+      <field id="nis">
+        <phrase id="fldcaption" value="NIS" />
+      </field>
+      <field id="nama">
+        <phrase id="fldcaption" value="Nama" />
       </field>
     </table>
   </project>
