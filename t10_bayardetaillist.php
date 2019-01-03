@@ -1979,6 +1979,7 @@ class ct10_bayardetail_list extends ct10_bayardetail {
 		$this->bayarmaster_id->ViewCustomAttributes = "";
 
 		// siswaspp_id
+		$this->siswaspp_id->ViewValue = $this->siswaspp_id->CurrentValue;
 		if (strval($this->siswaspp_id->CurrentValue) <> "") {
 			$sFilterWrk = "`id`" . ew_SearchString("=", $this->siswaspp_id->CurrentValue, EW_DATATYPE_NUMBER, "");
 		$sSqlWrk = "SELECT `id`, `SPP` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `v01_siswaspp`";
@@ -2006,6 +2007,26 @@ class ct10_bayardetail_list extends ct10_bayardetail {
 		$this->Keterangan->ViewCustomAttributes = "";
 
 		// Keterangan2
+		if (strval($this->Keterangan2->CurrentValue) <> "") {
+			$sFilterWrk = "`Periode`" . ew_SearchString("=", $this->Keterangan2->CurrentValue, EW_DATATYPE_STRING, "");
+		$sSqlWrk = "SELECT `Periode`, `Periode` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `t95_periode`";
+		$sWhereWrk = "";
+		$this->Keterangan2->LookupFilters = array();
+		ew_AddFilter($sWhereWrk, $sFilterWrk);
+		$this->Lookup_Selecting($this->Keterangan2, $sWhereWrk); // Call Lookup selecting
+		if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
+			$rswrk = Conn()->Execute($sSqlWrk);
+			if ($rswrk && !$rswrk->EOF) { // Lookup values found
+				$arwrk = array();
+				$arwrk[1] = $rswrk->fields('DispFld');
+				$this->Keterangan2->ViewValue = $this->Keterangan2->DisplayValue($arwrk);
+				$rswrk->Close();
+			} else {
+				$this->Keterangan2->ViewValue = $this->Keterangan2->CurrentValue;
+			}
+		} else {
+			$this->Keterangan2->ViewValue = NULL;
+		}
 		$this->Keterangan2->ViewCustomAttributes = "";
 
 		// Keterangan3
@@ -2047,21 +2068,28 @@ class ct10_bayardetail_list extends ct10_bayardetail {
 			// siswaspp_id
 			$this->siswaspp_id->EditAttrs["class"] = "form-control";
 			$this->siswaspp_id->EditCustomAttributes = "";
-			if (trim(strval($this->siswaspp_id->CurrentValue)) == "") {
-				$sFilterWrk = "0=1";
-			} else {
+			$this->siswaspp_id->EditValue = ew_HtmlEncode($this->siswaspp_id->CurrentValue);
+			if (strval($this->siswaspp_id->CurrentValue) <> "") {
 				$sFilterWrk = "`id`" . ew_SearchString("=", $this->siswaspp_id->CurrentValue, EW_DATATYPE_NUMBER, "");
-			}
-			$sSqlWrk = "SELECT `id`, `SPP` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld`, `siswa_id` AS `SelectFilterFld`, '' AS `SelectFilterFld2`, '' AS `SelectFilterFld3`, '' AS `SelectFilterFld4` FROM `v01_siswaspp`";
+			$sSqlWrk = "SELECT `id`, `SPP` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `v01_siswaspp`";
 			$sWhereWrk = "";
 			$this->siswaspp_id->LookupFilters = array();
 			ew_AddFilter($sWhereWrk, $sFilterWrk);
 			$this->Lookup_Selecting($this->siswaspp_id, $sWhereWrk); // Call Lookup selecting
 			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
-			$rswrk = Conn()->Execute($sSqlWrk);
-			$arwrk = ($rswrk) ? $rswrk->GetRows() : array();
-			if ($rswrk) $rswrk->Close();
-			$this->siswaspp_id->EditValue = $arwrk;
+				$rswrk = Conn()->Execute($sSqlWrk);
+				if ($rswrk && !$rswrk->EOF) { // Lookup values found
+					$arwrk = array();
+					$arwrk[1] = ew_HtmlEncode($rswrk->fields('DispFld'));
+					$this->siswaspp_id->EditValue = $this->siswaspp_id->DisplayValue($arwrk);
+					$rswrk->Close();
+				} else {
+					$this->siswaspp_id->EditValue = ew_HtmlEncode($this->siswaspp_id->CurrentValue);
+				}
+			} else {
+				$this->siswaspp_id->EditValue = NULL;
+			}
+			$this->siswaspp_id->PlaceHolder = ew_RemoveHtml($this->siswaspp_id->FldCaption());
 
 			// Keterangan
 			$this->Keterangan->EditAttrs["class"] = "form-control";
@@ -2072,6 +2100,21 @@ class ct10_bayardetail_list extends ct10_bayardetail {
 			// Keterangan2
 			$this->Keterangan2->EditAttrs["class"] = "form-control";
 			$this->Keterangan2->EditCustomAttributes = "";
+			if (trim(strval($this->Keterangan2->CurrentValue)) == "") {
+				$sFilterWrk = "0=1";
+			} else {
+				$sFilterWrk = "`Periode`" . ew_SearchString("=", $this->Keterangan2->CurrentValue, EW_DATATYPE_STRING, "");
+			}
+			$sSqlWrk = "SELECT `Periode`, `Periode` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld`, '' AS `SelectFilterFld`, '' AS `SelectFilterFld2`, '' AS `SelectFilterFld3`, '' AS `SelectFilterFld4` FROM `t95_periode`";
+			$sWhereWrk = "";
+			$this->Keterangan2->LookupFilters = array();
+			ew_AddFilter($sWhereWrk, $sFilterWrk);
+			$this->Lookup_Selecting($this->Keterangan2, $sWhereWrk); // Call Lookup selecting
+			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
+			$rswrk = Conn()->Execute($sSqlWrk);
+			$arwrk = ($rswrk) ? $rswrk->GetRows() : array();
+			if ($rswrk) $rswrk->Close();
+			$this->Keterangan2->EditValue = $arwrk;
 
 			// Keterangan3
 			$this->Keterangan3->EditAttrs["class"] = "form-control";
@@ -2115,21 +2158,28 @@ class ct10_bayardetail_list extends ct10_bayardetail {
 			// siswaspp_id
 			$this->siswaspp_id->EditAttrs["class"] = "form-control";
 			$this->siswaspp_id->EditCustomAttributes = "";
-			if (trim(strval($this->siswaspp_id->CurrentValue)) == "") {
-				$sFilterWrk = "0=1";
-			} else {
+			$this->siswaspp_id->EditValue = ew_HtmlEncode($this->siswaspp_id->CurrentValue);
+			if (strval($this->siswaspp_id->CurrentValue) <> "") {
 				$sFilterWrk = "`id`" . ew_SearchString("=", $this->siswaspp_id->CurrentValue, EW_DATATYPE_NUMBER, "");
-			}
-			$sSqlWrk = "SELECT `id`, `SPP` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld`, `siswa_id` AS `SelectFilterFld`, '' AS `SelectFilterFld2`, '' AS `SelectFilterFld3`, '' AS `SelectFilterFld4` FROM `v01_siswaspp`";
+			$sSqlWrk = "SELECT `id`, `SPP` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `v01_siswaspp`";
 			$sWhereWrk = "";
 			$this->siswaspp_id->LookupFilters = array();
 			ew_AddFilter($sWhereWrk, $sFilterWrk);
 			$this->Lookup_Selecting($this->siswaspp_id, $sWhereWrk); // Call Lookup selecting
 			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
-			$rswrk = Conn()->Execute($sSqlWrk);
-			$arwrk = ($rswrk) ? $rswrk->GetRows() : array();
-			if ($rswrk) $rswrk->Close();
-			$this->siswaspp_id->EditValue = $arwrk;
+				$rswrk = Conn()->Execute($sSqlWrk);
+				if ($rswrk && !$rswrk->EOF) { // Lookup values found
+					$arwrk = array();
+					$arwrk[1] = ew_HtmlEncode($rswrk->fields('DispFld'));
+					$this->siswaspp_id->EditValue = $this->siswaspp_id->DisplayValue($arwrk);
+					$rswrk->Close();
+				} else {
+					$this->siswaspp_id->EditValue = ew_HtmlEncode($this->siswaspp_id->CurrentValue);
+				}
+			} else {
+				$this->siswaspp_id->EditValue = NULL;
+			}
+			$this->siswaspp_id->PlaceHolder = ew_RemoveHtml($this->siswaspp_id->FldCaption());
 
 			// Keterangan
 			$this->Keterangan->EditAttrs["class"] = "form-control";
@@ -2140,6 +2190,21 @@ class ct10_bayardetail_list extends ct10_bayardetail {
 			// Keterangan2
 			$this->Keterangan2->EditAttrs["class"] = "form-control";
 			$this->Keterangan2->EditCustomAttributes = "";
+			if (trim(strval($this->Keterangan2->CurrentValue)) == "") {
+				$sFilterWrk = "0=1";
+			} else {
+				$sFilterWrk = "`Periode`" . ew_SearchString("=", $this->Keterangan2->CurrentValue, EW_DATATYPE_STRING, "");
+			}
+			$sSqlWrk = "SELECT `Periode`, `Periode` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld`, '' AS `SelectFilterFld`, '' AS `SelectFilterFld2`, '' AS `SelectFilterFld3`, '' AS `SelectFilterFld4` FROM `t95_periode`";
+			$sWhereWrk = "";
+			$this->Keterangan2->LookupFilters = array();
+			ew_AddFilter($sWhereWrk, $sFilterWrk);
+			$this->Lookup_Selecting($this->Keterangan2, $sWhereWrk); // Call Lookup selecting
+			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
+			$rswrk = Conn()->Execute($sSqlWrk);
+			$arwrk = ($rswrk) ? $rswrk->GetRows() : array();
+			if ($rswrk) $rswrk->Close();
+			$this->Keterangan2->EditValue = $arwrk;
 
 			// Keterangan3
 			$this->Keterangan3->EditAttrs["class"] = "form-control";
@@ -2202,6 +2267,9 @@ class ct10_bayardetail_list extends ct10_bayardetail {
 			return ($gsFormError == "");
 		if (!$this->siswaspp_id->FldIsDetailKey && !is_null($this->siswaspp_id->FormValue) && $this->siswaspp_id->FormValue == "") {
 			ew_AddMessage($gsFormError, str_replace("%s", $this->siswaspp_id->FldCaption(), $this->siswaspp_id->ReqErrMsg));
+		}
+		if (!ew_CheckInteger($this->siswaspp_id->FormValue)) {
+			ew_AddMessage($gsFormError, $this->siswaspp_id->FldErrMsg());
 		}
 		if (!$this->Jumlah->FldIsDetailKey && !is_null($this->Jumlah->FormValue) && $this->Jumlah->FormValue == "") {
 			ew_AddMessage($gsFormError, str_replace("%s", $this->Jumlah->FldCaption(), $this->Jumlah->ReqErrMsg));
@@ -2808,11 +2876,23 @@ class ct10_bayardetail_list extends ct10_bayardetail {
 		case "x_siswaspp_id":
 			$sSqlWrk = "";
 			$sSqlWrk = "SELECT `id` AS `LinkFld`, `SPP` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `v01_siswaspp`";
-			$sWhereWrk = "";
+			$sWhereWrk = "{filter}";
 			$this->siswaspp_id->LookupFilters = array();
 			$fld->LookupFilters += array("s" => $sSqlWrk, "d" => "", "f0" => '`id` = {filter_value}', "t0" => "3", "fn0" => "");
 			$sSqlWrk = "";
 			$this->Lookup_Selecting($this->siswaspp_id, $sWhereWrk); // Call Lookup selecting
+			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
+			if ($sSqlWrk <> "")
+				$fld->LookupFilters["s"] .= $sSqlWrk;
+			break;
+		case "x_Keterangan2":
+			$sSqlWrk = "";
+			$sSqlWrk = "SELECT `Periode` AS `LinkFld`, `Periode` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `t95_periode`";
+			$sWhereWrk = "";
+			$this->Keterangan2->LookupFilters = array();
+			$fld->LookupFilters += array("s" => $sSqlWrk, "d" => "", "f0" => '`Periode` = {filter_value}', "t0" => "200", "fn0" => "");
+			$sSqlWrk = "";
+			$this->Lookup_Selecting($this->Keterangan2, $sWhereWrk); // Call Lookup selecting
 			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
 			if ($sSqlWrk <> "")
 				$fld->LookupFilters["s"] .= $sSqlWrk;
@@ -2825,6 +2905,19 @@ class ct10_bayardetail_list extends ct10_bayardetail {
 		global $gsLanguage;
 		$pageId = $pageId ?: $this->PageID;
 		switch ($fld->FldVar) {
+		case "x_siswaspp_id":
+			$sSqlWrk = "";
+			$sSqlWrk = "SELECT `id`, `SPP` AS `DispFld` FROM `v01_siswaspp`";
+			$sWhereWrk = "`SPP` LIKE '{query_value}%'";
+			$this->siswaspp_id->LookupFilters = array();
+			$fld->LookupFilters += array("s" => $sSqlWrk, "d" => "");
+			$sSqlWrk = "";
+			$this->Lookup_Selecting($this->siswaspp_id, $sWhereWrk); // Call Lookup selecting
+			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
+			$sSqlWrk .= " LIMIT " . EW_AUTO_SUGGEST_MAX_ENTRIES;
+			if ($sSqlWrk <> "")
+				$fld->LookupFilters["s"] .= $sSqlWrk;
+			break;
 		}
 	}
 
@@ -2832,6 +2925,9 @@ class ct10_bayardetail_list extends ct10_bayardetail {
 	function Page_Load() {
 
 		//echo "Page Load";
+		if (isset($_GET["siswa_id"]) and isset($_GET["tahunajaran_id"])) {
+			$this->GridAddRowCount = ew_ExecuteScalar("select count(*) from v01_siswaspp where siswa_id = ".$_GET["siswa_id"]." and tahunajaran_id = ".$_GET["tahunajaran_id"]."");
+		}
 	}
 
 	// Page Unload event
@@ -2877,7 +2973,9 @@ class ct10_bayardetail_list extends ct10_bayardetail {
 
 		// Example:
 		//$header = "your header";
+		//$this->OtherOptions["addedit"]->Items["add"]->Visible = FALSE;
 
+		$this->OtherOptions["addedit"]->Items["addblankrow"]->Visible = FALSE;
 	}
 
 	// Page Data Rendered event
@@ -2996,6 +3094,9 @@ ft10_bayardetaillist.Validate = function() {
 			elm = this.GetElements("x" + infix + "_siswaspp_id");
 			if (elm && !ew_IsHidden(elm) && !ew_HasValue(elm))
 				return this.OnError(elm, "<?php echo ew_JsEncode2(str_replace("%s", $t10_bayardetail->siswaspp_id->FldCaption(), $t10_bayardetail->siswaspp_id->ReqErrMsg)) ?>");
+			elm = this.GetElements("x" + infix + "_siswaspp_id");
+			if (elm && !ew_CheckInteger(elm.value))
+				return this.OnError(elm, "<?php echo ew_JsEncode2($t10_bayardetail->siswaspp_id->FldErrMsg()) ?>");
 			elm = this.GetElements("x" + infix + "_Jumlah");
 			if (elm && !ew_IsHidden(elm) && !ew_HasValue(elm))
 				return this.OnError(elm, "<?php echo ew_JsEncode2(str_replace("%s", $t10_bayardetail->Jumlah->FldCaption(), $t10_bayardetail->Jumlah->ReqErrMsg)) ?>");
@@ -3042,7 +3143,8 @@ ft10_bayardetaillist.ValidateRequired = false;
 <?php } ?>
 
 // Dynamic selection lists
-ft10_bayardetaillist.Lists["x_siswaspp_id"] = {"LinkField":"x_id","Ajax":true,"AutoFill":true,"DisplayFields":["x_SPP","","",""],"ParentFields":[],"ChildFields":["t10_bayardetail x_Keterangan"],"FilterFields":[],"Options":[],"Template":"","LinkTable":"v01_siswaspp"};
+ft10_bayardetaillist.Lists["x_siswaspp_id"] = {"LinkField":"x_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_SPP","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":"","LinkTable":"v01_siswaspp"};
+ft10_bayardetaillist.Lists["x_Keterangan2"] = {"LinkField":"x_Periode","Ajax":true,"AutoFill":false,"DisplayFields":["x_Periode","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":"","LinkTable":"t95_periode"};
 
 // Form object for search
 </script>
@@ -3229,12 +3331,19 @@ $t10_bayardetail_list->ListOptions->Render("body", "left", $t10_bayardetail_list
 	<?php if ($t10_bayardetail->siswaspp_id->Visible) { // siswaspp_id ?>
 		<td data-name="siswaspp_id">
 <span id="el<?php echo $t10_bayardetail_list->RowCnt ?>_t10_bayardetail_siswaspp_id" class="form-group t10_bayardetail_siswaspp_id">
-<?php $t10_bayardetail->siswaspp_id->EditAttrs["onchange"] = "ew_AutoFill(this); " . @$t10_bayardetail->siswaspp_id->EditAttrs["onchange"]; ?>
-<select data-table="t10_bayardetail" data-field="x_siswaspp_id" data-value-separator="<?php echo $t10_bayardetail->siswaspp_id->DisplayValueSeparatorAttribute() ?>" id="x<?php echo $t10_bayardetail_list->RowIndex ?>_siswaspp_id" name="x<?php echo $t10_bayardetail_list->RowIndex ?>_siswaspp_id"<?php echo $t10_bayardetail->siswaspp_id->EditAttributes() ?>>
-<?php echo $t10_bayardetail->siswaspp_id->SelectOptionListHtml("x<?php echo $t10_bayardetail_list->RowIndex ?>_siswaspp_id") ?>
-</select>
-<input type="hidden" name="s_x<?php echo $t10_bayardetail_list->RowIndex ?>_siswaspp_id" id="s_x<?php echo $t10_bayardetail_list->RowIndex ?>_siswaspp_id" value="<?php echo $t10_bayardetail->siswaspp_id->LookupFilterQuery() ?>">
-<input type="hidden" name="ln_x<?php echo $t10_bayardetail_list->RowIndex ?>_siswaspp_id" id="ln_x<?php echo $t10_bayardetail_list->RowIndex ?>_siswaspp_id" value="x<?php echo $t10_bayardetail_list->RowIndex ?>_Jumlah">
+<?php
+$wrkonchange = trim(" " . @$t10_bayardetail->siswaspp_id->EditAttrs["onchange"]);
+if ($wrkonchange <> "") $wrkonchange = " onchange=\"" . ew_JsEncode2($wrkonchange) . "\"";
+$t10_bayardetail->siswaspp_id->EditAttrs["onchange"] = "";
+?>
+<span id="as_x<?php echo $t10_bayardetail_list->RowIndex ?>_siswaspp_id" style="white-space: nowrap; z-index: <?php echo (9000 - $t10_bayardetail_list->RowCnt * 10) ?>">
+	<input type="text" name="sv_x<?php echo $t10_bayardetail_list->RowIndex ?>_siswaspp_id" id="sv_x<?php echo $t10_bayardetail_list->RowIndex ?>_siswaspp_id" value="<?php echo $t10_bayardetail->siswaspp_id->EditValue ?>" size="30" placeholder="<?php echo ew_HtmlEncode($t10_bayardetail->siswaspp_id->getPlaceHolder()) ?>" data-placeholder="<?php echo ew_HtmlEncode($t10_bayardetail->siswaspp_id->getPlaceHolder()) ?>"<?php echo $t10_bayardetail->siswaspp_id->EditAttributes() ?>>
+</span>
+<input type="hidden" data-table="t10_bayardetail" data-field="x_siswaspp_id" data-value-separator="<?php echo $t10_bayardetail->siswaspp_id->DisplayValueSeparatorAttribute() ?>" name="x<?php echo $t10_bayardetail_list->RowIndex ?>_siswaspp_id" id="x<?php echo $t10_bayardetail_list->RowIndex ?>_siswaspp_id" value="<?php echo ew_HtmlEncode($t10_bayardetail->siswaspp_id->CurrentValue) ?>"<?php echo $wrkonchange ?>>
+<input type="hidden" name="q_x<?php echo $t10_bayardetail_list->RowIndex ?>_siswaspp_id" id="q_x<?php echo $t10_bayardetail_list->RowIndex ?>_siswaspp_id" value="<?php echo $t10_bayardetail->siswaspp_id->LookupFilterQuery(true) ?>">
+<script type="text/javascript">
+ft10_bayardetaillist.CreateAutoSuggest({"id":"x<?php echo $t10_bayardetail_list->RowIndex ?>_siswaspp_id","forceSelect":false});
+</script>
 </span>
 <input type="hidden" data-table="t10_bayardetail" data-field="x_siswaspp_id" name="o<?php echo $t10_bayardetail_list->RowIndex ?>_siswaspp_id" id="o<?php echo $t10_bayardetail_list->RowIndex ?>_siswaspp_id" value="<?php echo ew_HtmlEncode($t10_bayardetail->siswaspp_id->OldValue) ?>">
 </td>
@@ -3253,6 +3362,7 @@ $t10_bayardetail_list->ListOptions->Render("body", "left", $t10_bayardetail_list
 <select data-table="t10_bayardetail" data-field="x_Keterangan2" data-value-separator="<?php echo $t10_bayardetail->Keterangan2->DisplayValueSeparatorAttribute() ?>" id="x<?php echo $t10_bayardetail_list->RowIndex ?>_Keterangan2" name="x<?php echo $t10_bayardetail_list->RowIndex ?>_Keterangan2"<?php echo $t10_bayardetail->Keterangan2->EditAttributes() ?>>
 <?php echo $t10_bayardetail->Keterangan2->SelectOptionListHtml("x<?php echo $t10_bayardetail_list->RowIndex ?>_Keterangan2") ?>
 </select>
+<input type="hidden" name="s_x<?php echo $t10_bayardetail_list->RowIndex ?>_Keterangan2" id="s_x<?php echo $t10_bayardetail_list->RowIndex ?>_Keterangan2" value="<?php echo $t10_bayardetail->Keterangan2->LookupFilterQuery() ?>">
 </span>
 <input type="hidden" data-table="t10_bayardetail" data-field="x_Keterangan2" name="o<?php echo $t10_bayardetail_list->RowIndex ?>_Keterangan2" id="o<?php echo $t10_bayardetail_list->RowIndex ?>_Keterangan2" value="<?php echo ew_HtmlEncode($t10_bayardetail->Keterangan2->OldValue) ?>">
 </td>
@@ -3402,23 +3512,37 @@ $t10_bayardetail_list->ListOptions->Render("body", "left", $t10_bayardetail_list
 		<td data-name="siswaspp_id"<?php echo $t10_bayardetail->siswaspp_id->CellAttributes() ?>>
 <?php if ($t10_bayardetail->RowType == EW_ROWTYPE_ADD) { // Add record ?>
 <span id="el<?php echo $t10_bayardetail_list->RowCnt ?>_t10_bayardetail_siswaspp_id" class="form-group t10_bayardetail_siswaspp_id">
-<?php $t10_bayardetail->siswaspp_id->EditAttrs["onchange"] = "ew_AutoFill(this); " . @$t10_bayardetail->siswaspp_id->EditAttrs["onchange"]; ?>
-<select data-table="t10_bayardetail" data-field="x_siswaspp_id" data-value-separator="<?php echo $t10_bayardetail->siswaspp_id->DisplayValueSeparatorAttribute() ?>" id="x<?php echo $t10_bayardetail_list->RowIndex ?>_siswaspp_id" name="x<?php echo $t10_bayardetail_list->RowIndex ?>_siswaspp_id"<?php echo $t10_bayardetail->siswaspp_id->EditAttributes() ?>>
-<?php echo $t10_bayardetail->siswaspp_id->SelectOptionListHtml("x<?php echo $t10_bayardetail_list->RowIndex ?>_siswaspp_id") ?>
-</select>
-<input type="hidden" name="s_x<?php echo $t10_bayardetail_list->RowIndex ?>_siswaspp_id" id="s_x<?php echo $t10_bayardetail_list->RowIndex ?>_siswaspp_id" value="<?php echo $t10_bayardetail->siswaspp_id->LookupFilterQuery() ?>">
-<input type="hidden" name="ln_x<?php echo $t10_bayardetail_list->RowIndex ?>_siswaspp_id" id="ln_x<?php echo $t10_bayardetail_list->RowIndex ?>_siswaspp_id" value="x<?php echo $t10_bayardetail_list->RowIndex ?>_Jumlah">
+<?php
+$wrkonchange = trim(" " . @$t10_bayardetail->siswaspp_id->EditAttrs["onchange"]);
+if ($wrkonchange <> "") $wrkonchange = " onchange=\"" . ew_JsEncode2($wrkonchange) . "\"";
+$t10_bayardetail->siswaspp_id->EditAttrs["onchange"] = "";
+?>
+<span id="as_x<?php echo $t10_bayardetail_list->RowIndex ?>_siswaspp_id" style="white-space: nowrap; z-index: <?php echo (9000 - $t10_bayardetail_list->RowCnt * 10) ?>">
+	<input type="text" name="sv_x<?php echo $t10_bayardetail_list->RowIndex ?>_siswaspp_id" id="sv_x<?php echo $t10_bayardetail_list->RowIndex ?>_siswaspp_id" value="<?php echo $t10_bayardetail->siswaspp_id->EditValue ?>" size="30" placeholder="<?php echo ew_HtmlEncode($t10_bayardetail->siswaspp_id->getPlaceHolder()) ?>" data-placeholder="<?php echo ew_HtmlEncode($t10_bayardetail->siswaspp_id->getPlaceHolder()) ?>"<?php echo $t10_bayardetail->siswaspp_id->EditAttributes() ?>>
+</span>
+<input type="hidden" data-table="t10_bayardetail" data-field="x_siswaspp_id" data-value-separator="<?php echo $t10_bayardetail->siswaspp_id->DisplayValueSeparatorAttribute() ?>" name="x<?php echo $t10_bayardetail_list->RowIndex ?>_siswaspp_id" id="x<?php echo $t10_bayardetail_list->RowIndex ?>_siswaspp_id" value="<?php echo ew_HtmlEncode($t10_bayardetail->siswaspp_id->CurrentValue) ?>"<?php echo $wrkonchange ?>>
+<input type="hidden" name="q_x<?php echo $t10_bayardetail_list->RowIndex ?>_siswaspp_id" id="q_x<?php echo $t10_bayardetail_list->RowIndex ?>_siswaspp_id" value="<?php echo $t10_bayardetail->siswaspp_id->LookupFilterQuery(true) ?>">
+<script type="text/javascript">
+ft10_bayardetaillist.CreateAutoSuggest({"id":"x<?php echo $t10_bayardetail_list->RowIndex ?>_siswaspp_id","forceSelect":false});
+</script>
 </span>
 <input type="hidden" data-table="t10_bayardetail" data-field="x_siswaspp_id" name="o<?php echo $t10_bayardetail_list->RowIndex ?>_siswaspp_id" id="o<?php echo $t10_bayardetail_list->RowIndex ?>_siswaspp_id" value="<?php echo ew_HtmlEncode($t10_bayardetail->siswaspp_id->OldValue) ?>">
 <?php } ?>
 <?php if ($t10_bayardetail->RowType == EW_ROWTYPE_EDIT) { // Edit record ?>
 <span id="el<?php echo $t10_bayardetail_list->RowCnt ?>_t10_bayardetail_siswaspp_id" class="form-group t10_bayardetail_siswaspp_id">
-<?php $t10_bayardetail->siswaspp_id->EditAttrs["onchange"] = "ew_AutoFill(this); " . @$t10_bayardetail->siswaspp_id->EditAttrs["onchange"]; ?>
-<select data-table="t10_bayardetail" data-field="x_siswaspp_id" data-value-separator="<?php echo $t10_bayardetail->siswaspp_id->DisplayValueSeparatorAttribute() ?>" id="x<?php echo $t10_bayardetail_list->RowIndex ?>_siswaspp_id" name="x<?php echo $t10_bayardetail_list->RowIndex ?>_siswaspp_id"<?php echo $t10_bayardetail->siswaspp_id->EditAttributes() ?>>
-<?php echo $t10_bayardetail->siswaspp_id->SelectOptionListHtml("x<?php echo $t10_bayardetail_list->RowIndex ?>_siswaspp_id") ?>
-</select>
-<input type="hidden" name="s_x<?php echo $t10_bayardetail_list->RowIndex ?>_siswaspp_id" id="s_x<?php echo $t10_bayardetail_list->RowIndex ?>_siswaspp_id" value="<?php echo $t10_bayardetail->siswaspp_id->LookupFilterQuery() ?>">
-<input type="hidden" name="ln_x<?php echo $t10_bayardetail_list->RowIndex ?>_siswaspp_id" id="ln_x<?php echo $t10_bayardetail_list->RowIndex ?>_siswaspp_id" value="x<?php echo $t10_bayardetail_list->RowIndex ?>_Jumlah">
+<?php
+$wrkonchange = trim(" " . @$t10_bayardetail->siswaspp_id->EditAttrs["onchange"]);
+if ($wrkonchange <> "") $wrkonchange = " onchange=\"" . ew_JsEncode2($wrkonchange) . "\"";
+$t10_bayardetail->siswaspp_id->EditAttrs["onchange"] = "";
+?>
+<span id="as_x<?php echo $t10_bayardetail_list->RowIndex ?>_siswaspp_id" style="white-space: nowrap; z-index: <?php echo (9000 - $t10_bayardetail_list->RowCnt * 10) ?>">
+	<input type="text" name="sv_x<?php echo $t10_bayardetail_list->RowIndex ?>_siswaspp_id" id="sv_x<?php echo $t10_bayardetail_list->RowIndex ?>_siswaspp_id" value="<?php echo $t10_bayardetail->siswaspp_id->EditValue ?>" size="30" placeholder="<?php echo ew_HtmlEncode($t10_bayardetail->siswaspp_id->getPlaceHolder()) ?>" data-placeholder="<?php echo ew_HtmlEncode($t10_bayardetail->siswaspp_id->getPlaceHolder()) ?>"<?php echo $t10_bayardetail->siswaspp_id->EditAttributes() ?>>
+</span>
+<input type="hidden" data-table="t10_bayardetail" data-field="x_siswaspp_id" data-value-separator="<?php echo $t10_bayardetail->siswaspp_id->DisplayValueSeparatorAttribute() ?>" name="x<?php echo $t10_bayardetail_list->RowIndex ?>_siswaspp_id" id="x<?php echo $t10_bayardetail_list->RowIndex ?>_siswaspp_id" value="<?php echo ew_HtmlEncode($t10_bayardetail->siswaspp_id->CurrentValue) ?>"<?php echo $wrkonchange ?>>
+<input type="hidden" name="q_x<?php echo $t10_bayardetail_list->RowIndex ?>_siswaspp_id" id="q_x<?php echo $t10_bayardetail_list->RowIndex ?>_siswaspp_id" value="<?php echo $t10_bayardetail->siswaspp_id->LookupFilterQuery(true) ?>">
+<script type="text/javascript">
+ft10_bayardetaillist.CreateAutoSuggest({"id":"x<?php echo $t10_bayardetail_list->RowIndex ?>_siswaspp_id","forceSelect":false});
+</script>
 </span>
 <?php } ?>
 <?php if ($t10_bayardetail->RowType == EW_ROWTYPE_VIEW) { // View record ?>
@@ -3464,6 +3588,7 @@ $t10_bayardetail_list->ListOptions->Render("body", "left", $t10_bayardetail_list
 <select data-table="t10_bayardetail" data-field="x_Keterangan2" data-value-separator="<?php echo $t10_bayardetail->Keterangan2->DisplayValueSeparatorAttribute() ?>" id="x<?php echo $t10_bayardetail_list->RowIndex ?>_Keterangan2" name="x<?php echo $t10_bayardetail_list->RowIndex ?>_Keterangan2"<?php echo $t10_bayardetail->Keterangan2->EditAttributes() ?>>
 <?php echo $t10_bayardetail->Keterangan2->SelectOptionListHtml("x<?php echo $t10_bayardetail_list->RowIndex ?>_Keterangan2") ?>
 </select>
+<input type="hidden" name="s_x<?php echo $t10_bayardetail_list->RowIndex ?>_Keterangan2" id="s_x<?php echo $t10_bayardetail_list->RowIndex ?>_Keterangan2" value="<?php echo $t10_bayardetail->Keterangan2->LookupFilterQuery() ?>">
 </span>
 <input type="hidden" data-table="t10_bayardetail" data-field="x_Keterangan2" name="o<?php echo $t10_bayardetail_list->RowIndex ?>_Keterangan2" id="o<?php echo $t10_bayardetail_list->RowIndex ?>_Keterangan2" value="<?php echo ew_HtmlEncode($t10_bayardetail->Keterangan2->OldValue) ?>">
 <?php } ?>
@@ -3472,6 +3597,7 @@ $t10_bayardetail_list->ListOptions->Render("body", "left", $t10_bayardetail_list
 <select data-table="t10_bayardetail" data-field="x_Keterangan2" data-value-separator="<?php echo $t10_bayardetail->Keterangan2->DisplayValueSeparatorAttribute() ?>" id="x<?php echo $t10_bayardetail_list->RowIndex ?>_Keterangan2" name="x<?php echo $t10_bayardetail_list->RowIndex ?>_Keterangan2"<?php echo $t10_bayardetail->Keterangan2->EditAttributes() ?>>
 <?php echo $t10_bayardetail->Keterangan2->SelectOptionListHtml("x<?php echo $t10_bayardetail_list->RowIndex ?>_Keterangan2") ?>
 </select>
+<input type="hidden" name="s_x<?php echo $t10_bayardetail_list->RowIndex ?>_Keterangan2" id="s_x<?php echo $t10_bayardetail_list->RowIndex ?>_Keterangan2" value="<?php echo $t10_bayardetail->Keterangan2->LookupFilterQuery() ?>">
 </span>
 <?php } ?>
 <?php if ($t10_bayardetail->RowType == EW_ROWTYPE_VIEW) { // View record ?>
@@ -3569,12 +3695,19 @@ $t10_bayardetail_list->ListOptions->Render("body", "left", $t10_bayardetail_list
 	<?php if ($t10_bayardetail->siswaspp_id->Visible) { // siswaspp_id ?>
 		<td data-name="siswaspp_id">
 <span id="el$rowindex$_t10_bayardetail_siswaspp_id" class="form-group t10_bayardetail_siswaspp_id">
-<?php $t10_bayardetail->siswaspp_id->EditAttrs["onchange"] = "ew_AutoFill(this); " . @$t10_bayardetail->siswaspp_id->EditAttrs["onchange"]; ?>
-<select data-table="t10_bayardetail" data-field="x_siswaspp_id" data-value-separator="<?php echo $t10_bayardetail->siswaspp_id->DisplayValueSeparatorAttribute() ?>" id="x<?php echo $t10_bayardetail_list->RowIndex ?>_siswaspp_id" name="x<?php echo $t10_bayardetail_list->RowIndex ?>_siswaspp_id"<?php echo $t10_bayardetail->siswaspp_id->EditAttributes() ?>>
-<?php echo $t10_bayardetail->siswaspp_id->SelectOptionListHtml("x<?php echo $t10_bayardetail_list->RowIndex ?>_siswaspp_id") ?>
-</select>
-<input type="hidden" name="s_x<?php echo $t10_bayardetail_list->RowIndex ?>_siswaspp_id" id="s_x<?php echo $t10_bayardetail_list->RowIndex ?>_siswaspp_id" value="<?php echo $t10_bayardetail->siswaspp_id->LookupFilterQuery() ?>">
-<input type="hidden" name="ln_x<?php echo $t10_bayardetail_list->RowIndex ?>_siswaspp_id" id="ln_x<?php echo $t10_bayardetail_list->RowIndex ?>_siswaspp_id" value="x<?php echo $t10_bayardetail_list->RowIndex ?>_Jumlah">
+<?php
+$wrkonchange = trim(" " . @$t10_bayardetail->siswaspp_id->EditAttrs["onchange"]);
+if ($wrkonchange <> "") $wrkonchange = " onchange=\"" . ew_JsEncode2($wrkonchange) . "\"";
+$t10_bayardetail->siswaspp_id->EditAttrs["onchange"] = "";
+?>
+<span id="as_x<?php echo $t10_bayardetail_list->RowIndex ?>_siswaspp_id" style="white-space: nowrap; z-index: <?php echo (9000 - $t10_bayardetail_list->RowCnt * 10) ?>">
+	<input type="text" name="sv_x<?php echo $t10_bayardetail_list->RowIndex ?>_siswaspp_id" id="sv_x<?php echo $t10_bayardetail_list->RowIndex ?>_siswaspp_id" value="<?php echo $t10_bayardetail->siswaspp_id->EditValue ?>" size="30" placeholder="<?php echo ew_HtmlEncode($t10_bayardetail->siswaspp_id->getPlaceHolder()) ?>" data-placeholder="<?php echo ew_HtmlEncode($t10_bayardetail->siswaspp_id->getPlaceHolder()) ?>"<?php echo $t10_bayardetail->siswaspp_id->EditAttributes() ?>>
+</span>
+<input type="hidden" data-table="t10_bayardetail" data-field="x_siswaspp_id" data-value-separator="<?php echo $t10_bayardetail->siswaspp_id->DisplayValueSeparatorAttribute() ?>" name="x<?php echo $t10_bayardetail_list->RowIndex ?>_siswaspp_id" id="x<?php echo $t10_bayardetail_list->RowIndex ?>_siswaspp_id" value="<?php echo ew_HtmlEncode($t10_bayardetail->siswaspp_id->CurrentValue) ?>"<?php echo $wrkonchange ?>>
+<input type="hidden" name="q_x<?php echo $t10_bayardetail_list->RowIndex ?>_siswaspp_id" id="q_x<?php echo $t10_bayardetail_list->RowIndex ?>_siswaspp_id" value="<?php echo $t10_bayardetail->siswaspp_id->LookupFilterQuery(true) ?>">
+<script type="text/javascript">
+ft10_bayardetaillist.CreateAutoSuggest({"id":"x<?php echo $t10_bayardetail_list->RowIndex ?>_siswaspp_id","forceSelect":false});
+</script>
 </span>
 <input type="hidden" data-table="t10_bayardetail" data-field="x_siswaspp_id" name="o<?php echo $t10_bayardetail_list->RowIndex ?>_siswaspp_id" id="o<?php echo $t10_bayardetail_list->RowIndex ?>_siswaspp_id" value="<?php echo ew_HtmlEncode($t10_bayardetail->siswaspp_id->OldValue) ?>">
 </td>
@@ -3593,6 +3726,7 @@ $t10_bayardetail_list->ListOptions->Render("body", "left", $t10_bayardetail_list
 <select data-table="t10_bayardetail" data-field="x_Keterangan2" data-value-separator="<?php echo $t10_bayardetail->Keterangan2->DisplayValueSeparatorAttribute() ?>" id="x<?php echo $t10_bayardetail_list->RowIndex ?>_Keterangan2" name="x<?php echo $t10_bayardetail_list->RowIndex ?>_Keterangan2"<?php echo $t10_bayardetail->Keterangan2->EditAttributes() ?>>
 <?php echo $t10_bayardetail->Keterangan2->SelectOptionListHtml("x<?php echo $t10_bayardetail_list->RowIndex ?>_Keterangan2") ?>
 </select>
+<input type="hidden" name="s_x<?php echo $t10_bayardetail_list->RowIndex ?>_Keterangan2" id="s_x<?php echo $t10_bayardetail_list->RowIndex ?>_Keterangan2" value="<?php echo $t10_bayardetail->Keterangan2->LookupFilterQuery() ?>">
 </span>
 <input type="hidden" data-table="t10_bayardetail" data-field="x_Keterangan2" name="o<?php echo $t10_bayardetail_list->RowIndex ?>_Keterangan2" id="o<?php echo $t10_bayardetail_list->RowIndex ?>_Keterangan2" value="<?php echo ew_HtmlEncode($t10_bayardetail->Keterangan2->OldValue) ?>">
 </td>

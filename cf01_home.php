@@ -311,7 +311,19 @@ Page_Rendering();
 <div class="clearfix"></div>
 </div>
 <?php } ?>
-<!-- %%Custom page content begin%% --><!-- %%Custom page content end%% --><?php if (EW_DEBUG_ENABLED) echo ew_DebugMsg(); ?>
+<?php
+//$_SESSION["Tahun_Bulan"] = ew_ExecuteScalar("select Tahun_Bulan from t93_periode");
+//$_SESSION["Tahun_Bulan"] = date("Ym");
+//$abulan = array("", "Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember");
+//$_SESSION["Tahun_Bulan_Text"] = $abulan[ew_ExecuteScalar("select Bulan from t93_periode")]." ".ew_ExecuteScalar("select Tahun from t93_periode");
+//$_SESSION["Tahun_Bulan_Text"] = $abulan[date("m")]." ".date("Y");
+?>
+
+
+
+<!-- log -->
+<pre><?php $lines=file('00_pembayaran6log.txt');foreach ($lines as $line_num => $line){echo $line;}?></pre>
+<?php if (EW_DEBUG_ENABLED) echo ew_DebugMsg(); ?>
 <?php include_once "footer.php" ?>
 <?php
 $cf01_home_php->Page_Terminate();

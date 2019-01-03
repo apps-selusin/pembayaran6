@@ -1367,6 +1367,7 @@ class ct10_bayardetail_grid extends ct10_bayardetail {
 		$this->bayarmaster_id->ViewCustomAttributes = "";
 
 		// siswaspp_id
+		$this->siswaspp_id->ViewValue = $this->siswaspp_id->CurrentValue;
 		if (strval($this->siswaspp_id->CurrentValue) <> "") {
 			$sFilterWrk = "`id`" . ew_SearchString("=", $this->siswaspp_id->CurrentValue, EW_DATATYPE_NUMBER, "");
 		$sSqlWrk = "SELECT `id`, `SPP` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `v01_siswaspp`";
@@ -1394,6 +1395,26 @@ class ct10_bayardetail_grid extends ct10_bayardetail {
 		$this->Keterangan->ViewCustomAttributes = "";
 
 		// Keterangan2
+		if (strval($this->Keterangan2->CurrentValue) <> "") {
+			$sFilterWrk = "`Periode`" . ew_SearchString("=", $this->Keterangan2->CurrentValue, EW_DATATYPE_STRING, "");
+		$sSqlWrk = "SELECT `Periode`, `Periode` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `t95_periode`";
+		$sWhereWrk = "";
+		$this->Keterangan2->LookupFilters = array();
+		ew_AddFilter($sWhereWrk, $sFilterWrk);
+		$this->Lookup_Selecting($this->Keterangan2, $sWhereWrk); // Call Lookup selecting
+		if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
+			$rswrk = Conn()->Execute($sSqlWrk);
+			if ($rswrk && !$rswrk->EOF) { // Lookup values found
+				$arwrk = array();
+				$arwrk[1] = $rswrk->fields('DispFld');
+				$this->Keterangan2->ViewValue = $this->Keterangan2->DisplayValue($arwrk);
+				$rswrk->Close();
+			} else {
+				$this->Keterangan2->ViewValue = $this->Keterangan2->CurrentValue;
+			}
+		} else {
+			$this->Keterangan2->ViewValue = NULL;
+		}
 		$this->Keterangan2->ViewCustomAttributes = "";
 
 		// Keterangan3
@@ -1435,21 +1456,28 @@ class ct10_bayardetail_grid extends ct10_bayardetail {
 			// siswaspp_id
 			$this->siswaspp_id->EditAttrs["class"] = "form-control";
 			$this->siswaspp_id->EditCustomAttributes = "";
-			if (trim(strval($this->siswaspp_id->CurrentValue)) == "") {
-				$sFilterWrk = "0=1";
-			} else {
+			$this->siswaspp_id->EditValue = ew_HtmlEncode($this->siswaspp_id->CurrentValue);
+			if (strval($this->siswaspp_id->CurrentValue) <> "") {
 				$sFilterWrk = "`id`" . ew_SearchString("=", $this->siswaspp_id->CurrentValue, EW_DATATYPE_NUMBER, "");
-			}
-			$sSqlWrk = "SELECT `id`, `SPP` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld`, `siswa_id` AS `SelectFilterFld`, '' AS `SelectFilterFld2`, '' AS `SelectFilterFld3`, '' AS `SelectFilterFld4` FROM `v01_siswaspp`";
+			$sSqlWrk = "SELECT `id`, `SPP` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `v01_siswaspp`";
 			$sWhereWrk = "";
 			$this->siswaspp_id->LookupFilters = array();
 			ew_AddFilter($sWhereWrk, $sFilterWrk);
 			$this->Lookup_Selecting($this->siswaspp_id, $sWhereWrk); // Call Lookup selecting
 			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
-			$rswrk = Conn()->Execute($sSqlWrk);
-			$arwrk = ($rswrk) ? $rswrk->GetRows() : array();
-			if ($rswrk) $rswrk->Close();
-			$this->siswaspp_id->EditValue = $arwrk;
+				$rswrk = Conn()->Execute($sSqlWrk);
+				if ($rswrk && !$rswrk->EOF) { // Lookup values found
+					$arwrk = array();
+					$arwrk[1] = ew_HtmlEncode($rswrk->fields('DispFld'));
+					$this->siswaspp_id->EditValue = $this->siswaspp_id->DisplayValue($arwrk);
+					$rswrk->Close();
+				} else {
+					$this->siswaspp_id->EditValue = ew_HtmlEncode($this->siswaspp_id->CurrentValue);
+				}
+			} else {
+				$this->siswaspp_id->EditValue = NULL;
+			}
+			$this->siswaspp_id->PlaceHolder = ew_RemoveHtml($this->siswaspp_id->FldCaption());
 
 			// Keterangan
 			$this->Keterangan->EditAttrs["class"] = "form-control";
@@ -1460,6 +1488,21 @@ class ct10_bayardetail_grid extends ct10_bayardetail {
 			// Keterangan2
 			$this->Keterangan2->EditAttrs["class"] = "form-control";
 			$this->Keterangan2->EditCustomAttributes = "";
+			if (trim(strval($this->Keterangan2->CurrentValue)) == "") {
+				$sFilterWrk = "0=1";
+			} else {
+				$sFilterWrk = "`Periode`" . ew_SearchString("=", $this->Keterangan2->CurrentValue, EW_DATATYPE_STRING, "");
+			}
+			$sSqlWrk = "SELECT `Periode`, `Periode` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld`, '' AS `SelectFilterFld`, '' AS `SelectFilterFld2`, '' AS `SelectFilterFld3`, '' AS `SelectFilterFld4` FROM `t95_periode`";
+			$sWhereWrk = "";
+			$this->Keterangan2->LookupFilters = array();
+			ew_AddFilter($sWhereWrk, $sFilterWrk);
+			$this->Lookup_Selecting($this->Keterangan2, $sWhereWrk); // Call Lookup selecting
+			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
+			$rswrk = Conn()->Execute($sSqlWrk);
+			$arwrk = ($rswrk) ? $rswrk->GetRows() : array();
+			if ($rswrk) $rswrk->Close();
+			$this->Keterangan2->EditValue = $arwrk;
 
 			// Keterangan3
 			$this->Keterangan3->EditAttrs["class"] = "form-control";
@@ -1503,21 +1546,28 @@ class ct10_bayardetail_grid extends ct10_bayardetail {
 			// siswaspp_id
 			$this->siswaspp_id->EditAttrs["class"] = "form-control";
 			$this->siswaspp_id->EditCustomAttributes = "";
-			if (trim(strval($this->siswaspp_id->CurrentValue)) == "") {
-				$sFilterWrk = "0=1";
-			} else {
+			$this->siswaspp_id->EditValue = ew_HtmlEncode($this->siswaspp_id->CurrentValue);
+			if (strval($this->siswaspp_id->CurrentValue) <> "") {
 				$sFilterWrk = "`id`" . ew_SearchString("=", $this->siswaspp_id->CurrentValue, EW_DATATYPE_NUMBER, "");
-			}
-			$sSqlWrk = "SELECT `id`, `SPP` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld`, `siswa_id` AS `SelectFilterFld`, '' AS `SelectFilterFld2`, '' AS `SelectFilterFld3`, '' AS `SelectFilterFld4` FROM `v01_siswaspp`";
+			$sSqlWrk = "SELECT `id`, `SPP` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `v01_siswaspp`";
 			$sWhereWrk = "";
 			$this->siswaspp_id->LookupFilters = array();
 			ew_AddFilter($sWhereWrk, $sFilterWrk);
 			$this->Lookup_Selecting($this->siswaspp_id, $sWhereWrk); // Call Lookup selecting
 			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
-			$rswrk = Conn()->Execute($sSqlWrk);
-			$arwrk = ($rswrk) ? $rswrk->GetRows() : array();
-			if ($rswrk) $rswrk->Close();
-			$this->siswaspp_id->EditValue = $arwrk;
+				$rswrk = Conn()->Execute($sSqlWrk);
+				if ($rswrk && !$rswrk->EOF) { // Lookup values found
+					$arwrk = array();
+					$arwrk[1] = ew_HtmlEncode($rswrk->fields('DispFld'));
+					$this->siswaspp_id->EditValue = $this->siswaspp_id->DisplayValue($arwrk);
+					$rswrk->Close();
+				} else {
+					$this->siswaspp_id->EditValue = ew_HtmlEncode($this->siswaspp_id->CurrentValue);
+				}
+			} else {
+				$this->siswaspp_id->EditValue = NULL;
+			}
+			$this->siswaspp_id->PlaceHolder = ew_RemoveHtml($this->siswaspp_id->FldCaption());
 
 			// Keterangan
 			$this->Keterangan->EditAttrs["class"] = "form-control";
@@ -1528,6 +1578,21 @@ class ct10_bayardetail_grid extends ct10_bayardetail {
 			// Keterangan2
 			$this->Keterangan2->EditAttrs["class"] = "form-control";
 			$this->Keterangan2->EditCustomAttributes = "";
+			if (trim(strval($this->Keterangan2->CurrentValue)) == "") {
+				$sFilterWrk = "0=1";
+			} else {
+				$sFilterWrk = "`Periode`" . ew_SearchString("=", $this->Keterangan2->CurrentValue, EW_DATATYPE_STRING, "");
+			}
+			$sSqlWrk = "SELECT `Periode`, `Periode` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld`, '' AS `SelectFilterFld`, '' AS `SelectFilterFld2`, '' AS `SelectFilterFld3`, '' AS `SelectFilterFld4` FROM `t95_periode`";
+			$sWhereWrk = "";
+			$this->Keterangan2->LookupFilters = array();
+			ew_AddFilter($sWhereWrk, $sFilterWrk);
+			$this->Lookup_Selecting($this->Keterangan2, $sWhereWrk); // Call Lookup selecting
+			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
+			$rswrk = Conn()->Execute($sSqlWrk);
+			$arwrk = ($rswrk) ? $rswrk->GetRows() : array();
+			if ($rswrk) $rswrk->Close();
+			$this->Keterangan2->EditValue = $arwrk;
 
 			// Keterangan3
 			$this->Keterangan3->EditAttrs["class"] = "form-control";
@@ -1587,6 +1652,9 @@ class ct10_bayardetail_grid extends ct10_bayardetail {
 			return ($gsFormError == "");
 		if (!$this->siswaspp_id->FldIsDetailKey && !is_null($this->siswaspp_id->FormValue) && $this->siswaspp_id->FormValue == "") {
 			ew_AddMessage($gsFormError, str_replace("%s", $this->siswaspp_id->FldCaption(), $this->siswaspp_id->ReqErrMsg));
+		}
+		if (!ew_CheckInteger($this->siswaspp_id->FormValue)) {
+			ew_AddMessage($gsFormError, $this->siswaspp_id->FldErrMsg());
 		}
 		if (!$this->Jumlah->FldIsDetailKey && !is_null($this->Jumlah->FormValue) && $this->Jumlah->FormValue == "") {
 			ew_AddMessage($gsFormError, str_replace("%s", $this->Jumlah->FldCaption(), $this->Jumlah->ReqErrMsg));
@@ -1848,9 +1916,21 @@ class ct10_bayardetail_grid extends ct10_bayardetail {
 			$sSqlWrk = "SELECT `id` AS `LinkFld`, `SPP` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `v01_siswaspp`";
 			$sWhereWrk = "{filter}";
 			$this->siswaspp_id->LookupFilters = array();
-			$fld->LookupFilters += array("s" => $sSqlWrk, "d" => "", "f0" => '`id` = {filter_value}', "t0" => "3", "fn0" => "", "f1" => '`siswa_id` IN ({filter_value})', "t1" => "3", "fn1" => "");
+			$fld->LookupFilters += array("s" => $sSqlWrk, "d" => "", "f0" => '`id` = {filter_value}', "t0" => "3", "fn0" => "");
 			$sSqlWrk = "";
 			$this->Lookup_Selecting($this->siswaspp_id, $sWhereWrk); // Call Lookup selecting
+			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
+			if ($sSqlWrk <> "")
+				$fld->LookupFilters["s"] .= $sSqlWrk;
+			break;
+		case "x_Keterangan2":
+			$sSqlWrk = "";
+			$sSqlWrk = "SELECT `Periode` AS `LinkFld`, `Periode` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `t95_periode`";
+			$sWhereWrk = "";
+			$this->Keterangan2->LookupFilters = array();
+			$fld->LookupFilters += array("s" => $sSqlWrk, "d" => "", "f0" => '`Periode` = {filter_value}', "t0" => "200", "fn0" => "");
+			$sSqlWrk = "";
+			$this->Lookup_Selecting($this->Keterangan2, $sWhereWrk); // Call Lookup selecting
 			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
 			if ($sSqlWrk <> "")
 				$fld->LookupFilters["s"] .= $sSqlWrk;
@@ -1863,6 +1943,19 @@ class ct10_bayardetail_grid extends ct10_bayardetail {
 		global $gsLanguage;
 		$pageId = $pageId ?: $this->PageID;
 		switch ($fld->FldVar) {
+		case "x_siswaspp_id":
+			$sSqlWrk = "";
+			$sSqlWrk = "SELECT `id`, `SPP` AS `DispFld` FROM `v01_siswaspp`";
+			$sWhereWrk = "`SPP` LIKE '{query_value}%'";
+			$this->siswaspp_id->LookupFilters = array();
+			$fld->LookupFilters += array("s" => $sSqlWrk, "d" => "");
+			$sSqlWrk = "";
+			$this->Lookup_Selecting($this->siswaspp_id, $sWhereWrk); // Call Lookup selecting
+			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
+			$sSqlWrk .= " LIMIT " . EW_AUTO_SUGGEST_MAX_ENTRIES;
+			if ($sSqlWrk <> "")
+				$fld->LookupFilters["s"] .= $sSqlWrk;
+			break;
 		}
 	}
 
@@ -1870,6 +1963,9 @@ class ct10_bayardetail_grid extends ct10_bayardetail {
 	function Page_Load() {
 
 		//echo "Page Load";
+		if (isset($_GET["siswa_id"]) and isset($_GET["tahunajaran_id"])) {
+			$this->GridAddRowCount = ew_ExecuteScalar("select count(*) from v01_siswaspp where siswa_id = ".$_GET["siswa_id"]." and tahunajaran_id = ".$_GET["tahunajaran_id"]."");
+		}
 	}
 
 	// Page Unload event
@@ -1915,7 +2011,9 @@ class ct10_bayardetail_grid extends ct10_bayardetail {
 
 		// Example:
 		//$header = "your header";
+		//$this->OtherOptions["addedit"]->Items["add"]->Visible = FALSE;
 
+		$this->OtherOptions["addedit"]->Items["addblankrow"]->Visible = FALSE;
 	}
 
 	// Page Data Rendered event

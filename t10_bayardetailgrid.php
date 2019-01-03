@@ -44,6 +44,9 @@ ft10_bayardetailgrid.Validate = function() {
 			elm = this.GetElements("x" + infix + "_siswaspp_id");
 			if (elm && !ew_IsHidden(elm) && !ew_HasValue(elm))
 				return this.OnError(elm, "<?php echo ew_JsEncode2(str_replace("%s", $t10_bayardetail->siswaspp_id->FldCaption(), $t10_bayardetail->siswaspp_id->ReqErrMsg)) ?>");
+			elm = this.GetElements("x" + infix + "_siswaspp_id");
+			if (elm && !ew_CheckInteger(elm.value))
+				return this.OnError(elm, "<?php echo ew_JsEncode2($t10_bayardetail->siswaspp_id->FldErrMsg()) ?>");
 			elm = this.GetElements("x" + infix + "_Jumlah");
 			if (elm && !ew_IsHidden(elm) && !ew_HasValue(elm))
 				return this.OnError(elm, "<?php echo ew_JsEncode2(str_replace("%s", $t10_bayardetail->Jumlah->FldCaption(), $t10_bayardetail->Jumlah->ReqErrMsg)) ?>");
@@ -86,7 +89,8 @@ ft10_bayardetailgrid.ValidateRequired = false;
 <?php } ?>
 
 // Dynamic selection lists
-ft10_bayardetailgrid.Lists["x_siswaspp_id"] = {"LinkField":"x_id","Ajax":true,"AutoFill":true,"DisplayFields":["x_SPP","","",""],"ParentFields":["t09_bayarmaster x_siswa_id"],"ChildFields":["t10_bayardetail x_Keterangan"],"FilterFields":["x_siswa_id"],"Options":[],"Template":"","LinkTable":"v01_siswaspp"};
+ft10_bayardetailgrid.Lists["x_siswaspp_id"] = {"LinkField":"x_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_SPP","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":"","LinkTable":"v01_siswaspp"};
+ft10_bayardetailgrid.Lists["x_Keterangan2"] = {"LinkField":"x_Periode","Ajax":true,"AutoFill":false,"DisplayFields":["x_Periode","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":"","LinkTable":"t95_periode"};
 
 // Form object for search
 </script>
@@ -318,23 +322,37 @@ $t10_bayardetail_grid->ListOptions->Render("body", "left", $t10_bayardetail_grid
 		<td data-name="siswaspp_id"<?php echo $t10_bayardetail->siswaspp_id->CellAttributes() ?>>
 <?php if ($t10_bayardetail->RowType == EW_ROWTYPE_ADD) { // Add record ?>
 <span id="el<?php echo $t10_bayardetail_grid->RowCnt ?>_t10_bayardetail_siswaspp_id" class="form-group t10_bayardetail_siswaspp_id">
-<?php $t10_bayardetail->siswaspp_id->EditAttrs["onchange"] = "ew_AutoFill(this); " . @$t10_bayardetail->siswaspp_id->EditAttrs["onchange"]; ?>
-<select data-table="t10_bayardetail" data-field="x_siswaspp_id" data-value-separator="<?php echo $t10_bayardetail->siswaspp_id->DisplayValueSeparatorAttribute() ?>" id="x<?php echo $t10_bayardetail_grid->RowIndex ?>_siswaspp_id" name="x<?php echo $t10_bayardetail_grid->RowIndex ?>_siswaspp_id"<?php echo $t10_bayardetail->siswaspp_id->EditAttributes() ?>>
-<?php echo $t10_bayardetail->siswaspp_id->SelectOptionListHtml("x<?php echo $t10_bayardetail_grid->RowIndex ?>_siswaspp_id") ?>
-</select>
-<input type="hidden" name="s_x<?php echo $t10_bayardetail_grid->RowIndex ?>_siswaspp_id" id="s_x<?php echo $t10_bayardetail_grid->RowIndex ?>_siswaspp_id" value="<?php echo $t10_bayardetail->siswaspp_id->LookupFilterQuery() ?>">
-<input type="hidden" name="ln_x<?php echo $t10_bayardetail_grid->RowIndex ?>_siswaspp_id" id="ln_x<?php echo $t10_bayardetail_grid->RowIndex ?>_siswaspp_id" value="x<?php echo $t10_bayardetail_grid->RowIndex ?>_Jumlah">
+<?php
+$wrkonchange = trim(" " . @$t10_bayardetail->siswaspp_id->EditAttrs["onchange"]);
+if ($wrkonchange <> "") $wrkonchange = " onchange=\"" . ew_JsEncode2($wrkonchange) . "\"";
+$t10_bayardetail->siswaspp_id->EditAttrs["onchange"] = "";
+?>
+<span id="as_x<?php echo $t10_bayardetail_grid->RowIndex ?>_siswaspp_id" style="white-space: nowrap; z-index: <?php echo (9000 - $t10_bayardetail_grid->RowCnt * 10) ?>">
+	<input type="text" name="sv_x<?php echo $t10_bayardetail_grid->RowIndex ?>_siswaspp_id" id="sv_x<?php echo $t10_bayardetail_grid->RowIndex ?>_siswaspp_id" value="<?php echo $t10_bayardetail->siswaspp_id->EditValue ?>" size="30" placeholder="<?php echo ew_HtmlEncode($t10_bayardetail->siswaspp_id->getPlaceHolder()) ?>" data-placeholder="<?php echo ew_HtmlEncode($t10_bayardetail->siswaspp_id->getPlaceHolder()) ?>"<?php echo $t10_bayardetail->siswaspp_id->EditAttributes() ?>>
+</span>
+<input type="hidden" data-table="t10_bayardetail" data-field="x_siswaspp_id" data-value-separator="<?php echo $t10_bayardetail->siswaspp_id->DisplayValueSeparatorAttribute() ?>" name="x<?php echo $t10_bayardetail_grid->RowIndex ?>_siswaspp_id" id="x<?php echo $t10_bayardetail_grid->RowIndex ?>_siswaspp_id" value="<?php echo ew_HtmlEncode($t10_bayardetail->siswaspp_id->CurrentValue) ?>"<?php echo $wrkonchange ?>>
+<input type="hidden" name="q_x<?php echo $t10_bayardetail_grid->RowIndex ?>_siswaspp_id" id="q_x<?php echo $t10_bayardetail_grid->RowIndex ?>_siswaspp_id" value="<?php echo $t10_bayardetail->siswaspp_id->LookupFilterQuery(true) ?>">
+<script type="text/javascript">
+ft10_bayardetailgrid.CreateAutoSuggest({"id":"x<?php echo $t10_bayardetail_grid->RowIndex ?>_siswaspp_id","forceSelect":false});
+</script>
 </span>
 <input type="hidden" data-table="t10_bayardetail" data-field="x_siswaspp_id" name="o<?php echo $t10_bayardetail_grid->RowIndex ?>_siswaspp_id" id="o<?php echo $t10_bayardetail_grid->RowIndex ?>_siswaspp_id" value="<?php echo ew_HtmlEncode($t10_bayardetail->siswaspp_id->OldValue) ?>">
 <?php } ?>
 <?php if ($t10_bayardetail->RowType == EW_ROWTYPE_EDIT) { // Edit record ?>
 <span id="el<?php echo $t10_bayardetail_grid->RowCnt ?>_t10_bayardetail_siswaspp_id" class="form-group t10_bayardetail_siswaspp_id">
-<?php $t10_bayardetail->siswaspp_id->EditAttrs["onchange"] = "ew_AutoFill(this); " . @$t10_bayardetail->siswaspp_id->EditAttrs["onchange"]; ?>
-<select data-table="t10_bayardetail" data-field="x_siswaspp_id" data-value-separator="<?php echo $t10_bayardetail->siswaspp_id->DisplayValueSeparatorAttribute() ?>" id="x<?php echo $t10_bayardetail_grid->RowIndex ?>_siswaspp_id" name="x<?php echo $t10_bayardetail_grid->RowIndex ?>_siswaspp_id"<?php echo $t10_bayardetail->siswaspp_id->EditAttributes() ?>>
-<?php echo $t10_bayardetail->siswaspp_id->SelectOptionListHtml("x<?php echo $t10_bayardetail_grid->RowIndex ?>_siswaspp_id") ?>
-</select>
-<input type="hidden" name="s_x<?php echo $t10_bayardetail_grid->RowIndex ?>_siswaspp_id" id="s_x<?php echo $t10_bayardetail_grid->RowIndex ?>_siswaspp_id" value="<?php echo $t10_bayardetail->siswaspp_id->LookupFilterQuery() ?>">
-<input type="hidden" name="ln_x<?php echo $t10_bayardetail_grid->RowIndex ?>_siswaspp_id" id="ln_x<?php echo $t10_bayardetail_grid->RowIndex ?>_siswaspp_id" value="x<?php echo $t10_bayardetail_grid->RowIndex ?>_Jumlah">
+<?php
+$wrkonchange = trim(" " . @$t10_bayardetail->siswaspp_id->EditAttrs["onchange"]);
+if ($wrkonchange <> "") $wrkonchange = " onchange=\"" . ew_JsEncode2($wrkonchange) . "\"";
+$t10_bayardetail->siswaspp_id->EditAttrs["onchange"] = "";
+?>
+<span id="as_x<?php echo $t10_bayardetail_grid->RowIndex ?>_siswaspp_id" style="white-space: nowrap; z-index: <?php echo (9000 - $t10_bayardetail_grid->RowCnt * 10) ?>">
+	<input type="text" name="sv_x<?php echo $t10_bayardetail_grid->RowIndex ?>_siswaspp_id" id="sv_x<?php echo $t10_bayardetail_grid->RowIndex ?>_siswaspp_id" value="<?php echo $t10_bayardetail->siswaspp_id->EditValue ?>" size="30" placeholder="<?php echo ew_HtmlEncode($t10_bayardetail->siswaspp_id->getPlaceHolder()) ?>" data-placeholder="<?php echo ew_HtmlEncode($t10_bayardetail->siswaspp_id->getPlaceHolder()) ?>"<?php echo $t10_bayardetail->siswaspp_id->EditAttributes() ?>>
+</span>
+<input type="hidden" data-table="t10_bayardetail" data-field="x_siswaspp_id" data-value-separator="<?php echo $t10_bayardetail->siswaspp_id->DisplayValueSeparatorAttribute() ?>" name="x<?php echo $t10_bayardetail_grid->RowIndex ?>_siswaspp_id" id="x<?php echo $t10_bayardetail_grid->RowIndex ?>_siswaspp_id" value="<?php echo ew_HtmlEncode($t10_bayardetail->siswaspp_id->CurrentValue) ?>"<?php echo $wrkonchange ?>>
+<input type="hidden" name="q_x<?php echo $t10_bayardetail_grid->RowIndex ?>_siswaspp_id" id="q_x<?php echo $t10_bayardetail_grid->RowIndex ?>_siswaspp_id" value="<?php echo $t10_bayardetail->siswaspp_id->LookupFilterQuery(true) ?>">
+<script type="text/javascript">
+ft10_bayardetailgrid.CreateAutoSuggest({"id":"x<?php echo $t10_bayardetail_grid->RowIndex ?>_siswaspp_id","forceSelect":false});
+</script>
 </span>
 <?php } ?>
 <?php if ($t10_bayardetail->RowType == EW_ROWTYPE_VIEW) { // View record ?>
@@ -394,6 +412,7 @@ $t10_bayardetail_grid->ListOptions->Render("body", "left", $t10_bayardetail_grid
 <select data-table="t10_bayardetail" data-field="x_Keterangan2" data-value-separator="<?php echo $t10_bayardetail->Keterangan2->DisplayValueSeparatorAttribute() ?>" id="x<?php echo $t10_bayardetail_grid->RowIndex ?>_Keterangan2" name="x<?php echo $t10_bayardetail_grid->RowIndex ?>_Keterangan2"<?php echo $t10_bayardetail->Keterangan2->EditAttributes() ?>>
 <?php echo $t10_bayardetail->Keterangan2->SelectOptionListHtml("x<?php echo $t10_bayardetail_grid->RowIndex ?>_Keterangan2") ?>
 </select>
+<input type="hidden" name="s_x<?php echo $t10_bayardetail_grid->RowIndex ?>_Keterangan2" id="s_x<?php echo $t10_bayardetail_grid->RowIndex ?>_Keterangan2" value="<?php echo $t10_bayardetail->Keterangan2->LookupFilterQuery() ?>">
 </span>
 <input type="hidden" data-table="t10_bayardetail" data-field="x_Keterangan2" name="o<?php echo $t10_bayardetail_grid->RowIndex ?>_Keterangan2" id="o<?php echo $t10_bayardetail_grid->RowIndex ?>_Keterangan2" value="<?php echo ew_HtmlEncode($t10_bayardetail->Keterangan2->OldValue) ?>">
 <?php } ?>
@@ -402,6 +421,7 @@ $t10_bayardetail_grid->ListOptions->Render("body", "left", $t10_bayardetail_grid
 <select data-table="t10_bayardetail" data-field="x_Keterangan2" data-value-separator="<?php echo $t10_bayardetail->Keterangan2->DisplayValueSeparatorAttribute() ?>" id="x<?php echo $t10_bayardetail_grid->RowIndex ?>_Keterangan2" name="x<?php echo $t10_bayardetail_grid->RowIndex ?>_Keterangan2"<?php echo $t10_bayardetail->Keterangan2->EditAttributes() ?>>
 <?php echo $t10_bayardetail->Keterangan2->SelectOptionListHtml("x<?php echo $t10_bayardetail_grid->RowIndex ?>_Keterangan2") ?>
 </select>
+<input type="hidden" name="s_x<?php echo $t10_bayardetail_grid->RowIndex ?>_Keterangan2" id="s_x<?php echo $t10_bayardetail_grid->RowIndex ?>_Keterangan2" value="<?php echo $t10_bayardetail->Keterangan2->LookupFilterQuery() ?>">
 </span>
 <?php } ?>
 <?php if ($t10_bayardetail->RowType == EW_ROWTYPE_VIEW) { // View record ?>
@@ -521,12 +541,19 @@ $t10_bayardetail_grid->ListOptions->Render("body", "left", $t10_bayardetail_grid
 		<td data-name="siswaspp_id">
 <?php if ($t10_bayardetail->CurrentAction <> "F") { ?>
 <span id="el$rowindex$_t10_bayardetail_siswaspp_id" class="form-group t10_bayardetail_siswaspp_id">
-<?php $t10_bayardetail->siswaspp_id->EditAttrs["onchange"] = "ew_AutoFill(this); " . @$t10_bayardetail->siswaspp_id->EditAttrs["onchange"]; ?>
-<select data-table="t10_bayardetail" data-field="x_siswaspp_id" data-value-separator="<?php echo $t10_bayardetail->siswaspp_id->DisplayValueSeparatorAttribute() ?>" id="x<?php echo $t10_bayardetail_grid->RowIndex ?>_siswaspp_id" name="x<?php echo $t10_bayardetail_grid->RowIndex ?>_siswaspp_id"<?php echo $t10_bayardetail->siswaspp_id->EditAttributes() ?>>
-<?php echo $t10_bayardetail->siswaspp_id->SelectOptionListHtml("x<?php echo $t10_bayardetail_grid->RowIndex ?>_siswaspp_id") ?>
-</select>
-<input type="hidden" name="s_x<?php echo $t10_bayardetail_grid->RowIndex ?>_siswaspp_id" id="s_x<?php echo $t10_bayardetail_grid->RowIndex ?>_siswaspp_id" value="<?php echo $t10_bayardetail->siswaspp_id->LookupFilterQuery() ?>">
-<input type="hidden" name="ln_x<?php echo $t10_bayardetail_grid->RowIndex ?>_siswaspp_id" id="ln_x<?php echo $t10_bayardetail_grid->RowIndex ?>_siswaspp_id" value="x<?php echo $t10_bayardetail_grid->RowIndex ?>_Jumlah">
+<?php
+$wrkonchange = trim(" " . @$t10_bayardetail->siswaspp_id->EditAttrs["onchange"]);
+if ($wrkonchange <> "") $wrkonchange = " onchange=\"" . ew_JsEncode2($wrkonchange) . "\"";
+$t10_bayardetail->siswaspp_id->EditAttrs["onchange"] = "";
+?>
+<span id="as_x<?php echo $t10_bayardetail_grid->RowIndex ?>_siswaspp_id" style="white-space: nowrap; z-index: <?php echo (9000 - $t10_bayardetail_grid->RowCnt * 10) ?>">
+	<input type="text" name="sv_x<?php echo $t10_bayardetail_grid->RowIndex ?>_siswaspp_id" id="sv_x<?php echo $t10_bayardetail_grid->RowIndex ?>_siswaspp_id" value="<?php echo $t10_bayardetail->siswaspp_id->EditValue ?>" size="30" placeholder="<?php echo ew_HtmlEncode($t10_bayardetail->siswaspp_id->getPlaceHolder()) ?>" data-placeholder="<?php echo ew_HtmlEncode($t10_bayardetail->siswaspp_id->getPlaceHolder()) ?>"<?php echo $t10_bayardetail->siswaspp_id->EditAttributes() ?>>
+</span>
+<input type="hidden" data-table="t10_bayardetail" data-field="x_siswaspp_id" data-value-separator="<?php echo $t10_bayardetail->siswaspp_id->DisplayValueSeparatorAttribute() ?>" name="x<?php echo $t10_bayardetail_grid->RowIndex ?>_siswaspp_id" id="x<?php echo $t10_bayardetail_grid->RowIndex ?>_siswaspp_id" value="<?php echo ew_HtmlEncode($t10_bayardetail->siswaspp_id->CurrentValue) ?>"<?php echo $wrkonchange ?>>
+<input type="hidden" name="q_x<?php echo $t10_bayardetail_grid->RowIndex ?>_siswaspp_id" id="q_x<?php echo $t10_bayardetail_grid->RowIndex ?>_siswaspp_id" value="<?php echo $t10_bayardetail->siswaspp_id->LookupFilterQuery(true) ?>">
+<script type="text/javascript">
+ft10_bayardetailgrid.CreateAutoSuggest({"id":"x<?php echo $t10_bayardetail_grid->RowIndex ?>_siswaspp_id","forceSelect":false});
+</script>
 </span>
 <?php } else { ?>
 <span id="el$rowindex$_t10_bayardetail_siswaspp_id" class="form-group t10_bayardetail_siswaspp_id">
@@ -561,6 +588,7 @@ $t10_bayardetail_grid->ListOptions->Render("body", "left", $t10_bayardetail_grid
 <select data-table="t10_bayardetail" data-field="x_Keterangan2" data-value-separator="<?php echo $t10_bayardetail->Keterangan2->DisplayValueSeparatorAttribute() ?>" id="x<?php echo $t10_bayardetail_grid->RowIndex ?>_Keterangan2" name="x<?php echo $t10_bayardetail_grid->RowIndex ?>_Keterangan2"<?php echo $t10_bayardetail->Keterangan2->EditAttributes() ?>>
 <?php echo $t10_bayardetail->Keterangan2->SelectOptionListHtml("x<?php echo $t10_bayardetail_grid->RowIndex ?>_Keterangan2") ?>
 </select>
+<input type="hidden" name="s_x<?php echo $t10_bayardetail_grid->RowIndex ?>_Keterangan2" id="s_x<?php echo $t10_bayardetail_grid->RowIndex ?>_Keterangan2" value="<?php echo $t10_bayardetail->Keterangan2->LookupFilterQuery() ?>">
 </span>
 <?php } else { ?>
 <span id="el$rowindex$_t10_bayardetail_Keterangan2" class="form-group t10_bayardetail_Keterangan2">

@@ -523,6 +523,7 @@ class ct10_bayardetail_delete extends ct10_bayardetail {
 		$this->bayarmaster_id->ViewCustomAttributes = "";
 
 		// siswaspp_id
+		$this->siswaspp_id->ViewValue = $this->siswaspp_id->CurrentValue;
 		if (strval($this->siswaspp_id->CurrentValue) <> "") {
 			$sFilterWrk = "`id`" . ew_SearchString("=", $this->siswaspp_id->CurrentValue, EW_DATATYPE_NUMBER, "");
 		$sSqlWrk = "SELECT `id`, `SPP` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `v01_siswaspp`";
@@ -550,6 +551,26 @@ class ct10_bayardetail_delete extends ct10_bayardetail {
 		$this->Keterangan->ViewCustomAttributes = "";
 
 		// Keterangan2
+		if (strval($this->Keterangan2->CurrentValue) <> "") {
+			$sFilterWrk = "`Periode`" . ew_SearchString("=", $this->Keterangan2->CurrentValue, EW_DATATYPE_STRING, "");
+		$sSqlWrk = "SELECT `Periode`, `Periode` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `t95_periode`";
+		$sWhereWrk = "";
+		$this->Keterangan2->LookupFilters = array();
+		ew_AddFilter($sWhereWrk, $sFilterWrk);
+		$this->Lookup_Selecting($this->Keterangan2, $sWhereWrk); // Call Lookup selecting
+		if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
+			$rswrk = Conn()->Execute($sSqlWrk);
+			if ($rswrk && !$rswrk->EOF) { // Lookup values found
+				$arwrk = array();
+				$arwrk[1] = $rswrk->fields('DispFld');
+				$this->Keterangan2->ViewValue = $this->Keterangan2->DisplayValue($arwrk);
+				$rswrk->Close();
+			} else {
+				$this->Keterangan2->ViewValue = $this->Keterangan2->CurrentValue;
+			}
+		} else {
+			$this->Keterangan2->ViewValue = NULL;
+		}
 		$this->Keterangan2->ViewCustomAttributes = "";
 
 		// Keterangan3
@@ -867,7 +888,8 @@ ft10_bayardetaildelete.ValidateRequired = false;
 <?php } ?>
 
 // Dynamic selection lists
-ft10_bayardetaildelete.Lists["x_siswaspp_id"] = {"LinkField":"x_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_SPP","","",""],"ParentFields":[],"ChildFields":["t10_bayardetail x_Keterangan"],"FilterFields":[],"Options":[],"Template":"","LinkTable":"v01_siswaspp"};
+ft10_bayardetaildelete.Lists["x_siswaspp_id"] = {"LinkField":"x_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_SPP","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":"","LinkTable":"v01_siswaspp"};
+ft10_bayardetaildelete.Lists["x_Keterangan2"] = {"LinkField":"x_Periode","Ajax":true,"AutoFill":false,"DisplayFields":["x_Periode","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":"","LinkTable":"t95_periode"};
 
 // Form object for search
 </script>

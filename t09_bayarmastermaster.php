@@ -1,7 +1,7 @@
 <?php
 
-// siswa_id
 // tahunajaran_id
+// siswa_id
 // Tanggal
 // NomorBayar
 // Jumlah
@@ -12,17 +12,6 @@
 <table id="tbl_t09_bayarmastermaster" class="table table-bordered table-striped ewViewTable">
 <?php echo $t09_bayarmaster->TableCustomInnerHtml ?>
 	<tbody>
-<?php if ($t09_bayarmaster->siswa_id->Visible) { // siswa_id ?>
-		<tr id="r_siswa_id">
-			<td><?php echo $t09_bayarmaster->siswa_id->FldCaption() ?></td>
-			<td<?php echo $t09_bayarmaster->siswa_id->CellAttributes() ?>>
-<span id="el_t09_bayarmaster_siswa_id">
-<span<?php echo $t09_bayarmaster->siswa_id->ViewAttributes() ?>>
-<?php echo $t09_bayarmaster->siswa_id->ListViewValue() ?></span>
-</span>
-</td>
-		</tr>
-<?php } ?>
 <?php if ($t09_bayarmaster->tahunajaran_id->Visible) { // tahunajaran_id ?>
 		<tr id="r_tahunajaran_id">
 			<td><?php echo $t09_bayarmaster->tahunajaran_id->FldCaption() ?></td>
@@ -30,6 +19,17 @@
 <span id="el_t09_bayarmaster_tahunajaran_id">
 <span<?php echo $t09_bayarmaster->tahunajaran_id->ViewAttributes() ?>>
 <?php echo $t09_bayarmaster->tahunajaran_id->ListViewValue() ?></span>
+</span>
+</td>
+		</tr>
+<?php } ?>
+<?php if ($t09_bayarmaster->siswa_id->Visible) { // siswa_id ?>
+		<tr id="r_siswa_id">
+			<td><?php echo $t09_bayarmaster->siswa_id->FldCaption() ?></td>
+			<td<?php echo $t09_bayarmaster->siswa_id->CellAttributes() ?>>
+<span id="el_t09_bayarmaster_siswa_id">
+<span<?php echo $t09_bayarmaster->siswa_id->ViewAttributes() ?>>
+<?php echo $t09_bayarmaster->siswa_id->ListViewValue() ?></span>
 </span>
 </td>
 		</tr>

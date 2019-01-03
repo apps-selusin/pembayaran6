@@ -640,7 +640,7 @@
       <phrase id="menutext" value="Siswa" />
     </menu>
     <menu id="50">
-      <phrase id="menutext" value="SPP" />
+      <phrase id="menutext" value="Iuran" />
     </menu>
     <menu id="48">
       <phrase id="menutext" value="Pembayaran" />
@@ -797,7 +797,7 @@
       </field>
     </table>
     <table id="t07_spp">
-      <phrase id="tblcaption" value="SPP" />
+      <phrase id="tblcaption" value="Iuran" />
       <field id="id">
         <phrase id="fldcaption" value="id" />
       </field>
@@ -841,11 +841,11 @@
       <field id="id">
         <phrase id="fldcaption" value="id" />
       </field>
-      <field id="siswa_id">
-        <phrase id="fldcaption" value="NIS / Nama" />
-      </field>
       <field id="tahunajaran_id">
         <phrase id="fldcaption" value="Tahun Ajaran" />
+      </field>
+      <field id="siswa_id">
+        <phrase id="fldcaption" value="NIS / Nama" />
       </field>
       <field id="tanggal">
         <phrase id="fldcaption" value="Tanggal" />
@@ -866,7 +866,7 @@
         <phrase id="fldcaption" value="bayarmaster id" />
       </field>
       <field id="siswaspp_id">
-        <phrase id="fldcaption" value="SPP" />
+        <phrase id="fldcaption" value="Iuran" />
       </field>
       <field id="keterangan">
         <phrase id="fldcaption" value="Keterangan" />

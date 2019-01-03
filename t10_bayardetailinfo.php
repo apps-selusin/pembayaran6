@@ -64,10 +64,8 @@ class ct10_bayardetail extends cTable {
 		$this->fields['bayarmaster_id'] = &$this->bayarmaster_id;
 
 		// siswaspp_id
-		$this->siswaspp_id = new cField('t10_bayardetail', 't10_bayardetail', 'x_siswaspp_id', 'siswaspp_id', '`siswaspp_id`', '`siswaspp_id`', 3, -1, FALSE, '`siswaspp_id`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'SELECT');
+		$this->siswaspp_id = new cField('t10_bayardetail', 't10_bayardetail', 'x_siswaspp_id', 'siswaspp_id', '`siswaspp_id`', '`siswaspp_id`', 3, -1, FALSE, '`siswaspp_id`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
 		$this->siswaspp_id->Sortable = TRUE; // Allow sort
-		$this->siswaspp_id->UsePleaseSelect = TRUE; // Use PleaseSelect by default
-		$this->siswaspp_id->PleaseSelectText = $Language->Phrase("PleaseSelect"); // PleaseSelect text
 		$this->siswaspp_id->FldDefaultErrMsg = $Language->Phrase("IncorrectInteger");
 		$this->fields['siswaspp_id'] = &$this->siswaspp_id;
 
@@ -690,6 +688,7 @@ class ct10_bayardetail extends cTable {
 		$this->bayarmaster_id->ViewCustomAttributes = "";
 
 		// siswaspp_id
+		$this->siswaspp_id->ViewValue = $this->siswaspp_id->CurrentValue;
 		if (strval($this->siswaspp_id->CurrentValue) <> "") {
 			$sFilterWrk = "`id`" . ew_SearchString("=", $this->siswaspp_id->CurrentValue, EW_DATATYPE_NUMBER, "");
 		$sSqlWrk = "SELECT `id`, `SPP` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `v01_siswaspp`";
@@ -717,6 +716,26 @@ class ct10_bayardetail extends cTable {
 		$this->Keterangan->ViewCustomAttributes = "";
 
 		// Keterangan2
+		if (strval($this->Keterangan2->CurrentValue) <> "") {
+			$sFilterWrk = "`Periode`" . ew_SearchString("=", $this->Keterangan2->CurrentValue, EW_DATATYPE_STRING, "");
+		$sSqlWrk = "SELECT `Periode`, `Periode` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `t95_periode`";
+		$sWhereWrk = "";
+		$this->Keterangan2->LookupFilters = array();
+		ew_AddFilter($sWhereWrk, $sFilterWrk);
+		$this->Lookup_Selecting($this->Keterangan2, $sWhereWrk); // Call Lookup selecting
+		if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
+			$rswrk = Conn()->Execute($sSqlWrk);
+			if ($rswrk && !$rswrk->EOF) { // Lookup values found
+				$arwrk = array();
+				$arwrk[1] = $rswrk->fields('DispFld');
+				$this->Keterangan2->ViewValue = $this->Keterangan2->DisplayValue($arwrk);
+				$rswrk->Close();
+			} else {
+				$this->Keterangan2->ViewValue = $this->Keterangan2->CurrentValue;
+			}
+		} else {
+			$this->Keterangan2->ViewValue = NULL;
+		}
 		$this->Keterangan2->ViewCustomAttributes = "";
 
 		// Keterangan3
@@ -796,6 +815,8 @@ class ct10_bayardetail extends cTable {
 		// siswaspp_id
 		$this->siswaspp_id->EditAttrs["class"] = "form-control";
 		$this->siswaspp_id->EditCustomAttributes = "";
+		$this->siswaspp_id->EditValue = $this->siswaspp_id->CurrentValue;
+		$this->siswaspp_id->PlaceHolder = ew_RemoveHtml($this->siswaspp_id->FldCaption());
 
 		// Keterangan
 		$this->Keterangan->EditAttrs["class"] = "form-control";
@@ -923,27 +944,6 @@ class ct10_bayardetail extends cTable {
 	function GetAutoFill($id, $val) {
 		$rsarr = array();
 		$rowcnt = 0;
-		if (preg_match('/^x(\d)*_siswaspp_id$/', $id)) {
-			$conn = &$this->Connection();
-			$sSqlWrk = "SELECT `Nilai` AS FIELD0 FROM `v01_siswaspp`";
-			$sWhereWrk = "(`id` = " . ew_QuotedValue($val, EW_DATATYPE_NUMBER, $this->DBID) . ")";
-			$this->siswaspp_id->LookupFilters = array();
-			$this->Lookup_Selecting($this->siswaspp_id, $sWhereWrk); // Call Lookup selecting
-			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
-			if ($rs = ew_LoadRecordset($sSqlWrk, $conn)) {
-				while ($rs && !$rs->EOF) {
-					$ar = array();
-					$this->Jumlah->setDbValue($rs->fields[0]);
-					$this->RowType == EW_ROWTYPE_EDIT;
-					$this->RenderEditRow();
-					$ar[] = ($this->Jumlah->AutoFillOriginalValue) ? $this->Jumlah->CurrentValue : $this->Jumlah->EditValue;
-					$rowcnt += 1;
-					$rsarr[] = $ar;
-					$rs->MoveNext();
-				}
-				$rs->Close();
-			}
-		}
 
 		// Output
 		if (is_array($rsarr) && $rowcnt > 0) {
@@ -1230,14 +1230,50 @@ class ct10_bayardetail extends cTable {
 	// Row Rendering event
 	function Row_Rendering() {
 
-		// Enter your code here	
+		// Enter your code here
+		if($this->PageID == "grid") {
+			$grid_count = $this->GridAddRowCount;
+			$grid_num = $this->GridCnt;
+			if(isset($this->RowIndex)) {
+				$grid_num = $this->RowIndex;
+
+				//only when we are dawing actual rows
+				if(($grid_count >= $grid_num) && is_int($grid_num) && ($grid_num >= 1)) {
+					$offseter = $grid_num - 1;
+
+					//get & set product details
+					$product = ew_ExecuteRow("SELECT id FROM v01_siswaspp limit 1 OFFSET $offseter");
+					$this->siswaspp_id->CurrentValue = $product["id"];
+
+					//hide grid delete
+					$this->ListOptions->Items["griddelete"]->Visible = FALSE;
+				}
+			}
+		}
 	}
 
 	// Row Rendered event
 	function Row_Rendered() {
 
 		// To view properties of field class, use:
-		//var_dump($this-><FieldName>); 
+		//var_dump($this-><FieldName>);
+
+		if (CurrentPageID() == "add" && $this->CurrentAction != "F") {
+
+			//if ($this->CompID->CurrentValue=="") {
+			//	$this->CompID->CurrentValue = "Your Default Value"; // adjust it with yours
+			//}
+			// the following 2 lines of code is useful if you want to make it as a read-only field
+			//$this->CompID->EditValue = $this->CompID->CurrentValue;
+			//$this->CompID->ReadOnly = TRUE;
+
+			$this->Keterangan->ReadOnly = TRUE;
+			$this->siswaspp_id->ReadOnly = TRUE;
+		}
+
+		//if ($this->CurrentAction == "add" && $this->CurrentAction == "F") {
+		//	$this->CompID->ViewValue = $this->CompID->CurrentValue;
+		//}
 
 	}
 

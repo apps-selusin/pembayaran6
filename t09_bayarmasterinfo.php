@@ -14,8 +14,8 @@ class ct09_bayarmaster extends cTable {
 	var $AuditTrailOnViewData = FALSE;
 	var $AuditTrailOnSearch = FALSE;
 	var $id;
-	var $siswa_id;
 	var $tahunajaran_id;
+	var $siswa_id;
 	var $Tanggal;
 	var $NomorBayar;
 	var $Jumlah;
@@ -56,12 +56,6 @@ class ct09_bayarmaster extends cTable {
 		$this->id->FldDefaultErrMsg = $Language->Phrase("IncorrectInteger");
 		$this->fields['id'] = &$this->id;
 
-		// siswa_id
-		$this->siswa_id = new cField('t09_bayarmaster', 't09_bayarmaster', 'x_siswa_id', 'siswa_id', '`siswa_id`', '`siswa_id`', 3, -1, FALSE, '`EV__siswa_id`', TRUE, TRUE, TRUE, 'FORMATTED TEXT', 'TEXT');
-		$this->siswa_id->Sortable = TRUE; // Allow sort
-		$this->siswa_id->FldDefaultErrMsg = $Language->Phrase("IncorrectInteger");
-		$this->fields['siswa_id'] = &$this->siswa_id;
-
 		// tahunajaran_id
 		$this->tahunajaran_id = new cField('t09_bayarmaster', 't09_bayarmaster', 'x_tahunajaran_id', 'tahunajaran_id', '`tahunajaran_id`', '`tahunajaran_id`', 3, -1, FALSE, '`tahunajaran_id`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'SELECT');
 		$this->tahunajaran_id->Sortable = TRUE; // Allow sort
@@ -69,6 +63,12 @@ class ct09_bayarmaster extends cTable {
 		$this->tahunajaran_id->PleaseSelectText = $Language->Phrase("PleaseSelect"); // PleaseSelect text
 		$this->tahunajaran_id->FldDefaultErrMsg = $Language->Phrase("IncorrectInteger");
 		$this->fields['tahunajaran_id'] = &$this->tahunajaran_id;
+
+		// siswa_id
+		$this->siswa_id = new cField('t09_bayarmaster', 't09_bayarmaster', 'x_siswa_id', 'siswa_id', '`siswa_id`', '`siswa_id`', 3, -1, FALSE, '`EV__siswa_id`', TRUE, FALSE, TRUE, 'FORMATTED TEXT', 'TEXT');
+		$this->siswa_id->Sortable = TRUE; // Allow sort
+		$this->siswa_id->FldDefaultErrMsg = $Language->Phrase("IncorrectInteger");
+		$this->fields['siswa_id'] = &$this->siswa_id;
 
 		// Tanggal
 		$this->Tanggal = new cField('t09_bayarmaster', 't09_bayarmaster', 'x_Tanggal', 'Tanggal', '`Tanggal`', ew_CastDateFieldForLike('`Tanggal`', 7, "DB"), 133, 7, FALSE, '`Tanggal`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
@@ -200,7 +200,7 @@ class ct09_bayarmaster extends cTable {
 	function getSqlSelectList() { // Select for List page
 		$select = "";
 		$select = "SELECT * FROM (" .
-			"SELECT *, (SELECT CONCAT(`NIS`,'" . ew_ValueSeparator(1, $this->siswa_id) . "',`Nama`) FROM `t04_siswa` `EW_TMP_LOOKUPTABLE` WHERE `EW_TMP_LOOKUPTABLE`.`id` = `t09_bayarmaster`.`siswa_id` LIMIT 1) AS `EV__siswa_id` FROM `t09_bayarmaster`" .
+			"SELECT *, (SELECT CONCAT(`NIS`,'" . ew_ValueSeparator(1, $this->siswa_id) . "',`Nama`) FROM `v04_daftarsiswa` `EW_TMP_LOOKUPTABLE` WHERE `EW_TMP_LOOKUPTABLE`.`siswa_id` = `t09_bayarmaster`.`siswa_id` LIMIT 1) AS `EV__siswa_id` FROM `t09_bayarmaster`" .
 			") `EW_TMP_TABLE`";
 		return ($this->_SqlSelectList <> "") ? $this->_SqlSelectList : $select;
 	}
@@ -691,8 +691,8 @@ class ct09_bayarmaster extends cTable {
 	// Load row values from recordset
 	function LoadListRowValues(&$rs) {
 		$this->id->setDbValue($rs->fields('id'));
-		$this->siswa_id->setDbValue($rs->fields('siswa_id'));
 		$this->tahunajaran_id->setDbValue($rs->fields('tahunajaran_id'));
+		$this->siswa_id->setDbValue($rs->fields('siswa_id'));
 		$this->Tanggal->setDbValue($rs->fields('Tanggal'));
 		$this->NomorBayar->setDbValue($rs->fields('NomorBayar'));
 		$this->Jumlah->setDbValue($rs->fields('Jumlah'));
@@ -707,8 +707,8 @@ class ct09_bayarmaster extends cTable {
 
    // Common render codes
 		// id
-		// siswa_id
 		// tahunajaran_id
+		// siswa_id
 		// Tanggal
 		// NomorBayar
 		// Jumlah
@@ -716,37 +716,6 @@ class ct09_bayarmaster extends cTable {
 
 		$this->id->ViewValue = $this->id->CurrentValue;
 		$this->id->ViewCustomAttributes = "";
-
-		// siswa_id
-		if ($this->siswa_id->VirtualValue <> "") {
-			$this->siswa_id->ViewValue = $this->siswa_id->VirtualValue;
-		} else {
-			$this->siswa_id->ViewValue = $this->siswa_id->CurrentValue;
-		if (strval($this->siswa_id->CurrentValue) <> "") {
-			$sFilterWrk = "`id`" . ew_SearchString("=", $this->siswa_id->CurrentValue, EW_DATATYPE_NUMBER, "");
-		$sSqlWrk = "SELECT `id`, `NIS` AS `DispFld`, `Nama` AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `t04_siswa`";
-		$sWhereWrk = "";
-		$this->siswa_id->LookupFilters = array();
-		$lookuptblfilter = "`id` in (select siswa_id from t08_siswaspp)";
-		ew_AddFilter($sWhereWrk, $lookuptblfilter);
-		ew_AddFilter($sWhereWrk, $sFilterWrk);
-		$this->Lookup_Selecting($this->siswa_id, $sWhereWrk); // Call Lookup selecting
-		if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
-			$rswrk = Conn()->Execute($sSqlWrk);
-			if ($rswrk && !$rswrk->EOF) { // Lookup values found
-				$arwrk = array();
-				$arwrk[1] = $rswrk->fields('DispFld');
-				$arwrk[2] = $rswrk->fields('Disp2Fld');
-				$this->siswa_id->ViewValue = $this->siswa_id->DisplayValue($arwrk);
-				$rswrk->Close();
-			} else {
-				$this->siswa_id->ViewValue = $this->siswa_id->CurrentValue;
-			}
-		} else {
-			$this->siswa_id->ViewValue = NULL;
-		}
-		}
-		$this->siswa_id->ViewCustomAttributes = "";
 
 		// tahunajaran_id
 		if (strval($this->tahunajaran_id->CurrentValue) <> "") {
@@ -771,6 +740,37 @@ class ct09_bayarmaster extends cTable {
 		}
 		$this->tahunajaran_id->ViewCustomAttributes = "";
 
+		// siswa_id
+		if ($this->siswa_id->VirtualValue <> "") {
+			$this->siswa_id->ViewValue = $this->siswa_id->VirtualValue;
+		} else {
+			$this->siswa_id->ViewValue = $this->siswa_id->CurrentValue;
+		if (strval($this->siswa_id->CurrentValue) <> "") {
+			$sFilterWrk = "`siswa_id`" . ew_SearchString("=", $this->siswa_id->CurrentValue, EW_DATATYPE_NUMBER, "");
+		$sSqlWrk = "SELECT `siswa_id`, `NIS` AS `DispFld`, `Nama` AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `v04_daftarsiswa`";
+		$sWhereWrk = "";
+		$this->siswa_id->LookupFilters = array();
+		$lookuptblfilter = "`siswa_id` is not null";
+		ew_AddFilter($sWhereWrk, $lookuptblfilter);
+		ew_AddFilter($sWhereWrk, $sFilterWrk);
+		$this->Lookup_Selecting($this->siswa_id, $sWhereWrk); // Call Lookup selecting
+		if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
+			$rswrk = Conn()->Execute($sSqlWrk);
+			if ($rswrk && !$rswrk->EOF) { // Lookup values found
+				$arwrk = array();
+				$arwrk[1] = $rswrk->fields('DispFld');
+				$arwrk[2] = $rswrk->fields('Disp2Fld');
+				$this->siswa_id->ViewValue = $this->siswa_id->DisplayValue($arwrk);
+				$rswrk->Close();
+			} else {
+				$this->siswa_id->ViewValue = $this->siswa_id->CurrentValue;
+			}
+		} else {
+			$this->siswa_id->ViewValue = NULL;
+		}
+		}
+		$this->siswa_id->ViewCustomAttributes = "";
+
 		// Tanggal
 		$this->Tanggal->ViewValue = $this->Tanggal->CurrentValue;
 		$this->Tanggal->ViewValue = ew_FormatDateTime($this->Tanggal->ViewValue, 7);
@@ -791,15 +791,15 @@ class ct09_bayarmaster extends cTable {
 		$this->id->HrefValue = "";
 		$this->id->TooltipValue = "";
 
-		// siswa_id
-		$this->siswa_id->LinkCustomAttributes = "";
-		$this->siswa_id->HrefValue = "";
-		$this->siswa_id->TooltipValue = "";
-
 		// tahunajaran_id
 		$this->tahunajaran_id->LinkCustomAttributes = "";
 		$this->tahunajaran_id->HrefValue = "";
 		$this->tahunajaran_id->TooltipValue = "";
+
+		// siswa_id
+		$this->siswa_id->LinkCustomAttributes = "";
+		$this->siswa_id->HrefValue = "";
+		$this->siswa_id->TooltipValue = "";
 
 		// Tanggal
 		$this->Tanggal->LinkCustomAttributes = "";
@@ -833,15 +833,15 @@ class ct09_bayarmaster extends cTable {
 		$this->id->EditValue = $this->id->CurrentValue;
 		$this->id->ViewCustomAttributes = "";
 
+		// tahunajaran_id
+		$this->tahunajaran_id->EditAttrs["class"] = "form-control";
+		$this->tahunajaran_id->EditCustomAttributes = "";
+
 		// siswa_id
 		$this->siswa_id->EditAttrs["class"] = "form-control";
 		$this->siswa_id->EditCustomAttributes = "";
 		$this->siswa_id->EditValue = $this->siswa_id->CurrentValue;
 		$this->siswa_id->PlaceHolder = ew_RemoveHtml($this->siswa_id->FldCaption());
-
-		// tahunajaran_id
-		$this->tahunajaran_id->EditAttrs["class"] = "form-control";
-		$this->tahunajaran_id->EditCustomAttributes = "";
 
 		// Tanggal
 		$this->Tanggal->EditAttrs["class"] = "form-control";
@@ -889,15 +889,15 @@ class ct09_bayarmaster extends cTable {
 			if ($Doc->Horizontal) { // Horizontal format, write header
 				$Doc->BeginExportRow();
 				if ($ExportPageType == "view") {
-					if ($this->siswa_id->Exportable) $Doc->ExportCaption($this->siswa_id);
 					if ($this->tahunajaran_id->Exportable) $Doc->ExportCaption($this->tahunajaran_id);
+					if ($this->siswa_id->Exportable) $Doc->ExportCaption($this->siswa_id);
 					if ($this->Tanggal->Exportable) $Doc->ExportCaption($this->Tanggal);
 					if ($this->NomorBayar->Exportable) $Doc->ExportCaption($this->NomorBayar);
 					if ($this->Jumlah->Exportable) $Doc->ExportCaption($this->Jumlah);
 				} else {
 					if ($this->id->Exportable) $Doc->ExportCaption($this->id);
-					if ($this->siswa_id->Exportable) $Doc->ExportCaption($this->siswa_id);
 					if ($this->tahunajaran_id->Exportable) $Doc->ExportCaption($this->tahunajaran_id);
+					if ($this->siswa_id->Exportable) $Doc->ExportCaption($this->siswa_id);
 					if ($this->Tanggal->Exportable) $Doc->ExportCaption($this->Tanggal);
 					if ($this->NomorBayar->Exportable) $Doc->ExportCaption($this->NomorBayar);
 					if ($this->Jumlah->Exportable) $Doc->ExportCaption($this->Jumlah);
@@ -932,15 +932,15 @@ class ct09_bayarmaster extends cTable {
 				if (!$Doc->ExportCustom) {
 					$Doc->BeginExportRow($RowCnt); // Allow CSS styles if enabled
 					if ($ExportPageType == "view") {
-						if ($this->siswa_id->Exportable) $Doc->ExportField($this->siswa_id);
 						if ($this->tahunajaran_id->Exportable) $Doc->ExportField($this->tahunajaran_id);
+						if ($this->siswa_id->Exportable) $Doc->ExportField($this->siswa_id);
 						if ($this->Tanggal->Exportable) $Doc->ExportField($this->Tanggal);
 						if ($this->NomorBayar->Exportable) $Doc->ExportField($this->NomorBayar);
 						if ($this->Jumlah->Exportable) $Doc->ExportField($this->Jumlah);
 					} else {
 						if ($this->id->Exportable) $Doc->ExportField($this->id);
-						if ($this->siswa_id->Exportable) $Doc->ExportField($this->siswa_id);
 						if ($this->tahunajaran_id->Exportable) $Doc->ExportField($this->tahunajaran_id);
+						if ($this->siswa_id->Exportable) $Doc->ExportField($this->siswa_id);
 						if ($this->Tanggal->Exportable) $Doc->ExportField($this->Tanggal);
 						if ($this->NomorBayar->Exportable) $Doc->ExportField($this->NomorBayar);
 						if ($this->Jumlah->Exportable) $Doc->ExportField($this->Jumlah);

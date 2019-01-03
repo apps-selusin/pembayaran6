@@ -286,8 +286,8 @@ class ct09_bayarmaster_edit extends ct09_bayarmaster {
 		// Create form object
 		$objForm = new cFormObj();
 		$this->CurrentAction = (@$_GET["a"] <> "") ? $_GET["a"] : @$_POST["a_list"]; // Set up current action
-		$this->siswa_id->SetVisibility();
 		$this->tahunajaran_id->SetVisibility();
+		$this->siswa_id->SetVisibility();
 		$this->Tanggal->SetVisibility();
 		$this->NomorBayar->SetVisibility();
 		$this->Jumlah->SetVisibility();
@@ -562,11 +562,11 @@ class ct09_bayarmaster_edit extends ct09_bayarmaster {
 
 		// Load from form
 		global $objForm;
-		if (!$this->siswa_id->FldIsDetailKey) {
-			$this->siswa_id->setFormValue($objForm->GetValue("x_siswa_id"));
-		}
 		if (!$this->tahunajaran_id->FldIsDetailKey) {
 			$this->tahunajaran_id->setFormValue($objForm->GetValue("x_tahunajaran_id"));
+		}
+		if (!$this->siswa_id->FldIsDetailKey) {
+			$this->siswa_id->setFormValue($objForm->GetValue("x_siswa_id"));
 		}
 		if (!$this->Tanggal->FldIsDetailKey) {
 			$this->Tanggal->setFormValue($objForm->GetValue("x_Tanggal"));
@@ -587,8 +587,8 @@ class ct09_bayarmaster_edit extends ct09_bayarmaster {
 		global $objForm;
 		$this->LoadRow();
 		$this->id->CurrentValue = $this->id->FormValue;
-		$this->siswa_id->CurrentValue = $this->siswa_id->FormValue;
 		$this->tahunajaran_id->CurrentValue = $this->tahunajaran_id->FormValue;
+		$this->siswa_id->CurrentValue = $this->siswa_id->FormValue;
 		$this->Tanggal->CurrentValue = $this->Tanggal->FormValue;
 		$this->Tanggal->CurrentValue = ew_UnFormatDateTime($this->Tanggal->CurrentValue, 7);
 		$this->NomorBayar->CurrentValue = $this->NomorBayar->FormValue;
@@ -651,13 +651,13 @@ class ct09_bayarmaster_edit extends ct09_bayarmaster {
 		$row = &$rs->fields;
 		$this->Row_Selected($row);
 		$this->id->setDbValue($rs->fields('id'));
+		$this->tahunajaran_id->setDbValue($rs->fields('tahunajaran_id'));
 		$this->siswa_id->setDbValue($rs->fields('siswa_id'));
 		if (array_key_exists('EV__siswa_id', $rs->fields)) {
 			$this->siswa_id->VirtualValue = $rs->fields('EV__siswa_id'); // Set up virtual field value
 		} else {
 			$this->siswa_id->VirtualValue = ""; // Clear value
 		}
-		$this->tahunajaran_id->setDbValue($rs->fields('tahunajaran_id'));
 		$this->Tanggal->setDbValue($rs->fields('Tanggal'));
 		$this->NomorBayar->setDbValue($rs->fields('NomorBayar'));
 		$this->Jumlah->setDbValue($rs->fields('Jumlah'));
@@ -668,8 +668,8 @@ class ct09_bayarmaster_edit extends ct09_bayarmaster {
 		if (!$rs || !is_array($rs) && $rs->EOF) return;
 		$row = is_array($rs) ? $rs : $rs->fields;
 		$this->id->DbValue = $row['id'];
-		$this->siswa_id->DbValue = $row['siswa_id'];
 		$this->tahunajaran_id->DbValue = $row['tahunajaran_id'];
+		$this->siswa_id->DbValue = $row['siswa_id'];
 		$this->Tanggal->DbValue = $row['Tanggal'];
 		$this->NomorBayar->DbValue = $row['NomorBayar'];
 		$this->Jumlah->DbValue = $row['Jumlah'];
@@ -690,8 +690,8 @@ class ct09_bayarmaster_edit extends ct09_bayarmaster {
 
 		// Common render codes for all row types
 		// id
-		// siswa_id
 		// tahunajaran_id
+		// siswa_id
 		// Tanggal
 		// NomorBayar
 		// Jumlah
@@ -701,37 +701,6 @@ class ct09_bayarmaster_edit extends ct09_bayarmaster {
 		// id
 		$this->id->ViewValue = $this->id->CurrentValue;
 		$this->id->ViewCustomAttributes = "";
-
-		// siswa_id
-		if ($this->siswa_id->VirtualValue <> "") {
-			$this->siswa_id->ViewValue = $this->siswa_id->VirtualValue;
-		} else {
-			$this->siswa_id->ViewValue = $this->siswa_id->CurrentValue;
-		if (strval($this->siswa_id->CurrentValue) <> "") {
-			$sFilterWrk = "`id`" . ew_SearchString("=", $this->siswa_id->CurrentValue, EW_DATATYPE_NUMBER, "");
-		$sSqlWrk = "SELECT `id`, `NIS` AS `DispFld`, `Nama` AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `t04_siswa`";
-		$sWhereWrk = "";
-		$this->siswa_id->LookupFilters = array();
-		$lookuptblfilter = "`id` in (select siswa_id from t08_siswaspp)";
-		ew_AddFilter($sWhereWrk, $lookuptblfilter);
-		ew_AddFilter($sWhereWrk, $sFilterWrk);
-		$this->Lookup_Selecting($this->siswa_id, $sWhereWrk); // Call Lookup selecting
-		if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
-			$rswrk = Conn()->Execute($sSqlWrk);
-			if ($rswrk && !$rswrk->EOF) { // Lookup values found
-				$arwrk = array();
-				$arwrk[1] = $rswrk->fields('DispFld');
-				$arwrk[2] = $rswrk->fields('Disp2Fld');
-				$this->siswa_id->ViewValue = $this->siswa_id->DisplayValue($arwrk);
-				$rswrk->Close();
-			} else {
-				$this->siswa_id->ViewValue = $this->siswa_id->CurrentValue;
-			}
-		} else {
-			$this->siswa_id->ViewValue = NULL;
-		}
-		}
-		$this->siswa_id->ViewCustomAttributes = "";
 
 		// tahunajaran_id
 		if (strval($this->tahunajaran_id->CurrentValue) <> "") {
@@ -756,6 +725,37 @@ class ct09_bayarmaster_edit extends ct09_bayarmaster {
 		}
 		$this->tahunajaran_id->ViewCustomAttributes = "";
 
+		// siswa_id
+		if ($this->siswa_id->VirtualValue <> "") {
+			$this->siswa_id->ViewValue = $this->siswa_id->VirtualValue;
+		} else {
+			$this->siswa_id->ViewValue = $this->siswa_id->CurrentValue;
+		if (strval($this->siswa_id->CurrentValue) <> "") {
+			$sFilterWrk = "`siswa_id`" . ew_SearchString("=", $this->siswa_id->CurrentValue, EW_DATATYPE_NUMBER, "");
+		$sSqlWrk = "SELECT `siswa_id`, `NIS` AS `DispFld`, `Nama` AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `v04_daftarsiswa`";
+		$sWhereWrk = "";
+		$this->siswa_id->LookupFilters = array();
+		$lookuptblfilter = "`siswa_id` is not null";
+		ew_AddFilter($sWhereWrk, $lookuptblfilter);
+		ew_AddFilter($sWhereWrk, $sFilterWrk);
+		$this->Lookup_Selecting($this->siswa_id, $sWhereWrk); // Call Lookup selecting
+		if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
+			$rswrk = Conn()->Execute($sSqlWrk);
+			if ($rswrk && !$rswrk->EOF) { // Lookup values found
+				$arwrk = array();
+				$arwrk[1] = $rswrk->fields('DispFld');
+				$arwrk[2] = $rswrk->fields('Disp2Fld');
+				$this->siswa_id->ViewValue = $this->siswa_id->DisplayValue($arwrk);
+				$rswrk->Close();
+			} else {
+				$this->siswa_id->ViewValue = $this->siswa_id->CurrentValue;
+			}
+		} else {
+			$this->siswa_id->ViewValue = NULL;
+		}
+		}
+		$this->siswa_id->ViewCustomAttributes = "";
+
 		// Tanggal
 		$this->Tanggal->ViewValue = $this->Tanggal->CurrentValue;
 		$this->Tanggal->ViewValue = ew_FormatDateTime($this->Tanggal->ViewValue, 7);
@@ -771,15 +771,15 @@ class ct09_bayarmaster_edit extends ct09_bayarmaster {
 		$this->Jumlah->CellCssStyle .= "text-align: right;";
 		$this->Jumlah->ViewCustomAttributes = "";
 
-			// siswa_id
-			$this->siswa_id->LinkCustomAttributes = "";
-			$this->siswa_id->HrefValue = "";
-			$this->siswa_id->TooltipValue = "";
-
 			// tahunajaran_id
 			$this->tahunajaran_id->LinkCustomAttributes = "";
 			$this->tahunajaran_id->HrefValue = "";
 			$this->tahunajaran_id->TooltipValue = "";
+
+			// siswa_id
+			$this->siswa_id->LinkCustomAttributes = "";
+			$this->siswa_id->HrefValue = "";
+			$this->siswa_id->TooltipValue = "";
 
 			// Tanggal
 			$this->Tanggal->LinkCustomAttributes = "";
@@ -796,35 +796,6 @@ class ct09_bayarmaster_edit extends ct09_bayarmaster {
 			$this->Jumlah->HrefValue = "";
 			$this->Jumlah->TooltipValue = "";
 		} elseif ($this->RowType == EW_ROWTYPE_EDIT) { // Edit row
-
-			// siswa_id
-			$this->siswa_id->EditAttrs["class"] = "form-control";
-			$this->siswa_id->EditCustomAttributes = "";
-			$this->siswa_id->EditValue = ew_HtmlEncode($this->siswa_id->CurrentValue);
-			if (strval($this->siswa_id->CurrentValue) <> "") {
-				$sFilterWrk = "`id`" . ew_SearchString("=", $this->siswa_id->CurrentValue, EW_DATATYPE_NUMBER, "");
-			$sSqlWrk = "SELECT `id`, `NIS` AS `DispFld`, `Nama` AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `t04_siswa`";
-			$sWhereWrk = "";
-			$this->siswa_id->LookupFilters = array();
-			$lookuptblfilter = "`id` in (select siswa_id from t08_siswaspp)";
-			ew_AddFilter($sWhereWrk, $lookuptblfilter);
-			ew_AddFilter($sWhereWrk, $sFilterWrk);
-			$this->Lookup_Selecting($this->siswa_id, $sWhereWrk); // Call Lookup selecting
-			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
-				$rswrk = Conn()->Execute($sSqlWrk);
-				if ($rswrk && !$rswrk->EOF) { // Lookup values found
-					$arwrk = array();
-					$arwrk[1] = ew_HtmlEncode($rswrk->fields('DispFld'));
-					$arwrk[2] = ew_HtmlEncode($rswrk->fields('Disp2Fld'));
-					$this->siswa_id->EditValue = $this->siswa_id->DisplayValue($arwrk);
-					$rswrk->Close();
-				} else {
-					$this->siswa_id->EditValue = ew_HtmlEncode($this->siswa_id->CurrentValue);
-				}
-			} else {
-				$this->siswa_id->EditValue = NULL;
-			}
-			$this->siswa_id->PlaceHolder = ew_RemoveHtml($this->siswa_id->FldCaption());
 
 			// tahunajaran_id
 			$this->tahunajaran_id->EditAttrs["class"] = "form-control";
@@ -844,6 +815,12 @@ class ct09_bayarmaster_edit extends ct09_bayarmaster {
 			$arwrk = ($rswrk) ? $rswrk->GetRows() : array();
 			if ($rswrk) $rswrk->Close();
 			$this->tahunajaran_id->EditValue = $arwrk;
+
+			// siswa_id
+			$this->siswa_id->EditAttrs["class"] = "form-control";
+			$this->siswa_id->EditCustomAttributes = "";
+			$this->siswa_id->EditValue = ew_HtmlEncode($this->siswa_id->CurrentValue);
+			$this->siswa_id->PlaceHolder = ew_RemoveHtml($this->siswa_id->FldCaption());
 
 			// Tanggal
 			$this->Tanggal->EditAttrs["class"] = "form-control";
@@ -865,14 +842,14 @@ class ct09_bayarmaster_edit extends ct09_bayarmaster {
 			if (strval($this->Jumlah->EditValue) <> "" && is_numeric($this->Jumlah->EditValue)) $this->Jumlah->EditValue = ew_FormatNumber($this->Jumlah->EditValue, -2, -2, -2, -2);
 
 			// Edit refer script
-			// siswa_id
-
-			$this->siswa_id->LinkCustomAttributes = "";
-			$this->siswa_id->HrefValue = "";
-
 			// tahunajaran_id
+
 			$this->tahunajaran_id->LinkCustomAttributes = "";
 			$this->tahunajaran_id->HrefValue = "";
+
+			// siswa_id
+			$this->siswa_id->LinkCustomAttributes = "";
+			$this->siswa_id->HrefValue = "";
 
 			// Tanggal
 			$this->Tanggal->LinkCustomAttributes = "";
@@ -907,11 +884,11 @@ class ct09_bayarmaster_edit extends ct09_bayarmaster {
 		// Check if validation required
 		if (!EW_SERVER_VALIDATE)
 			return ($gsFormError == "");
-		if (!$this->siswa_id->FldIsDetailKey && !is_null($this->siswa_id->FormValue) && $this->siswa_id->FormValue == "") {
-			ew_AddMessage($gsFormError, str_replace("%s", $this->siswa_id->FldCaption(), $this->siswa_id->ReqErrMsg));
-		}
 		if (!$this->tahunajaran_id->FldIsDetailKey && !is_null($this->tahunajaran_id->FormValue) && $this->tahunajaran_id->FormValue == "") {
 			ew_AddMessage($gsFormError, str_replace("%s", $this->tahunajaran_id->FldCaption(), $this->tahunajaran_id->ReqErrMsg));
+		}
+		if (!$this->siswa_id->FldIsDetailKey && !is_null($this->siswa_id->FormValue) && $this->siswa_id->FormValue == "") {
+			ew_AddMessage($gsFormError, str_replace("%s", $this->siswa_id->FldCaption(), $this->siswa_id->ReqErrMsg));
 		}
 		if (!$this->Tanggal->FldIsDetailKey && !is_null($this->Tanggal->FormValue) && $this->Tanggal->FormValue == "") {
 			ew_AddMessage($gsFormError, str_replace("%s", $this->Tanggal->FldCaption(), $this->Tanggal->ReqErrMsg));
@@ -975,11 +952,11 @@ class ct09_bayarmaster_edit extends ct09_bayarmaster {
 			$this->LoadDbValues($rsold);
 			$rsnew = array();
 
-			// siswa_id
-			$this->siswa_id->SetDbValueDef($rsnew, $this->siswa_id->CurrentValue, 0, $this->siswa_id->ReadOnly);
-
 			// tahunajaran_id
 			$this->tahunajaran_id->SetDbValueDef($rsnew, $this->tahunajaran_id->CurrentValue, 0, $this->tahunajaran_id->ReadOnly);
+
+			// siswa_id
+			$this->siswa_id->SetDbValueDef($rsnew, $this->siswa_id->CurrentValue, 0, $this->siswa_id->ReadOnly);
 
 			// Tanggal
 			$this->Tanggal->SetDbValueDef($rsnew, ew_UnFormatDateTime($this->Tanggal->CurrentValue, 7), ew_CurrentDate(), $this->Tanggal->ReadOnly);
@@ -1087,20 +1064,6 @@ class ct09_bayarmaster_edit extends ct09_bayarmaster {
 		global $gsLanguage;
 		$pageId = $pageId ?: $this->PageID;
 		switch ($fld->FldVar) {
-		case "x_siswa_id":
-			$sSqlWrk = "";
-			$sSqlWrk = "SELECT `id` AS `LinkFld`, `NIS` AS `DispFld`, `Nama` AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `t04_siswa`";
-			$sWhereWrk = "{filter}";
-			$this->siswa_id->LookupFilters = array();
-			$lookuptblfilter = "`id` in (select siswa_id from t08_siswaspp)";
-			ew_AddFilter($sWhereWrk, $lookuptblfilter);
-			$fld->LookupFilters += array("s" => $sSqlWrk, "d" => "", "f0" => '`id` = {filter_value}', "t0" => "3", "fn0" => "");
-			$sSqlWrk = "";
-			$this->Lookup_Selecting($this->siswa_id, $sWhereWrk); // Call Lookup selecting
-			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
-			if ($sSqlWrk <> "")
-				$fld->LookupFilters["s"] .= $sSqlWrk;
-			break;
 		case "x_tahunajaran_id":
 			$sSqlWrk = "";
 			$sSqlWrk = "SELECT `id` AS `LinkFld`, `TahunAjaran` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `t01_tahunajaran`";
@@ -1109,6 +1072,20 @@ class ct09_bayarmaster_edit extends ct09_bayarmaster {
 			$fld->LookupFilters += array("s" => $sSqlWrk, "d" => "", "f0" => '`id` = {filter_value}', "t0" => "3", "fn0" => "");
 			$sSqlWrk = "";
 			$this->Lookup_Selecting($this->tahunajaran_id, $sWhereWrk); // Call Lookup selecting
+			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
+			if ($sSqlWrk <> "")
+				$fld->LookupFilters["s"] .= $sSqlWrk;
+			break;
+		case "x_siswa_id":
+			$sSqlWrk = "";
+			$sSqlWrk = "SELECT `siswa_id` AS `LinkFld`, `NIS` AS `DispFld`, `Nama` AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `v04_daftarsiswa`";
+			$sWhereWrk = "{filter}";
+			$this->siswa_id->LookupFilters = array();
+			$lookuptblfilter = "`siswa_id` is not null";
+			ew_AddFilter($sWhereWrk, $lookuptblfilter);
+			$fld->LookupFilters += array("s" => $sSqlWrk, "d" => "", "f0" => '`siswa_id` = {filter_value}', "t0" => "3", "fn0" => "", "f1" => '`tahunajaran_id` IN ({filter_value})', "t1" => "3", "fn1" => "");
+			$sSqlWrk = "";
+			$this->Lookup_Selecting($this->siswa_id, $sWhereWrk); // Call Lookup selecting
 			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
 			if ($sSqlWrk <> "")
 				$fld->LookupFilters["s"] .= $sSqlWrk;
@@ -1123,12 +1100,12 @@ class ct09_bayarmaster_edit extends ct09_bayarmaster {
 		switch ($fld->FldVar) {
 		case "x_siswa_id":
 			$sSqlWrk = "";
-			$sSqlWrk = "SELECT `id`, `NIS` AS `DispFld`, `Nama` AS `Disp2Fld` FROM `t04_siswa`";
-			$sWhereWrk = "`NIS` LIKE '{query_value}%' OR CONCAT(`NIS`,'" . ew_ValueSeparator(1, $this->siswa_id) . "',`Nama`) LIKE '{query_value}%'";
+			$sSqlWrk = "SELECT `siswa_id`, `NIS` AS `DispFld`, `Nama` AS `Disp2Fld` FROM `v04_daftarsiswa`";
+			$sWhereWrk = "(`NIS` LIKE '{query_value}%' OR CONCAT(`NIS`,'" . ew_ValueSeparator(1, $this->siswa_id) . "',`Nama`) LIKE '{query_value}%') AND ({filter})";
 			$this->siswa_id->LookupFilters = array();
-			$lookuptblfilter = "`id` in (select siswa_id from t08_siswaspp)";
+			$lookuptblfilter = "`siswa_id` is not null";
 			ew_AddFilter($sWhereWrk, $lookuptblfilter);
-			$fld->LookupFilters += array("s" => $sSqlWrk, "d" => "");
+			$fld->LookupFilters += array("s" => $sSqlWrk, "d" => "", "f1" => "`tahunajaran_id` IN ({filter_value})", "t1" => "3", "fn1" => "");
 			$sSqlWrk = "";
 			$this->Lookup_Selecting($this->siswa_id, $sWhereWrk); // Call Lookup selecting
 			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
@@ -1247,12 +1224,12 @@ ft09_bayarmasteredit.Validate = function() {
 	for (var i = startcnt; i <= rowcnt; i++) {
 		var infix = ($k[0]) ? String(i) : "";
 		$fobj.data("rowindex", infix);
-			elm = this.GetElements("x" + infix + "_siswa_id");
-			if (elm && !ew_IsHidden(elm) && !ew_HasValue(elm))
-				return this.OnError(elm, "<?php echo ew_JsEncode2(str_replace("%s", $t09_bayarmaster->siswa_id->FldCaption(), $t09_bayarmaster->siswa_id->ReqErrMsg)) ?>");
 			elm = this.GetElements("x" + infix + "_tahunajaran_id");
 			if (elm && !ew_IsHidden(elm) && !ew_HasValue(elm))
 				return this.OnError(elm, "<?php echo ew_JsEncode2(str_replace("%s", $t09_bayarmaster->tahunajaran_id->FldCaption(), $t09_bayarmaster->tahunajaran_id->ReqErrMsg)) ?>");
+			elm = this.GetElements("x" + infix + "_siswa_id");
+			if (elm && !ew_IsHidden(elm) && !ew_HasValue(elm))
+				return this.OnError(elm, "<?php echo ew_JsEncode2(str_replace("%s", $t09_bayarmaster->siswa_id->FldCaption(), $t09_bayarmaster->siswa_id->ReqErrMsg)) ?>");
 			elm = this.GetElements("x" + infix + "_Tanggal");
 			if (elm && !ew_IsHidden(elm) && !ew_HasValue(elm))
 				return this.OnError(elm, "<?php echo ew_JsEncode2(str_replace("%s", $t09_bayarmaster->Tanggal->FldCaption(), $t09_bayarmaster->Tanggal->ReqErrMsg)) ?>");
@@ -1301,8 +1278,8 @@ ft09_bayarmasteredit.ValidateRequired = false;
 <?php } ?>
 
 // Dynamic selection lists
-ft09_bayarmasteredit.Lists["x_siswa_id"] = {"LinkField":"x_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_NIS","x_Nama","",""],"ParentFields":[],"ChildFields":["t10_bayardetail x_siswaspp_id"],"FilterFields":[],"Options":[],"Template":"","LinkTable":"t04_siswa"};
-ft09_bayarmasteredit.Lists["x_tahunajaran_id"] = {"LinkField":"x_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_TahunAjaran","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":"","LinkTable":"t01_tahunajaran"};
+ft09_bayarmasteredit.Lists["x_tahunajaran_id"] = {"LinkField":"x_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_TahunAjaran","","",""],"ParentFields":[],"ChildFields":["x_siswa_id"],"FilterFields":[],"Options":[],"Template":"","LinkTable":"t01_tahunajaran"};
+ft09_bayarmasteredit.Lists["x_siswa_id"] = {"LinkField":"x_siswa_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_NIS","x_Nama","",""],"ParentFields":["x_tahunajaran_id"],"ChildFields":[],"FilterFields":["x_tahunajaran_id"],"Options":[],"Template":"","LinkTable":"v04_daftarsiswa"};
 
 // Form object for search
 </script>
@@ -1331,39 +1308,40 @@ $t09_bayarmaster_edit->ShowMessage();
 <input type="hidden" name="modal" value="1">
 <?php } ?>
 <div>
-<?php if ($t09_bayarmaster->siswa_id->Visible) { // siswa_id ?>
-	<div id="r_siswa_id" class="form-group">
-		<label id="elh_t09_bayarmaster_siswa_id" class="col-sm-2 control-label ewLabel"><?php echo $t09_bayarmaster->siswa_id->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></label>
-		<div class="col-sm-10"><div<?php echo $t09_bayarmaster->siswa_id->CellAttributes() ?>>
-<span id="el_t09_bayarmaster_siswa_id">
-<?php
-$wrkonchange = trim("ew_UpdateOpt.call(this); " . @$t09_bayarmaster->siswa_id->EditAttrs["onchange"]);
-if ($wrkonchange <> "") $wrkonchange = " onchange=\"" . ew_JsEncode2($wrkonchange) . "\"";
-$t09_bayarmaster->siswa_id->EditAttrs["onchange"] = "";
-?>
-<span id="as_x_siswa_id" style="white-space: nowrap; z-index: 8980">
-	<input type="text" name="sv_x_siswa_id" id="sv_x_siswa_id" value="<?php echo $t09_bayarmaster->siswa_id->EditValue ?>" size="30" placeholder="<?php echo ew_HtmlEncode($t09_bayarmaster->siswa_id->getPlaceHolder()) ?>" data-placeholder="<?php echo ew_HtmlEncode($t09_bayarmaster->siswa_id->getPlaceHolder()) ?>"<?php echo $t09_bayarmaster->siswa_id->EditAttributes() ?>>
-</span>
-<input type="hidden" data-table="t09_bayarmaster" data-field="x_siswa_id" data-value-separator="<?php echo $t09_bayarmaster->siswa_id->DisplayValueSeparatorAttribute() ?>" name="x_siswa_id" id="x_siswa_id" value="<?php echo ew_HtmlEncode($t09_bayarmaster->siswa_id->CurrentValue) ?>"<?php echo $wrkonchange ?>>
-<input type="hidden" name="q_x_siswa_id" id="q_x_siswa_id" value="<?php echo $t09_bayarmaster->siswa_id->LookupFilterQuery(true) ?>">
-<script type="text/javascript">
-ft09_bayarmasteredit.CreateAutoSuggest({"id":"x_siswa_id","forceSelect":true});
-</script>
-</span>
-<?php echo $t09_bayarmaster->siswa_id->CustomMsg ?></div></div>
-	</div>
-<?php } ?>
 <?php if ($t09_bayarmaster->tahunajaran_id->Visible) { // tahunajaran_id ?>
 	<div id="r_tahunajaran_id" class="form-group">
 		<label id="elh_t09_bayarmaster_tahunajaran_id" for="x_tahunajaran_id" class="col-sm-2 control-label ewLabel"><?php echo $t09_bayarmaster->tahunajaran_id->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></label>
 		<div class="col-sm-10"><div<?php echo $t09_bayarmaster->tahunajaran_id->CellAttributes() ?>>
 <span id="el_t09_bayarmaster_tahunajaran_id">
+<?php $t09_bayarmaster->tahunajaran_id->EditAttrs["onchange"] = "ew_UpdateOpt.call(this); " . @$t09_bayarmaster->tahunajaran_id->EditAttrs["onchange"]; ?>
 <select data-table="t09_bayarmaster" data-field="x_tahunajaran_id" data-value-separator="<?php echo $t09_bayarmaster->tahunajaran_id->DisplayValueSeparatorAttribute() ?>" id="x_tahunajaran_id" name="x_tahunajaran_id"<?php echo $t09_bayarmaster->tahunajaran_id->EditAttributes() ?>>
 <?php echo $t09_bayarmaster->tahunajaran_id->SelectOptionListHtml("x_tahunajaran_id") ?>
 </select>
 <input type="hidden" name="s_x_tahunajaran_id" id="s_x_tahunajaran_id" value="<?php echo $t09_bayarmaster->tahunajaran_id->LookupFilterQuery() ?>">
 </span>
 <?php echo $t09_bayarmaster->tahunajaran_id->CustomMsg ?></div></div>
+	</div>
+<?php } ?>
+<?php if ($t09_bayarmaster->siswa_id->Visible) { // siswa_id ?>
+	<div id="r_siswa_id" class="form-group">
+		<label id="elh_t09_bayarmaster_siswa_id" class="col-sm-2 control-label ewLabel"><?php echo $t09_bayarmaster->siswa_id->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></label>
+		<div class="col-sm-10"><div<?php echo $t09_bayarmaster->siswa_id->CellAttributes() ?>>
+<span id="el_t09_bayarmaster_siswa_id">
+<?php
+$wrkonchange = trim(" " . @$t09_bayarmaster->siswa_id->EditAttrs["onchange"]);
+if ($wrkonchange <> "") $wrkonchange = " onchange=\"" . ew_JsEncode2($wrkonchange) . "\"";
+$t09_bayarmaster->siswa_id->EditAttrs["onchange"] = "";
+?>
+<span id="as_x_siswa_id" style="white-space: nowrap; z-index: 8970">
+	<input type="text" name="sv_x_siswa_id" id="sv_x_siswa_id" value="<?php echo $t09_bayarmaster->siswa_id->EditValue ?>" size="30" placeholder="<?php echo ew_HtmlEncode($t09_bayarmaster->siswa_id->getPlaceHolder()) ?>" data-placeholder="<?php echo ew_HtmlEncode($t09_bayarmaster->siswa_id->getPlaceHolder()) ?>"<?php echo $t09_bayarmaster->siswa_id->EditAttributes() ?>>
+</span>
+<input type="hidden" data-table="t09_bayarmaster" data-field="x_siswa_id" data-value-separator="<?php echo $t09_bayarmaster->siswa_id->DisplayValueSeparatorAttribute() ?>" name="x_siswa_id" id="x_siswa_id" value="<?php echo ew_HtmlEncode($t09_bayarmaster->siswa_id->CurrentValue) ?>"<?php echo $wrkonchange ?>>
+<input type="hidden" name="q_x_siswa_id" id="q_x_siswa_id" value="<?php echo $t09_bayarmaster->siswa_id->LookupFilterQuery(true) ?>">
+<script type="text/javascript">
+ft09_bayarmasteredit.CreateAutoSuggest({"id":"x_siswa_id","forceSelect":false});
+</script>
+</span>
+<?php echo $t09_bayarmaster->siswa_id->CustomMsg ?></div></div>
 	</div>
 <?php } ?>
 <?php if ($t09_bayarmaster->Tanggal->Visible) { // Tanggal ?>

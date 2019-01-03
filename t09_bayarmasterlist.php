@@ -411,8 +411,8 @@ class ct09_bayarmaster_list extends ct09_bayarmaster {
 
 		// Setup export options
 		$this->SetupExportOptions();
-		$this->siswa_id->SetVisibility();
 		$this->tahunajaran_id->SetVisibility();
+		$this->siswa_id->SetVisibility();
 		$this->Tanggal->SetVisibility();
 		$this->NomorBayar->SetVisibility();
 		$this->Jumlah->SetVisibility();
@@ -781,8 +781,8 @@ class ct09_bayarmaster_list extends ct09_bayarmaster {
 		// Initialize
 		$sFilterList = "";
 		$sFilterList = ew_Concat($sFilterList, $this->id->AdvancedSearch->ToJSON(), ","); // Field id
-		$sFilterList = ew_Concat($sFilterList, $this->siswa_id->AdvancedSearch->ToJSON(), ","); // Field siswa_id
 		$sFilterList = ew_Concat($sFilterList, $this->tahunajaran_id->AdvancedSearch->ToJSON(), ","); // Field tahunajaran_id
+		$sFilterList = ew_Concat($sFilterList, $this->siswa_id->AdvancedSearch->ToJSON(), ","); // Field siswa_id
 		$sFilterList = ew_Concat($sFilterList, $this->Tanggal->AdvancedSearch->ToJSON(), ","); // Field Tanggal
 		$sFilterList = ew_Concat($sFilterList, $this->NomorBayar->AdvancedSearch->ToJSON(), ","); // Field NomorBayar
 		$sFilterList = ew_Concat($sFilterList, $this->Jumlah->AdvancedSearch->ToJSON(), ","); // Field Jumlah
@@ -834,14 +834,6 @@ class ct09_bayarmaster_list extends ct09_bayarmaster {
 		$this->id->AdvancedSearch->SearchOperator2 = @$filter["w_id"];
 		$this->id->AdvancedSearch->Save();
 
-		// Field siswa_id
-		$this->siswa_id->AdvancedSearch->SearchValue = @$filter["x_siswa_id"];
-		$this->siswa_id->AdvancedSearch->SearchOperator = @$filter["z_siswa_id"];
-		$this->siswa_id->AdvancedSearch->SearchCondition = @$filter["v_siswa_id"];
-		$this->siswa_id->AdvancedSearch->SearchValue2 = @$filter["y_siswa_id"];
-		$this->siswa_id->AdvancedSearch->SearchOperator2 = @$filter["w_siswa_id"];
-		$this->siswa_id->AdvancedSearch->Save();
-
 		// Field tahunajaran_id
 		$this->tahunajaran_id->AdvancedSearch->SearchValue = @$filter["x_tahunajaran_id"];
 		$this->tahunajaran_id->AdvancedSearch->SearchOperator = @$filter["z_tahunajaran_id"];
@@ -849,6 +841,14 @@ class ct09_bayarmaster_list extends ct09_bayarmaster {
 		$this->tahunajaran_id->AdvancedSearch->SearchValue2 = @$filter["y_tahunajaran_id"];
 		$this->tahunajaran_id->AdvancedSearch->SearchOperator2 = @$filter["w_tahunajaran_id"];
 		$this->tahunajaran_id->AdvancedSearch->Save();
+
+		// Field siswa_id
+		$this->siswa_id->AdvancedSearch->SearchValue = @$filter["x_siswa_id"];
+		$this->siswa_id->AdvancedSearch->SearchOperator = @$filter["z_siswa_id"];
+		$this->siswa_id->AdvancedSearch->SearchCondition = @$filter["v_siswa_id"];
+		$this->siswa_id->AdvancedSearch->SearchValue2 = @$filter["y_siswa_id"];
+		$this->siswa_id->AdvancedSearch->SearchOperator2 = @$filter["w_siswa_id"];
+		$this->siswa_id->AdvancedSearch->Save();
 
 		// Field Tanggal
 		$this->Tanggal->AdvancedSearch->SearchValue = @$filter["x_Tanggal"];
@@ -881,8 +881,8 @@ class ct09_bayarmaster_list extends ct09_bayarmaster {
 		$sWhere = "";
 		if (!$Security->CanSearch()) return "";
 		$this->BuildSearchSql($sWhere, $this->id, $Default, FALSE); // id
-		$this->BuildSearchSql($sWhere, $this->siswa_id, $Default, FALSE); // siswa_id
 		$this->BuildSearchSql($sWhere, $this->tahunajaran_id, $Default, FALSE); // tahunajaran_id
+		$this->BuildSearchSql($sWhere, $this->siswa_id, $Default, FALSE); // siswa_id
 		$this->BuildSearchSql($sWhere, $this->Tanggal, $Default, FALSE); // Tanggal
 		$this->BuildSearchSql($sWhere, $this->NomorBayar, $Default, FALSE); // NomorBayar
 		$this->BuildSearchSql($sWhere, $this->Jumlah, $Default, FALSE); // Jumlah
@@ -893,8 +893,8 @@ class ct09_bayarmaster_list extends ct09_bayarmaster {
 		}
 		if (!$Default && $this->Command == "search") {
 			$this->id->AdvancedSearch->Save(); // id
-			$this->siswa_id->AdvancedSearch->Save(); // siswa_id
 			$this->tahunajaran_id->AdvancedSearch->Save(); // tahunajaran_id
+			$this->siswa_id->AdvancedSearch->Save(); // siswa_id
 			$this->Tanggal->AdvancedSearch->Save(); // Tanggal
 			$this->NomorBayar->AdvancedSearch->Save(); // NomorBayar
 			$this->Jumlah->AdvancedSearch->Save(); // Jumlah
@@ -954,9 +954,9 @@ class ct09_bayarmaster_list extends ct09_bayarmaster {
 	function CheckSearchParms() {
 		if ($this->id->AdvancedSearch->IssetSession())
 			return TRUE;
-		if ($this->siswa_id->AdvancedSearch->IssetSession())
-			return TRUE;
 		if ($this->tahunajaran_id->AdvancedSearch->IssetSession())
+			return TRUE;
+		if ($this->siswa_id->AdvancedSearch->IssetSession())
 			return TRUE;
 		if ($this->Tanggal->AdvancedSearch->IssetSession())
 			return TRUE;
@@ -986,8 +986,8 @@ class ct09_bayarmaster_list extends ct09_bayarmaster {
 	// Clear all advanced search parameters
 	function ResetAdvancedSearchParms() {
 		$this->id->AdvancedSearch->UnsetSession();
-		$this->siswa_id->AdvancedSearch->UnsetSession();
 		$this->tahunajaran_id->AdvancedSearch->UnsetSession();
+		$this->siswa_id->AdvancedSearch->UnsetSession();
 		$this->Tanggal->AdvancedSearch->UnsetSession();
 		$this->NomorBayar->AdvancedSearch->UnsetSession();
 		$this->Jumlah->AdvancedSearch->UnsetSession();
@@ -999,8 +999,8 @@ class ct09_bayarmaster_list extends ct09_bayarmaster {
 
 		// Restore advanced search values
 		$this->id->AdvancedSearch->Load();
-		$this->siswa_id->AdvancedSearch->Load();
 		$this->tahunajaran_id->AdvancedSearch->Load();
+		$this->siswa_id->AdvancedSearch->Load();
 		$this->Tanggal->AdvancedSearch->Load();
 		$this->NomorBayar->AdvancedSearch->Load();
 		$this->Jumlah->AdvancedSearch->Load();
@@ -1016,8 +1016,8 @@ class ct09_bayarmaster_list extends ct09_bayarmaster {
 		if (@$_GET["order"] <> "") {
 			$this->CurrentOrder = ew_StripSlashes(@$_GET["order"]);
 			$this->CurrentOrderType = @$_GET["ordertype"];
-			$this->UpdateSort($this->siswa_id, $bCtrl); // siswa_id
 			$this->UpdateSort($this->tahunajaran_id, $bCtrl); // tahunajaran_id
+			$this->UpdateSort($this->siswa_id, $bCtrl); // siswa_id
 			$this->UpdateSort($this->Tanggal, $bCtrl); // Tanggal
 			$this->UpdateSort($this->NomorBayar, $bCtrl); // NomorBayar
 			$this->UpdateSort($this->Jumlah, $bCtrl); // Jumlah
@@ -1054,8 +1054,8 @@ class ct09_bayarmaster_list extends ct09_bayarmaster {
 				$sOrderBy = "";
 				$this->setSessionOrderBy($sOrderBy);
 				$this->setSessionOrderByList($sOrderBy);
-				$this->siswa_id->setSort("");
 				$this->tahunajaran_id->setSort("");
+				$this->siswa_id->setSort("");
 				$this->Tanggal->setSort("");
 				$this->NomorBayar->setSort("");
 				$this->Jumlah->setSort("");
@@ -1565,6 +1565,11 @@ class ct09_bayarmaster_list extends ct09_bayarmaster {
 		if ($this->id->AdvancedSearch->SearchValue <> "") $this->Command = "search";
 		$this->id->AdvancedSearch->SearchOperator = @$_GET["z_id"];
 
+		// tahunajaran_id
+		$this->tahunajaran_id->AdvancedSearch->SearchValue = ew_StripSlashes(@$_GET["x_tahunajaran_id"]);
+		if ($this->tahunajaran_id->AdvancedSearch->SearchValue <> "") $this->Command = "search";
+		$this->tahunajaran_id->AdvancedSearch->SearchOperator = @$_GET["z_tahunajaran_id"];
+
 		// siswa_id
 		$this->siswa_id->AdvancedSearch->SearchValue = ew_StripSlashes(@$_GET["x_siswa_id"]);
 		if ($this->siswa_id->AdvancedSearch->SearchValue <> "") $this->Command = "search";
@@ -1573,11 +1578,6 @@ class ct09_bayarmaster_list extends ct09_bayarmaster {
 		$this->siswa_id->AdvancedSearch->SearchValue2 = ew_StripSlashes(@$_GET["y_siswa_id"]);
 		if ($this->siswa_id->AdvancedSearch->SearchValue2 <> "") $this->Command = "search";
 		$this->siswa_id->AdvancedSearch->SearchOperator2 = @$_GET["w_siswa_id"];
-
-		// tahunajaran_id
-		$this->tahunajaran_id->AdvancedSearch->SearchValue = ew_StripSlashes(@$_GET["x_tahunajaran_id"]);
-		if ($this->tahunajaran_id->AdvancedSearch->SearchValue <> "") $this->Command = "search";
-		$this->tahunajaran_id->AdvancedSearch->SearchOperator = @$_GET["z_tahunajaran_id"];
 
 		// Tanggal
 		$this->Tanggal->AdvancedSearch->SearchValue = ew_StripSlashes(@$_GET["x_Tanggal"]);
@@ -1651,13 +1651,13 @@ class ct09_bayarmaster_list extends ct09_bayarmaster {
 		$row = &$rs->fields;
 		$this->Row_Selected($row);
 		$this->id->setDbValue($rs->fields('id'));
+		$this->tahunajaran_id->setDbValue($rs->fields('tahunajaran_id'));
 		$this->siswa_id->setDbValue($rs->fields('siswa_id'));
 		if (array_key_exists('EV__siswa_id', $rs->fields)) {
 			$this->siswa_id->VirtualValue = $rs->fields('EV__siswa_id'); // Set up virtual field value
 		} else {
 			$this->siswa_id->VirtualValue = ""; // Clear value
 		}
-		$this->tahunajaran_id->setDbValue($rs->fields('tahunajaran_id'));
 		$this->Tanggal->setDbValue($rs->fields('Tanggal'));
 		$this->NomorBayar->setDbValue($rs->fields('NomorBayar'));
 		$this->Jumlah->setDbValue($rs->fields('Jumlah'));
@@ -1674,8 +1674,8 @@ class ct09_bayarmaster_list extends ct09_bayarmaster {
 		if (!$rs || !is_array($rs) && $rs->EOF) return;
 		$row = is_array($rs) ? $rs : $rs->fields;
 		$this->id->DbValue = $row['id'];
-		$this->siswa_id->DbValue = $row['siswa_id'];
 		$this->tahunajaran_id->DbValue = $row['tahunajaran_id'];
+		$this->siswa_id->DbValue = $row['siswa_id'];
 		$this->Tanggal->DbValue = $row['Tanggal'];
 		$this->NomorBayar->DbValue = $row['NomorBayar'];
 		$this->Jumlah->DbValue = $row['Jumlah'];
@@ -1725,8 +1725,8 @@ class ct09_bayarmaster_list extends ct09_bayarmaster {
 
 		// Common render codes for all row types
 		// id
-		// siswa_id
 		// tahunajaran_id
+		// siswa_id
 		// Tanggal
 		// NomorBayar
 		// Jumlah
@@ -1736,37 +1736,6 @@ class ct09_bayarmaster_list extends ct09_bayarmaster {
 		// id
 		$this->id->ViewValue = $this->id->CurrentValue;
 		$this->id->ViewCustomAttributes = "";
-
-		// siswa_id
-		if ($this->siswa_id->VirtualValue <> "") {
-			$this->siswa_id->ViewValue = $this->siswa_id->VirtualValue;
-		} else {
-			$this->siswa_id->ViewValue = $this->siswa_id->CurrentValue;
-		if (strval($this->siswa_id->CurrentValue) <> "") {
-			$sFilterWrk = "`id`" . ew_SearchString("=", $this->siswa_id->CurrentValue, EW_DATATYPE_NUMBER, "");
-		$sSqlWrk = "SELECT `id`, `NIS` AS `DispFld`, `Nama` AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `t04_siswa`";
-		$sWhereWrk = "";
-		$this->siswa_id->LookupFilters = array();
-		$lookuptblfilter = "`id` in (select siswa_id from t08_siswaspp)";
-		ew_AddFilter($sWhereWrk, $lookuptblfilter);
-		ew_AddFilter($sWhereWrk, $sFilterWrk);
-		$this->Lookup_Selecting($this->siswa_id, $sWhereWrk); // Call Lookup selecting
-		if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
-			$rswrk = Conn()->Execute($sSqlWrk);
-			if ($rswrk && !$rswrk->EOF) { // Lookup values found
-				$arwrk = array();
-				$arwrk[1] = $rswrk->fields('DispFld');
-				$arwrk[2] = $rswrk->fields('Disp2Fld');
-				$this->siswa_id->ViewValue = $this->siswa_id->DisplayValue($arwrk);
-				$rswrk->Close();
-			} else {
-				$this->siswa_id->ViewValue = $this->siswa_id->CurrentValue;
-			}
-		} else {
-			$this->siswa_id->ViewValue = NULL;
-		}
-		}
-		$this->siswa_id->ViewCustomAttributes = "";
 
 		// tahunajaran_id
 		if (strval($this->tahunajaran_id->CurrentValue) <> "") {
@@ -1791,6 +1760,37 @@ class ct09_bayarmaster_list extends ct09_bayarmaster {
 		}
 		$this->tahunajaran_id->ViewCustomAttributes = "";
 
+		// siswa_id
+		if ($this->siswa_id->VirtualValue <> "") {
+			$this->siswa_id->ViewValue = $this->siswa_id->VirtualValue;
+		} else {
+			$this->siswa_id->ViewValue = $this->siswa_id->CurrentValue;
+		if (strval($this->siswa_id->CurrentValue) <> "") {
+			$sFilterWrk = "`siswa_id`" . ew_SearchString("=", $this->siswa_id->CurrentValue, EW_DATATYPE_NUMBER, "");
+		$sSqlWrk = "SELECT `siswa_id`, `NIS` AS `DispFld`, `Nama` AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `v04_daftarsiswa`";
+		$sWhereWrk = "";
+		$this->siswa_id->LookupFilters = array();
+		$lookuptblfilter = "`siswa_id` is not null";
+		ew_AddFilter($sWhereWrk, $lookuptblfilter);
+		ew_AddFilter($sWhereWrk, $sFilterWrk);
+		$this->Lookup_Selecting($this->siswa_id, $sWhereWrk); // Call Lookup selecting
+		if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
+			$rswrk = Conn()->Execute($sSqlWrk);
+			if ($rswrk && !$rswrk->EOF) { // Lookup values found
+				$arwrk = array();
+				$arwrk[1] = $rswrk->fields('DispFld');
+				$arwrk[2] = $rswrk->fields('Disp2Fld');
+				$this->siswa_id->ViewValue = $this->siswa_id->DisplayValue($arwrk);
+				$rswrk->Close();
+			} else {
+				$this->siswa_id->ViewValue = $this->siswa_id->CurrentValue;
+			}
+		} else {
+			$this->siswa_id->ViewValue = NULL;
+		}
+		}
+		$this->siswa_id->ViewCustomAttributes = "";
+
 		// Tanggal
 		$this->Tanggal->ViewValue = $this->Tanggal->CurrentValue;
 		$this->Tanggal->ViewValue = ew_FormatDateTime($this->Tanggal->ViewValue, 7);
@@ -1806,15 +1806,15 @@ class ct09_bayarmaster_list extends ct09_bayarmaster {
 		$this->Jumlah->CellCssStyle .= "text-align: right;";
 		$this->Jumlah->ViewCustomAttributes = "";
 
-			// siswa_id
-			$this->siswa_id->LinkCustomAttributes = "";
-			$this->siswa_id->HrefValue = "";
-			$this->siswa_id->TooltipValue = "";
-
 			// tahunajaran_id
 			$this->tahunajaran_id->LinkCustomAttributes = "";
 			$this->tahunajaran_id->HrefValue = "";
 			$this->tahunajaran_id->TooltipValue = "";
+
+			// siswa_id
+			$this->siswa_id->LinkCustomAttributes = "";
+			$this->siswa_id->HrefValue = "";
+			$this->siswa_id->TooltipValue = "";
 
 			// Tanggal
 			$this->Tanggal->LinkCustomAttributes = "";
@@ -1832,6 +1832,10 @@ class ct09_bayarmaster_list extends ct09_bayarmaster {
 			$this->Jumlah->TooltipValue = "";
 		} elseif ($this->RowType == EW_ROWTYPE_SEARCH) { // Search row
 
+			// tahunajaran_id
+			$this->tahunajaran_id->EditAttrs["class"] = "form-control";
+			$this->tahunajaran_id->EditCustomAttributes = "";
+
 			// siswa_id
 			$this->siswa_id->EditAttrs["class"] = "form-control";
 			$this->siswa_id->EditCustomAttributes = "";
@@ -1841,10 +1845,6 @@ class ct09_bayarmaster_list extends ct09_bayarmaster {
 			$this->siswa_id->EditCustomAttributes = "";
 			$this->siswa_id->EditValue2 = ew_HtmlEncode($this->siswa_id->AdvancedSearch->SearchValue2);
 			$this->siswa_id->PlaceHolder = ew_RemoveHtml($this->siswa_id->FldCaption());
-
-			// tahunajaran_id
-			$this->tahunajaran_id->EditAttrs["class"] = "form-control";
-			$this->tahunajaran_id->EditCustomAttributes = "";
 
 			// Tanggal
 			$this->Tanggal->EditAttrs["class"] = "form-control";
@@ -1901,8 +1901,8 @@ class ct09_bayarmaster_list extends ct09_bayarmaster {
 	// Load advanced search
 	function LoadAdvancedSearch() {
 		$this->id->AdvancedSearch->Load();
-		$this->siswa_id->AdvancedSearch->Load();
 		$this->tahunajaran_id->AdvancedSearch->Load();
+		$this->siswa_id->AdvancedSearch->Load();
 		$this->Tanggal->AdvancedSearch->Load();
 		$this->NomorBayar->AdvancedSearch->Load();
 		$this->Jumlah->AdvancedSearch->Load();
@@ -2158,8 +2158,8 @@ class ct09_bayarmaster_list extends ct09_bayarmaster {
 
 		// Build QueryString for search
 		$this->AddSearchQueryString($sQry, $this->id); // id
-		$this->AddSearchQueryString($sQry, $this->siswa_id); // siswa_id
 		$this->AddSearchQueryString($sQry, $this->tahunajaran_id); // tahunajaran_id
+		$this->AddSearchQueryString($sQry, $this->siswa_id); // siswa_id
 		$this->AddSearchQueryString($sQry, $this->Tanggal); // Tanggal
 		$this->AddSearchQueryString($sQry, $this->NomorBayar); // NomorBayar
 		$this->AddSearchQueryString($sQry, $this->Jumlah); // Jumlah
@@ -2205,12 +2205,12 @@ class ct09_bayarmaster_list extends ct09_bayarmaster {
 			switch ($fld->FldVar) {
 		case "x_siswa_id":
 			$sSqlWrk = "";
-			$sSqlWrk = "SELECT `id` AS `LinkFld`, `NIS` AS `DispFld`, `Nama` AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `t04_siswa`";
+			$sSqlWrk = "SELECT `siswa_id` AS `LinkFld`, `NIS` AS `DispFld`, `Nama` AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `v04_daftarsiswa`";
 			$sWhereWrk = "{filter}";
 			$this->siswa_id->LookupFilters = array();
-			$lookuptblfilter = "`id` in (select siswa_id from t08_siswaspp)";
+			$lookuptblfilter = "`siswa_id` is not null";
 			ew_AddFilter($sWhereWrk, $lookuptblfilter);
-			$fld->LookupFilters += array("s" => $sSqlWrk, "d" => "", "f0" => '`id` = {filter_value}', "t0" => "3", "fn0" => "");
+			$fld->LookupFilters += array("s" => $sSqlWrk, "d" => "", "f0" => '`siswa_id` = {filter_value}', "t0" => "3", "fn0" => "");
 			$sSqlWrk = "";
 			$this->Lookup_Selecting($this->siswa_id, $sWhereWrk); // Call Lookup selecting
 			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
@@ -2232,10 +2232,10 @@ class ct09_bayarmaster_list extends ct09_bayarmaster {
 			switch ($fld->FldVar) {
 		case "x_siswa_id":
 			$sSqlWrk = "";
-			$sSqlWrk = "SELECT `id`, `NIS` AS `DispFld`, `Nama` AS `Disp2Fld` FROM `t04_siswa`";
+			$sSqlWrk = "SELECT `siswa_id`, `NIS` AS `DispFld`, `Nama` AS `Disp2Fld` FROM `v04_daftarsiswa`";
 			$sWhereWrk = "`NIS` LIKE '{query_value}%' OR CONCAT(`NIS`,'" . ew_ValueSeparator(1, $this->siswa_id) . "',`Nama`) LIKE '{query_value}%'";
 			$this->siswa_id->LookupFilters = array();
-			$lookuptblfilter = "`id` in (select siswa_id from t08_siswaspp)";
+			$lookuptblfilter = "`siswa_id` is not null";
 			ew_AddFilter($sWhereWrk, $lookuptblfilter);
 			$fld->LookupFilters += array("s" => $sSqlWrk, "d" => "");
 			$sSqlWrk = "";
@@ -2253,6 +2253,7 @@ class ct09_bayarmaster_list extends ct09_bayarmaster {
 	function Page_Load() {
 
 		//echo "Page Load";
+		// untuk tambahan button di halaman list
 		//$this->CustomActions["ambilkrs"] = "Ambil KRS";
 
 	}
@@ -2414,8 +2415,8 @@ ft09_bayarmasterlist.ValidateRequired = false;
 <?php } ?>
 
 // Dynamic selection lists
-ft09_bayarmasterlist.Lists["x_siswa_id"] = {"LinkField":"x_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_NIS","x_Nama","",""],"ParentFields":[],"ChildFields":["t10_bayardetail x_siswaspp_id"],"FilterFields":[],"Options":[],"Template":"","LinkTable":"t04_siswa"};
-ft09_bayarmasterlist.Lists["x_tahunajaran_id"] = {"LinkField":"x_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_TahunAjaran","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":"","LinkTable":"t01_tahunajaran"};
+ft09_bayarmasterlist.Lists["x_tahunajaran_id"] = {"LinkField":"x_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_TahunAjaran","","",""],"ParentFields":[],"ChildFields":["x_siswa_id"],"FilterFields":[],"Options":[],"Template":"","LinkTable":"t01_tahunajaran"};
+ft09_bayarmasterlist.Lists["x_siswa_id"] = {"LinkField":"x_siswa_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_NIS","x_Nama","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":"","LinkTable":"v04_daftarsiswa"};
 
 // Form object for search
 var CurrentSearchForm = ft09_bayarmasterlistsrch = new ew_Form("ft09_bayarmasterlistsrch");
@@ -2449,7 +2450,7 @@ ft09_bayarmasterlistsrch.ValidateRequired = false; // No JavaScript validation
 <?php } ?>
 
 // Dynamic selection lists
-ft09_bayarmasterlistsrch.Lists["x_siswa_id"] = {"LinkField":"x_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_NIS","x_Nama","",""],"ParentFields":[],"ChildFields":["t10_bayardetail x_siswaspp_id"],"FilterFields":[],"Options":[],"Template":"","LinkTable":"t04_siswa"};
+ft09_bayarmasterlistsrch.Lists["x_siswa_id"] = {"LinkField":"x_siswa_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_NIS","x_Nama","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":"","LinkTable":"v04_daftarsiswa"};
 </script>
 <script type="text/javascript">
 
@@ -2541,7 +2542,7 @@ $wrkonchange = trim(" " . @$t09_bayarmaster->siswa_id->EditAttrs["onchange"]);
 if ($wrkonchange <> "") $wrkonchange = " onchange=\"" . ew_JsEncode2($wrkonchange) . "\"";
 $t09_bayarmaster->siswa_id->EditAttrs["onchange"] = "";
 ?>
-<span id="as_x_siswa_id" style="white-space: nowrap; z-index: 8980">
+<span id="as_x_siswa_id" style="white-space: nowrap; z-index: 8970">
 	<input type="text" name="sv_x_siswa_id" id="sv_x_siswa_id" value="<?php echo $t09_bayarmaster->siswa_id->EditValue ?>" size="30" placeholder="<?php echo ew_HtmlEncode($t09_bayarmaster->siswa_id->getPlaceHolder()) ?>" data-placeholder="<?php echo ew_HtmlEncode($t09_bayarmaster->siswa_id->getPlaceHolder()) ?>"<?php echo $t09_bayarmaster->siswa_id->EditAttributes() ?>>
 </span>
 <input type="hidden" data-table="t09_bayarmaster" data-field="x_siswa_id" data-value-separator="<?php echo $t09_bayarmaster->siswa_id->DisplayValueSeparatorAttribute() ?>" name="x_siswa_id" id="x_siswa_id" value="<?php echo ew_HtmlEncode($t09_bayarmaster->siswa_id->AdvancedSearch->SearchValue) ?>"<?php echo $wrkonchange ?>>
@@ -2557,7 +2558,7 @@ $wrkonchange = trim(" " . @$t09_bayarmaster->siswa_id->EditAttrs["onchange"]);
 if ($wrkonchange <> "") $wrkonchange = " onchange=\"" . ew_JsEncode2($wrkonchange) . "\"";
 $t09_bayarmaster->siswa_id->EditAttrs["onchange"] = "";
 ?>
-<span id="as_y_siswa_id" style="white-space: nowrap; z-index: 8980">
+<span id="as_y_siswa_id" style="white-space: nowrap; z-index: 8970">
 	<input type="text" name="sv_y_siswa_id" id="sv_y_siswa_id" value="<?php echo $t09_bayarmaster->siswa_id->EditValue2 ?>" size="30" placeholder="<?php echo ew_HtmlEncode($t09_bayarmaster->siswa_id->getPlaceHolder()) ?>" data-placeholder="<?php echo ew_HtmlEncode($t09_bayarmaster->siswa_id->getPlaceHolder()) ?>"<?php echo $t09_bayarmaster->siswa_id->EditAttributes() ?>>
 </span>
 <input type="hidden" data-table="t09_bayarmaster" data-field="x_siswa_id" data-value-separator="<?php echo $t09_bayarmaster->siswa_id->DisplayValueSeparatorAttribute() ?>" name="y_siswa_id" id="y_siswa_id" value="<?php echo ew_HtmlEncode($t09_bayarmaster->siswa_id->AdvancedSearch->SearchValue2) ?>"<?php echo $wrkonchange ?>>
@@ -2605,21 +2606,21 @@ $t09_bayarmaster_list->RenderListOptions();
 // Render list options (header, left)
 $t09_bayarmaster_list->ListOptions->Render("header", "left");
 ?>
-<?php if ($t09_bayarmaster->siswa_id->Visible) { // siswa_id ?>
-	<?php if ($t09_bayarmaster->SortUrl($t09_bayarmaster->siswa_id) == "") { ?>
-		<th data-name="siswa_id"><div id="elh_t09_bayarmaster_siswa_id" class="t09_bayarmaster_siswa_id"><div class="ewTableHeaderCaption"><?php echo $t09_bayarmaster->siswa_id->FldCaption() ?></div></div></th>
-	<?php } else { ?>
-		<th data-name="siswa_id"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $t09_bayarmaster->SortUrl($t09_bayarmaster->siswa_id) ?>',2);"><div id="elh_t09_bayarmaster_siswa_id" class="t09_bayarmaster_siswa_id">
-			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $t09_bayarmaster->siswa_id->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($t09_bayarmaster->siswa_id->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($t09_bayarmaster->siswa_id->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
-        </div></div></th>
-	<?php } ?>
-<?php } ?>		
 <?php if ($t09_bayarmaster->tahunajaran_id->Visible) { // tahunajaran_id ?>
 	<?php if ($t09_bayarmaster->SortUrl($t09_bayarmaster->tahunajaran_id) == "") { ?>
 		<th data-name="tahunajaran_id"><div id="elh_t09_bayarmaster_tahunajaran_id" class="t09_bayarmaster_tahunajaran_id"><div class="ewTableHeaderCaption"><?php echo $t09_bayarmaster->tahunajaran_id->FldCaption() ?></div></div></th>
 	<?php } else { ?>
 		<th data-name="tahunajaran_id"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $t09_bayarmaster->SortUrl($t09_bayarmaster->tahunajaran_id) ?>',2);"><div id="elh_t09_bayarmaster_tahunajaran_id" class="t09_bayarmaster_tahunajaran_id">
 			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $t09_bayarmaster->tahunajaran_id->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($t09_bayarmaster->tahunajaran_id->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($t09_bayarmaster->tahunajaran_id->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
+        </div></div></th>
+	<?php } ?>
+<?php } ?>		
+<?php if ($t09_bayarmaster->siswa_id->Visible) { // siswa_id ?>
+	<?php if ($t09_bayarmaster->SortUrl($t09_bayarmaster->siswa_id) == "") { ?>
+		<th data-name="siswa_id"><div id="elh_t09_bayarmaster_siswa_id" class="t09_bayarmaster_siswa_id"><div class="ewTableHeaderCaption"><?php echo $t09_bayarmaster->siswa_id->FldCaption() ?></div></div></th>
+	<?php } else { ?>
+		<th data-name="siswa_id"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $t09_bayarmaster->SortUrl($t09_bayarmaster->siswa_id) ?>',2);"><div id="elh_t09_bayarmaster_siswa_id" class="t09_bayarmaster_siswa_id">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $t09_bayarmaster->siswa_id->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($t09_bayarmaster->siswa_id->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($t09_bayarmaster->siswa_id->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
         </div></div></th>
 	<?php } ?>
 <?php } ?>		
@@ -2715,19 +2716,19 @@ while ($t09_bayarmaster_list->RecCnt < $t09_bayarmaster_list->StopRec) {
 // Render list options (body, left)
 $t09_bayarmaster_list->ListOptions->Render("body", "left", $t09_bayarmaster_list->RowCnt);
 ?>
-	<?php if ($t09_bayarmaster->siswa_id->Visible) { // siswa_id ?>
-		<td data-name="siswa_id"<?php echo $t09_bayarmaster->siswa_id->CellAttributes() ?>>
-<span id="el<?php echo $t09_bayarmaster_list->RowCnt ?>_t09_bayarmaster_siswa_id" class="t09_bayarmaster_siswa_id">
-<span<?php echo $t09_bayarmaster->siswa_id->ViewAttributes() ?>>
-<?php echo $t09_bayarmaster->siswa_id->ListViewValue() ?></span>
-</span>
-<a id="<?php echo $t09_bayarmaster_list->PageObjName . "_row_" . $t09_bayarmaster_list->RowCnt ?>"></a></td>
-	<?php } ?>
 	<?php if ($t09_bayarmaster->tahunajaran_id->Visible) { // tahunajaran_id ?>
 		<td data-name="tahunajaran_id"<?php echo $t09_bayarmaster->tahunajaran_id->CellAttributes() ?>>
 <span id="el<?php echo $t09_bayarmaster_list->RowCnt ?>_t09_bayarmaster_tahunajaran_id" class="t09_bayarmaster_tahunajaran_id">
 <span<?php echo $t09_bayarmaster->tahunajaran_id->ViewAttributes() ?>>
 <?php echo $t09_bayarmaster->tahunajaran_id->ListViewValue() ?></span>
+</span>
+<a id="<?php echo $t09_bayarmaster_list->PageObjName . "_row_" . $t09_bayarmaster_list->RowCnt ?>"></a></td>
+	<?php } ?>
+	<?php if ($t09_bayarmaster->siswa_id->Visible) { // siswa_id ?>
+		<td data-name="siswa_id"<?php echo $t09_bayarmaster->siswa_id->CellAttributes() ?>>
+<span id="el<?php echo $t09_bayarmaster_list->RowCnt ?>_t09_bayarmaster_siswa_id" class="t09_bayarmaster_siswa_id">
+<span<?php echo $t09_bayarmaster->siswa_id->ViewAttributes() ?>>
+<?php echo $t09_bayarmaster->siswa_id->ListViewValue() ?></span>
 </span>
 </td>
 	<?php } ?>
@@ -2881,14 +2882,15 @@ if (EW_DEBUG_ENABLED)
 
 // Write your table-specific startup script here
 // document.write("page loaded");
+// untuk selalu mendefaultkan nilai "CONTAINS" di combo query
 
 $(document).ready(function() { 
 	$("#z_siswa_id option[value='LIKE']").attr('selected', 'selected'); 
 });
+
+// untuk mereset nilai NIS agar selalu kosong pada tampilan LIST
 $(document).ready(function() {
-	<?php if (CurrentPage()->siswa_id->AdvancedSearch->getValue("x") <> "") { ?>
-		$("#x_siswa_id").val("");
-	<?php } ?>
+	$("#sv_x_siswa_id").val("");
 });
 </script>
 <?php } ?>

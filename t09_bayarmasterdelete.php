@@ -282,8 +282,8 @@ class ct09_bayarmaster_delete extends ct09_bayarmaster {
 			$Security->UserID_Loaded();
 		}
 		$this->CurrentAction = (@$_GET["a"] <> "") ? $_GET["a"] : @$_POST["a_list"]; // Set up current action
-		$this->siswa_id->SetVisibility();
 		$this->tahunajaran_id->SetVisibility();
+		$this->siswa_id->SetVisibility();
 		$this->Tanggal->SetVisibility();
 		$this->NomorBayar->SetVisibility();
 		$this->Jumlah->SetVisibility();
@@ -462,13 +462,13 @@ class ct09_bayarmaster_delete extends ct09_bayarmaster {
 		$row = &$rs->fields;
 		$this->Row_Selected($row);
 		$this->id->setDbValue($rs->fields('id'));
+		$this->tahunajaran_id->setDbValue($rs->fields('tahunajaran_id'));
 		$this->siswa_id->setDbValue($rs->fields('siswa_id'));
 		if (array_key_exists('EV__siswa_id', $rs->fields)) {
 			$this->siswa_id->VirtualValue = $rs->fields('EV__siswa_id'); // Set up virtual field value
 		} else {
 			$this->siswa_id->VirtualValue = ""; // Clear value
 		}
-		$this->tahunajaran_id->setDbValue($rs->fields('tahunajaran_id'));
 		$this->Tanggal->setDbValue($rs->fields('Tanggal'));
 		$this->NomorBayar->setDbValue($rs->fields('NomorBayar'));
 		$this->Jumlah->setDbValue($rs->fields('Jumlah'));
@@ -479,8 +479,8 @@ class ct09_bayarmaster_delete extends ct09_bayarmaster {
 		if (!$rs || !is_array($rs) && $rs->EOF) return;
 		$row = is_array($rs) ? $rs : $rs->fields;
 		$this->id->DbValue = $row['id'];
-		$this->siswa_id->DbValue = $row['siswa_id'];
 		$this->tahunajaran_id->DbValue = $row['tahunajaran_id'];
+		$this->siswa_id->DbValue = $row['siswa_id'];
 		$this->Tanggal->DbValue = $row['Tanggal'];
 		$this->NomorBayar->DbValue = $row['NomorBayar'];
 		$this->Jumlah->DbValue = $row['Jumlah'];
@@ -501,8 +501,8 @@ class ct09_bayarmaster_delete extends ct09_bayarmaster {
 
 		// Common render codes for all row types
 		// id
-		// siswa_id
 		// tahunajaran_id
+		// siswa_id
 		// Tanggal
 		// NomorBayar
 		// Jumlah
@@ -512,37 +512,6 @@ class ct09_bayarmaster_delete extends ct09_bayarmaster {
 		// id
 		$this->id->ViewValue = $this->id->CurrentValue;
 		$this->id->ViewCustomAttributes = "";
-
-		// siswa_id
-		if ($this->siswa_id->VirtualValue <> "") {
-			$this->siswa_id->ViewValue = $this->siswa_id->VirtualValue;
-		} else {
-			$this->siswa_id->ViewValue = $this->siswa_id->CurrentValue;
-		if (strval($this->siswa_id->CurrentValue) <> "") {
-			$sFilterWrk = "`id`" . ew_SearchString("=", $this->siswa_id->CurrentValue, EW_DATATYPE_NUMBER, "");
-		$sSqlWrk = "SELECT `id`, `NIS` AS `DispFld`, `Nama` AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `t04_siswa`";
-		$sWhereWrk = "";
-		$this->siswa_id->LookupFilters = array();
-		$lookuptblfilter = "`id` in (select siswa_id from t08_siswaspp)";
-		ew_AddFilter($sWhereWrk, $lookuptblfilter);
-		ew_AddFilter($sWhereWrk, $sFilterWrk);
-		$this->Lookup_Selecting($this->siswa_id, $sWhereWrk); // Call Lookup selecting
-		if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
-			$rswrk = Conn()->Execute($sSqlWrk);
-			if ($rswrk && !$rswrk->EOF) { // Lookup values found
-				$arwrk = array();
-				$arwrk[1] = $rswrk->fields('DispFld');
-				$arwrk[2] = $rswrk->fields('Disp2Fld');
-				$this->siswa_id->ViewValue = $this->siswa_id->DisplayValue($arwrk);
-				$rswrk->Close();
-			} else {
-				$this->siswa_id->ViewValue = $this->siswa_id->CurrentValue;
-			}
-		} else {
-			$this->siswa_id->ViewValue = NULL;
-		}
-		}
-		$this->siswa_id->ViewCustomAttributes = "";
 
 		// tahunajaran_id
 		if (strval($this->tahunajaran_id->CurrentValue) <> "") {
@@ -567,6 +536,37 @@ class ct09_bayarmaster_delete extends ct09_bayarmaster {
 		}
 		$this->tahunajaran_id->ViewCustomAttributes = "";
 
+		// siswa_id
+		if ($this->siswa_id->VirtualValue <> "") {
+			$this->siswa_id->ViewValue = $this->siswa_id->VirtualValue;
+		} else {
+			$this->siswa_id->ViewValue = $this->siswa_id->CurrentValue;
+		if (strval($this->siswa_id->CurrentValue) <> "") {
+			$sFilterWrk = "`siswa_id`" . ew_SearchString("=", $this->siswa_id->CurrentValue, EW_DATATYPE_NUMBER, "");
+		$sSqlWrk = "SELECT `siswa_id`, `NIS` AS `DispFld`, `Nama` AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `v04_daftarsiswa`";
+		$sWhereWrk = "";
+		$this->siswa_id->LookupFilters = array();
+		$lookuptblfilter = "`siswa_id` is not null";
+		ew_AddFilter($sWhereWrk, $lookuptblfilter);
+		ew_AddFilter($sWhereWrk, $sFilterWrk);
+		$this->Lookup_Selecting($this->siswa_id, $sWhereWrk); // Call Lookup selecting
+		if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
+			$rswrk = Conn()->Execute($sSqlWrk);
+			if ($rswrk && !$rswrk->EOF) { // Lookup values found
+				$arwrk = array();
+				$arwrk[1] = $rswrk->fields('DispFld');
+				$arwrk[2] = $rswrk->fields('Disp2Fld');
+				$this->siswa_id->ViewValue = $this->siswa_id->DisplayValue($arwrk);
+				$rswrk->Close();
+			} else {
+				$this->siswa_id->ViewValue = $this->siswa_id->CurrentValue;
+			}
+		} else {
+			$this->siswa_id->ViewValue = NULL;
+		}
+		}
+		$this->siswa_id->ViewCustomAttributes = "";
+
 		// Tanggal
 		$this->Tanggal->ViewValue = $this->Tanggal->CurrentValue;
 		$this->Tanggal->ViewValue = ew_FormatDateTime($this->Tanggal->ViewValue, 7);
@@ -582,15 +582,15 @@ class ct09_bayarmaster_delete extends ct09_bayarmaster {
 		$this->Jumlah->CellCssStyle .= "text-align: right;";
 		$this->Jumlah->ViewCustomAttributes = "";
 
-			// siswa_id
-			$this->siswa_id->LinkCustomAttributes = "";
-			$this->siswa_id->HrefValue = "";
-			$this->siswa_id->TooltipValue = "";
-
 			// tahunajaran_id
 			$this->tahunajaran_id->LinkCustomAttributes = "";
 			$this->tahunajaran_id->HrefValue = "";
 			$this->tahunajaran_id->TooltipValue = "";
+
+			// siswa_id
+			$this->siswa_id->LinkCustomAttributes = "";
+			$this->siswa_id->HrefValue = "";
+			$this->siswa_id->TooltipValue = "";
 
 			// Tanggal
 			$this->Tanggal->LinkCustomAttributes = "";
@@ -827,8 +827,8 @@ ft09_bayarmasterdelete.ValidateRequired = false;
 <?php } ?>
 
 // Dynamic selection lists
-ft09_bayarmasterdelete.Lists["x_siswa_id"] = {"LinkField":"x_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_NIS","x_Nama","",""],"ParentFields":[],"ChildFields":["t10_bayardetail x_siswaspp_id"],"FilterFields":[],"Options":[],"Template":"","LinkTable":"t04_siswa"};
-ft09_bayarmasterdelete.Lists["x_tahunajaran_id"] = {"LinkField":"x_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_TahunAjaran","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":"","LinkTable":"t01_tahunajaran"};
+ft09_bayarmasterdelete.Lists["x_tahunajaran_id"] = {"LinkField":"x_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_TahunAjaran","","",""],"ParentFields":[],"ChildFields":["x_siswa_id"],"FilterFields":[],"Options":[],"Template":"","LinkTable":"t01_tahunajaran"};
+ft09_bayarmasterdelete.Lists["x_siswa_id"] = {"LinkField":"x_siswa_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_NIS","x_Nama","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":"","LinkTable":"v04_daftarsiswa"};
 
 // Form object for search
 </script>
@@ -861,11 +861,11 @@ $t09_bayarmaster_delete->ShowMessage();
 <?php echo $t09_bayarmaster->TableCustomInnerHtml ?>
 	<thead>
 	<tr class="ewTableHeader">
-<?php if ($t09_bayarmaster->siswa_id->Visible) { // siswa_id ?>
-		<th><span id="elh_t09_bayarmaster_siswa_id" class="t09_bayarmaster_siswa_id"><?php echo $t09_bayarmaster->siswa_id->FldCaption() ?></span></th>
-<?php } ?>
 <?php if ($t09_bayarmaster->tahunajaran_id->Visible) { // tahunajaran_id ?>
 		<th><span id="elh_t09_bayarmaster_tahunajaran_id" class="t09_bayarmaster_tahunajaran_id"><?php echo $t09_bayarmaster->tahunajaran_id->FldCaption() ?></span></th>
+<?php } ?>
+<?php if ($t09_bayarmaster->siswa_id->Visible) { // siswa_id ?>
+		<th><span id="elh_t09_bayarmaster_siswa_id" class="t09_bayarmaster_siswa_id"><?php echo $t09_bayarmaster->siswa_id->FldCaption() ?></span></th>
 <?php } ?>
 <?php if ($t09_bayarmaster->Tanggal->Visible) { // Tanggal ?>
 		<th><span id="elh_t09_bayarmaster_Tanggal" class="t09_bayarmaster_Tanggal"><?php echo $t09_bayarmaster->Tanggal->FldCaption() ?></span></th>
@@ -897,19 +897,19 @@ while (!$t09_bayarmaster_delete->Recordset->EOF) {
 	$t09_bayarmaster_delete->RenderRow();
 ?>
 	<tr<?php echo $t09_bayarmaster->RowAttributes() ?>>
-<?php if ($t09_bayarmaster->siswa_id->Visible) { // siswa_id ?>
-		<td<?php echo $t09_bayarmaster->siswa_id->CellAttributes() ?>>
-<span id="el<?php echo $t09_bayarmaster_delete->RowCnt ?>_t09_bayarmaster_siswa_id" class="t09_bayarmaster_siswa_id">
-<span<?php echo $t09_bayarmaster->siswa_id->ViewAttributes() ?>>
-<?php echo $t09_bayarmaster->siswa_id->ListViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
 <?php if ($t09_bayarmaster->tahunajaran_id->Visible) { // tahunajaran_id ?>
 		<td<?php echo $t09_bayarmaster->tahunajaran_id->CellAttributes() ?>>
 <span id="el<?php echo $t09_bayarmaster_delete->RowCnt ?>_t09_bayarmaster_tahunajaran_id" class="t09_bayarmaster_tahunajaran_id">
 <span<?php echo $t09_bayarmaster->tahunajaran_id->ViewAttributes() ?>>
 <?php echo $t09_bayarmaster->tahunajaran_id->ListViewValue() ?></span>
+</span>
+</td>
+<?php } ?>
+<?php if ($t09_bayarmaster->siswa_id->Visible) { // siswa_id ?>
+		<td<?php echo $t09_bayarmaster->siswa_id->CellAttributes() ?>>
+<span id="el<?php echo $t09_bayarmaster_delete->RowCnt ?>_t09_bayarmaster_siswa_id" class="t09_bayarmaster_siswa_id">
+<span<?php echo $t09_bayarmaster->siswa_id->ViewAttributes() ?>>
+<?php echo $t09_bayarmaster->siswa_id->ListViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
