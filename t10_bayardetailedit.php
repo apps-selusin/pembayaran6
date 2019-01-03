@@ -719,9 +719,11 @@ class ct10_bayardetail_edit extends ct10_bayardetail {
 		// Keterangan2
 		if (strval($this->Keterangan2->CurrentValue) <> "") {
 			$sFilterWrk = "`Periode`" . ew_SearchString("=", $this->Keterangan2->CurrentValue, EW_DATATYPE_STRING, "");
-		$sSqlWrk = "SELECT `Periode`, `Periode` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `t95_periode`";
+		$sSqlWrk = "SELECT `Periode`, `Periode` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `v03_kartuspp`";
 		$sWhereWrk = "";
 		$this->Keterangan2->LookupFilters = array();
+		$lookuptblfilter = (is_null($this->siswaspp_id->CurrentValue)) ? "`Tanggal` is null " : "`Tanggal` is null and siswaspp_id = ".$this->siswaspp_id->CurrentValue."";
+		ew_AddFilter($sWhereWrk, $lookuptblfilter);
 		ew_AddFilter($sWhereWrk, $sFilterWrk);
 		$this->Lookup_Selecting($this->Keterangan2, $sWhereWrk); // Call Lookup selecting
 		if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
@@ -815,9 +817,11 @@ class ct10_bayardetail_edit extends ct10_bayardetail {
 			} else {
 				$sFilterWrk = "`Periode`" . ew_SearchString("=", $this->Keterangan2->CurrentValue, EW_DATATYPE_STRING, "");
 			}
-			$sSqlWrk = "SELECT `Periode`, `Periode` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld`, '' AS `SelectFilterFld`, '' AS `SelectFilterFld2`, '' AS `SelectFilterFld3`, '' AS `SelectFilterFld4` FROM `t95_periode`";
+			$sSqlWrk = "SELECT `Periode`, `Periode` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld`, '' AS `SelectFilterFld`, '' AS `SelectFilterFld2`, '' AS `SelectFilterFld3`, '' AS `SelectFilterFld4` FROM `v03_kartuspp`";
 			$sWhereWrk = "";
 			$this->Keterangan2->LookupFilters = array();
+			$lookuptblfilter = (is_null($this->siswaspp_id->CurrentValue)) ? "`Tanggal` is null " : "`Tanggal` is null and siswaspp_id = ".$this->siswaspp_id->CurrentValue."";
+			ew_AddFilter($sWhereWrk, $lookuptblfilter);
 			ew_AddFilter($sWhereWrk, $sFilterWrk);
 			$this->Lookup_Selecting($this->Keterangan2, $sWhereWrk); // Call Lookup selecting
 			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
@@ -1067,9 +1071,11 @@ class ct10_bayardetail_edit extends ct10_bayardetail {
 			break;
 		case "x_Keterangan2":
 			$sSqlWrk = "";
-			$sSqlWrk = "SELECT `Periode` AS `LinkFld`, `Periode` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `t95_periode`";
+			$sSqlWrk = "SELECT `Periode` AS `LinkFld`, `Periode` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `v03_kartuspp`";
 			$sWhereWrk = "";
 			$this->Keterangan2->LookupFilters = array();
+			$lookuptblfilter = (is_null($this->siswaspp_id->CurrentValue)) ? "`Tanggal` is null " : "`Tanggal` is null and siswaspp_id = ".$this->siswaspp_id->CurrentValue."";
+			ew_AddFilter($sWhereWrk, $lookuptblfilter);
 			$fld->LookupFilters += array("s" => $sSqlWrk, "d" => "", "f0" => '`Periode` = {filter_value}', "t0" => "200", "fn0" => "");
 			$sSqlWrk = "";
 			$this->Lookup_Selecting($this->Keterangan2, $sWhereWrk); // Call Lookup selecting
@@ -1255,7 +1261,7 @@ ft10_bayardetailedit.ValidateRequired = false;
 
 // Dynamic selection lists
 ft10_bayardetailedit.Lists["x_siswaspp_id"] = {"LinkField":"x_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_SPP","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":"","LinkTable":"v01_siswaspp"};
-ft10_bayardetailedit.Lists["x_Keterangan2"] = {"LinkField":"x_Periode","Ajax":true,"AutoFill":false,"DisplayFields":["x_Periode","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":"","LinkTable":"t95_periode"};
+ft10_bayardetailedit.Lists["x_Keterangan2"] = {"LinkField":"x_Periode","Ajax":true,"AutoFill":false,"DisplayFields":["x_Periode","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":"","LinkTable":"v03_kartuspp"};
 
 // Form object for search
 </script>
@@ -1299,7 +1305,7 @@ if ($wrkonchange <> "") $wrkonchange = " onchange=\"" . ew_JsEncode2($wrkonchang
 $t10_bayardetail->siswaspp_id->EditAttrs["onchange"] = "";
 ?>
 <span id="as_x_siswaspp_id" style="white-space: nowrap; z-index: 8970">
-	<input type="text" name="sv_x_siswaspp_id" id="sv_x_siswaspp_id" value="<?php echo $t10_bayardetail->siswaspp_id->EditValue ?>" size="30" placeholder="<?php echo ew_HtmlEncode($t10_bayardetail->siswaspp_id->getPlaceHolder()) ?>" data-placeholder="<?php echo ew_HtmlEncode($t10_bayardetail->siswaspp_id->getPlaceHolder()) ?>"<?php echo $t10_bayardetail->siswaspp_id->EditAttributes() ?>>
+	<input type="text" name="sv_x_siswaspp_id" id="sv_x_siswaspp_id" value="<?php echo $t10_bayardetail->siswaspp_id->EditValue ?>" size="15" placeholder="<?php echo ew_HtmlEncode($t10_bayardetail->siswaspp_id->getPlaceHolder()) ?>" data-placeholder="<?php echo ew_HtmlEncode($t10_bayardetail->siswaspp_id->getPlaceHolder()) ?>"<?php echo $t10_bayardetail->siswaspp_id->EditAttributes() ?>>
 </span>
 <input type="hidden" data-table="t10_bayardetail" data-field="x_siswaspp_id" data-value-separator="<?php echo $t10_bayardetail->siswaspp_id->DisplayValueSeparatorAttribute() ?>" name="x_siswaspp_id" id="x_siswaspp_id" value="<?php echo ew_HtmlEncode($t10_bayardetail->siswaspp_id->CurrentValue) ?>"<?php echo $wrkonchange ?>>
 <input type="hidden" name="q_x_siswaspp_id" id="q_x_siswaspp_id" value="<?php echo $t10_bayardetail->siswaspp_id->LookupFilterQuery(true) ?>">
@@ -1315,7 +1321,7 @@ ft10_bayardetailedit.CreateAutoSuggest({"id":"x_siswaspp_id","forceSelect":false
 		<label id="elh_t10_bayardetail_Keterangan" for="x_Keterangan" class="col-sm-2 control-label ewLabel"><?php echo $t10_bayardetail->Keterangan->FldCaption() ?></label>
 		<div class="col-sm-10"><div<?php echo $t10_bayardetail->Keterangan->CellAttributes() ?>>
 <span id="el_t10_bayardetail_Keterangan">
-<input type="text" data-table="t10_bayardetail" data-field="x_Keterangan" name="x_Keterangan" id="x_Keterangan" size="30" maxlength="100" placeholder="<?php echo ew_HtmlEncode($t10_bayardetail->Keterangan->getPlaceHolder()) ?>" value="<?php echo $t10_bayardetail->Keterangan->EditValue ?>"<?php echo $t10_bayardetail->Keterangan->EditAttributes() ?>>
+<input type="text" data-table="t10_bayardetail" data-field="x_Keterangan" name="x_Keterangan" id="x_Keterangan" size="15" maxlength="100" placeholder="<?php echo ew_HtmlEncode($t10_bayardetail->Keterangan->getPlaceHolder()) ?>" value="<?php echo $t10_bayardetail->Keterangan->EditValue ?>"<?php echo $t10_bayardetail->Keterangan->EditAttributes() ?>>
 </span>
 <?php echo $t10_bayardetail->Keterangan->CustomMsg ?></div></div>
 	</div>
@@ -1338,7 +1344,7 @@ ft10_bayardetailedit.CreateAutoSuggest({"id":"x_siswaspp_id","forceSelect":false
 		<label id="elh_t10_bayardetail_Keterangan3" for="x_Keterangan3" class="col-sm-2 control-label ewLabel"><?php echo $t10_bayardetail->Keterangan3->FldCaption() ?></label>
 		<div class="col-sm-10"><div<?php echo $t10_bayardetail->Keterangan3->CellAttributes() ?>>
 <span id="el_t10_bayardetail_Keterangan3">
-<input type="text" data-table="t10_bayardetail" data-field="x_Keterangan3" name="x_Keterangan3" id="x_Keterangan3" size="10" maxlength="100" placeholder="<?php echo ew_HtmlEncode($t10_bayardetail->Keterangan3->getPlaceHolder()) ?>" value="<?php echo $t10_bayardetail->Keterangan3->EditValue ?>"<?php echo $t10_bayardetail->Keterangan3->EditAttributes() ?>>
+<input type="text" data-table="t10_bayardetail" data-field="x_Keterangan3" name="x_Keterangan3" id="x_Keterangan3" size="30" maxlength="100" placeholder="<?php echo ew_HtmlEncode($t10_bayardetail->Keterangan3->getPlaceHolder()) ?>" value="<?php echo $t10_bayardetail->Keterangan3->EditValue ?>"<?php echo $t10_bayardetail->Keterangan3->EditAttributes() ?>>
 </span>
 <?php echo $t10_bayardetail->Keterangan3->CustomMsg ?></div></div>
 	</div>
@@ -1348,7 +1354,7 @@ ft10_bayardetailedit.CreateAutoSuggest({"id":"x_siswaspp_id","forceSelect":false
 		<label id="elh_t10_bayardetail_Jumlah" for="x_Jumlah" class="col-sm-2 control-label ewLabel"><?php echo $t10_bayardetail->Jumlah->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></label>
 		<div class="col-sm-10"><div<?php echo $t10_bayardetail->Jumlah->CellAttributes() ?>>
 <span id="el_t10_bayardetail_Jumlah">
-<input type="text" data-table="t10_bayardetail" data-field="x_Jumlah" name="x_Jumlah" id="x_Jumlah" size="30" placeholder="<?php echo ew_HtmlEncode($t10_bayardetail->Jumlah->getPlaceHolder()) ?>" value="<?php echo $t10_bayardetail->Jumlah->EditValue ?>"<?php echo $t10_bayardetail->Jumlah->EditAttributes() ?>>
+<input type="text" data-table="t10_bayardetail" data-field="x_Jumlah" name="x_Jumlah" id="x_Jumlah" size="10" placeholder="<?php echo ew_HtmlEncode($t10_bayardetail->Jumlah->getPlaceHolder()) ?>" value="<?php echo $t10_bayardetail->Jumlah->EditValue ?>"<?php echo $t10_bayardetail->Jumlah->EditAttributes() ?>>
 </span>
 <?php echo $t10_bayardetail->Jumlah->CustomMsg ?></div></div>
 	</div>

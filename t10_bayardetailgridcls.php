@@ -1397,9 +1397,11 @@ class ct10_bayardetail_grid extends ct10_bayardetail {
 		// Keterangan2
 		if (strval($this->Keterangan2->CurrentValue) <> "") {
 			$sFilterWrk = "`Periode`" . ew_SearchString("=", $this->Keterangan2->CurrentValue, EW_DATATYPE_STRING, "");
-		$sSqlWrk = "SELECT `Periode`, `Periode` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `t95_periode`";
+		$sSqlWrk = "SELECT `Periode`, `Periode` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `v03_kartuspp`";
 		$sWhereWrk = "";
 		$this->Keterangan2->LookupFilters = array();
+		$lookuptblfilter = (is_null($this->siswaspp_id->CurrentValue)) ? "`Tanggal` is null " : "`Tanggal` is null and siswaspp_id = ".$this->siswaspp_id->CurrentValue."";
+		ew_AddFilter($sWhereWrk, $lookuptblfilter);
 		ew_AddFilter($sWhereWrk, $sFilterWrk);
 		$this->Lookup_Selecting($this->Keterangan2, $sWhereWrk); // Call Lookup selecting
 		if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
@@ -1493,9 +1495,11 @@ class ct10_bayardetail_grid extends ct10_bayardetail {
 			} else {
 				$sFilterWrk = "`Periode`" . ew_SearchString("=", $this->Keterangan2->CurrentValue, EW_DATATYPE_STRING, "");
 			}
-			$sSqlWrk = "SELECT `Periode`, `Periode` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld`, '' AS `SelectFilterFld`, '' AS `SelectFilterFld2`, '' AS `SelectFilterFld3`, '' AS `SelectFilterFld4` FROM `t95_periode`";
+			$sSqlWrk = "SELECT `Periode`, `Periode` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld`, '' AS `SelectFilterFld`, '' AS `SelectFilterFld2`, '' AS `SelectFilterFld3`, '' AS `SelectFilterFld4` FROM `v03_kartuspp`";
 			$sWhereWrk = "";
 			$this->Keterangan2->LookupFilters = array();
+			$lookuptblfilter = (is_null($this->siswaspp_id->CurrentValue)) ? "`Tanggal` is null " : "`Tanggal` is null and siswaspp_id = ".$this->siswaspp_id->CurrentValue."";
+			ew_AddFilter($sWhereWrk, $lookuptblfilter);
 			ew_AddFilter($sWhereWrk, $sFilterWrk);
 			$this->Lookup_Selecting($this->Keterangan2, $sWhereWrk); // Call Lookup selecting
 			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
@@ -1583,9 +1587,11 @@ class ct10_bayardetail_grid extends ct10_bayardetail {
 			} else {
 				$sFilterWrk = "`Periode`" . ew_SearchString("=", $this->Keterangan2->CurrentValue, EW_DATATYPE_STRING, "");
 			}
-			$sSqlWrk = "SELECT `Periode`, `Periode` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld`, '' AS `SelectFilterFld`, '' AS `SelectFilterFld2`, '' AS `SelectFilterFld3`, '' AS `SelectFilterFld4` FROM `t95_periode`";
+			$sSqlWrk = "SELECT `Periode`, `Periode` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld`, '' AS `SelectFilterFld`, '' AS `SelectFilterFld2`, '' AS `SelectFilterFld3`, '' AS `SelectFilterFld4` FROM `v03_kartuspp`";
 			$sWhereWrk = "";
 			$this->Keterangan2->LookupFilters = array();
+			$lookuptblfilter = (is_null($this->siswaspp_id->CurrentValue)) ? "`Tanggal` is null " : "`Tanggal` is null and siswaspp_id = ".$this->siswaspp_id->CurrentValue."";
+			ew_AddFilter($sWhereWrk, $lookuptblfilter);
 			ew_AddFilter($sWhereWrk, $sFilterWrk);
 			$this->Lookup_Selecting($this->Keterangan2, $sWhereWrk); // Call Lookup selecting
 			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
@@ -1925,9 +1931,11 @@ class ct10_bayardetail_grid extends ct10_bayardetail {
 			break;
 		case "x_Keterangan2":
 			$sSqlWrk = "";
-			$sSqlWrk = "SELECT `Periode` AS `LinkFld`, `Periode` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `t95_periode`";
+			$sSqlWrk = "SELECT `Periode` AS `LinkFld`, `Periode` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `v03_kartuspp`";
 			$sWhereWrk = "";
 			$this->Keterangan2->LookupFilters = array();
+			$lookuptblfilter = (is_null($this->siswaspp_id->CurrentValue)) ? "`Tanggal` is null " : "`Tanggal` is null and siswaspp_id = ".$this->siswaspp_id->CurrentValue."";
+			ew_AddFilter($sWhereWrk, $lookuptblfilter);
 			$fld->LookupFilters += array("s" => $sSqlWrk, "d" => "", "f0" => '`Periode` = {filter_value}', "t0" => "200", "fn0" => "");
 			$sSqlWrk = "";
 			$this->Lookup_Selecting($this->Keterangan2, $sWhereWrk); // Call Lookup selecting
@@ -1963,6 +1971,9 @@ class ct10_bayardetail_grid extends ct10_bayardetail {
 	function Page_Load() {
 
 		//echo "Page Load";
+		$this->GridAddRowCount = 0;
+
+		// ambil data iuran
 		if (isset($_GET["siswa_id"]) and isset($_GET["tahunajaran_id"])) {
 			$this->GridAddRowCount = ew_ExecuteScalar("select count(*) from v01_siswaspp where siswa_id = ".$_GET["siswa_id"]." and tahunajaran_id = ".$_GET["tahunajaran_id"]."");
 		}
@@ -2011,7 +2022,7 @@ class ct10_bayardetail_grid extends ct10_bayardetail {
 
 		// Example:
 		//$header = "your header";
-		//$this->OtherOptions["addedit"]->Items["add"]->Visible = FALSE;
+		// sembunyikan tombol add blank row
 
 		$this->OtherOptions["addedit"]->Items["addblankrow"]->Visible = FALSE;
 	}

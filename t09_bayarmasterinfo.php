@@ -1153,6 +1153,7 @@ class ct09_bayarmaster extends cTable {
 		// Enter your code here
 		// To cancel, set return value to FALSE
 
+		$rsnew["NomorBayar"] = GetNextNomorBayar(); // mengantisipasi lebih satu user menginput data saat bersamaan
 		return TRUE;
 	}
 
@@ -1256,8 +1257,23 @@ class ct09_bayarmaster extends cTable {
 	function Row_Rendered() {
 
 		// To view properties of field class, use:
-		//var_dump($this-><FieldName>); 
+		//var_dump($this-><FieldName>);
 
+		$this->Jumlah->ReadOnly = true;
+		$this->NomorBayar->ReadOnly = true;
+
+		// Kondisi saat form Tambah sedang terbuka (tidak dalam mode konfirmasi)
+		if (CurrentPageID() == "add" && $this->CurrentAction != "F") {
+			$this->NomorBayar->CurrentValue = GetNextNomorBayar(); // trik
+			$this->NomorBayar->EditValue = $this->NomorBayar->CurrentValue; // tampilkan
+
+			//$this->NomorBayar->ReadOnly = TRUE; // supaya tidak bisa diubah
+		}
+
+		// Kondisi saat form Tambah sedang dalam mode konfirmasi
+		if ($this->CurrentAction == "add" && $this->CurrentAction=="F") {
+			$this->NomorBayar->ViewValue = $this->NomorBayar->CurrentValue; // ambil dari mode sebelumnya
+		}
 	}
 
 	// User ID Filtering event

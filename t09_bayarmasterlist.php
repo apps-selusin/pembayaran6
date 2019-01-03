@@ -1077,22 +1077,10 @@ class ct09_bayarmaster_list extends ct09_bayarmaster {
 		$item->OnLeft = TRUE;
 		$item->Visible = FALSE;
 
-		// "view"
-		$item = &$this->ListOptions->Add("view");
-		$item->CssStyle = "white-space: nowrap;";
-		$item->Visible = $Security->CanView();
-		$item->OnLeft = TRUE;
-
 		// "edit"
 		$item = &$this->ListOptions->Add("edit");
 		$item->CssStyle = "white-space: nowrap;";
 		$item->Visible = $Security->CanEdit();
-		$item->OnLeft = TRUE;
-
-		// "copy"
-		$item = &$this->ListOptions->Add("copy");
-		$item->CssStyle = "white-space: nowrap;";
-		$item->Visible = $Security->CanAdd();
 		$item->OnLeft = TRUE;
 
 		// "detail_t10_bayardetail"
@@ -1167,29 +1155,11 @@ class ct09_bayarmaster_list extends ct09_bayarmaster {
 		$oListOpt = &$this->ListOptions->Items["sequence"];
 		$oListOpt->Body = ew_FormatSeqNo($this->RecCnt);
 
-		// "view"
-		$oListOpt = &$this->ListOptions->Items["view"];
-		$viewcaption = ew_HtmlTitle($Language->Phrase("ViewLink"));
-		if ($Security->CanView()) {
-			$oListOpt->Body = "<a class=\"ewRowLink ewView\" title=\"" . $viewcaption . "\" data-caption=\"" . $viewcaption . "\" href=\"" . ew_HtmlEncode($this->ViewUrl) . "\">" . $Language->Phrase("ViewLink") . "</a>";
-		} else {
-			$oListOpt->Body = "";
-		}
-
 		// "edit"
 		$oListOpt = &$this->ListOptions->Items["edit"];
 		$editcaption = ew_HtmlTitle($Language->Phrase("EditLink"));
 		if ($Security->CanEdit()) {
 			$oListOpt->Body = "<a class=\"ewRowLink ewEdit\" title=\"" . ew_HtmlTitle($Language->Phrase("EditLink")) . "\" data-caption=\"" . ew_HtmlTitle($Language->Phrase("EditLink")) . "\" href=\"" . ew_HtmlEncode($this->EditUrl) . "\">" . $Language->Phrase("EditLink") . "</a>";
-		} else {
-			$oListOpt->Body = "";
-		}
-
-		// "copy"
-		$oListOpt = &$this->ListOptions->Items["copy"];
-		$copycaption = ew_HtmlTitle($Language->Phrase("CopyLink"));
-		if ($Security->CanAdd()) {
-			$oListOpt->Body = "<a class=\"ewRowLink ewCopy\" title=\"" . $copycaption . "\" data-caption=\"" . $copycaption . "\" href=\"" . ew_HtmlEncode($this->CopyUrl) . "\">" . $Language->Phrase("CopyLink") . "</a>";
 		} else {
 			$oListOpt->Body = "";
 		}
@@ -1233,20 +1203,10 @@ class ct09_bayarmaster_list extends ct09_bayarmaster {
 			$body .= str_replace("%c", $this->t10_bayardetail_Count, $Language->Phrase("DetailCount"));
 			$body = "<a class=\"btn btn-default btn-sm ewRowLink ewDetail\" data-action=\"list\" href=\"" . ew_HtmlEncode("t10_bayardetaillist.php?" . EW_TABLE_SHOW_MASTER . "=t09_bayarmaster&fk_id=" . urlencode(strval($this->id->CurrentValue)) . "") . "\">" . $body . "</a>";
 			$links = "";
-			if ($GLOBALS["t10_bayardetail_grid"]->DetailView && $Security->CanView() && $Security->AllowView(CurrentProjectID() . 't10_bayardetail')) {
-				$links .= "<li><a class=\"ewRowLink ewDetailView\" data-action=\"view\" data-caption=\"" . ew_HtmlTitle($Language->Phrase("MasterDetailViewLink")) . "\" href=\"" . ew_HtmlEncode($this->GetViewUrl(EW_TABLE_SHOW_DETAIL . "=t10_bayardetail")) . "\">" . ew_HtmlImageAndText($Language->Phrase("MasterDetailViewLink")) . "</a></li>";
-				if ($DetailViewTblVar <> "") $DetailViewTblVar .= ",";
-				$DetailViewTblVar .= "t10_bayardetail";
-			}
 			if ($GLOBALS["t10_bayardetail_grid"]->DetailEdit && $Security->CanEdit() && $Security->AllowEdit(CurrentProjectID() . 't10_bayardetail')) {
 				$links .= "<li><a class=\"ewRowLink ewDetailEdit\" data-action=\"edit\" data-caption=\"" . ew_HtmlTitle($Language->Phrase("MasterDetailEditLink")) . "\" href=\"" . ew_HtmlEncode($this->GetEditUrl(EW_TABLE_SHOW_DETAIL . "=t10_bayardetail")) . "\">" . ew_HtmlImageAndText($Language->Phrase("MasterDetailEditLink")) . "</a></li>";
 				if ($DetailEditTblVar <> "") $DetailEditTblVar .= ",";
 				$DetailEditTblVar .= "t10_bayardetail";
-			}
-			if ($GLOBALS["t10_bayardetail_grid"]->DetailAdd && $Security->CanAdd() && $Security->AllowAdd(CurrentProjectID() . 't10_bayardetail')) {
-				$links .= "<li><a class=\"ewRowLink ewDetailCopy\" data-action=\"add\" data-caption=\"" . ew_HtmlTitle($Language->Phrase("MasterDetailCopyLink")) . "\" href=\"" . ew_HtmlEncode($this->GetCopyUrl(EW_TABLE_SHOW_DETAIL . "=t10_bayardetail")) . "\">" . ew_HtmlImageAndText($Language->Phrase("MasterDetailCopyLink")) . "</a></li>";
-				if ($DetailCopyTblVar <> "") $DetailCopyTblVar .= ",";
-				$DetailCopyTblVar .= "t10_bayardetail";
 			}
 			if ($links <> "") {
 				$body .= "<button class=\"dropdown-toggle btn btn-default btn-sm ewDetail\" data-toggle=\"dropdown\"><b class=\"caret\"></b></button>";

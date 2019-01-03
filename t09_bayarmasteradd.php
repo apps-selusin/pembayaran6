@@ -1063,15 +1063,14 @@ class ct09_bayarmaster_add extends ct09_bayarmaster {
 
 			// Pass a server side variable (encrypted SQL) to client side
 		*/
+
+		// mencari data Periode yang sudah pernah dibayar
+		// jika belum ada pembayaran :: maka akan ditampilkan Periode yang pertama
+
 		/*ew_SetClientVar(
 			"MyCustomSql",
 			ew_Encrypt("SELECT Periode FROM v03_kartuspp WHERE siswaspp_id = {query_value} and Tanggal is null limit 1"));
 		*/
-
-		// mencari jumlah record IURAN berdasarkan siswa_id
-		ew_SetClientVar(
-			"MyCustomSql",
-			ew_Encrypt("SELECT count(*) FROM v01_siswaspp WHERE siswa_id = ".$_SESSION["siswa_id"]." and tahunajaran_id = ".$_SESSION["tahunajaran_id"].""));
 	}
 
 	// Page Unload event
@@ -1122,11 +1121,12 @@ class ct09_bayarmaster_add extends ct09_bayarmaster {
 
 		// Example:
 		//$header = "your header";
+		// mengambil passing parameter
 
 		$this->tahunajaran_id->CurrentValue = $_GET["tahunajaran_id"];
-
-		//$this->siswa_id->CurrentValue = $_GET["siswa_id"];
+		$this->siswa_id->CurrentValue = $_GET["siswa_id"];
 		$this->siswa_id->EditValue = $_GET["siswa_id_value"];
+		$this->Tanggal->EditValue = date("d-m-Y");
 	}
 
 	// Page Data Rendered event
@@ -1373,28 +1373,10 @@ if (EW_DEBUG_ENABLED)
 
 /*$('[data-table=t10_bayardetail][data-field=x_siswaspp_id]').change(function() {
 	var $row = $(this).fields();
-
-	//var result = ew_Ajax(ewVar.MyCustomSql, $(this).val()); // Send the encrypted SQL and client side input value to server side by Ajax for execution and get the result
+	var result = ew_Ajax(ewVar.MyCustomSql, $(this).val()); // Send the encrypted SQL and client side input value to server side by Ajax for execution and get the result
 	$row["Keterangan"].val(result); // Set the result (manipulate it first if necessary) to the target field
-});  */
-$('[id=sv_x_siswa_id]').change(function() {
-
-	//var $row = $(this).fields();
-	//var result = ew_Ajax(ewVar.MyCustomSql, $(this).val()); // Send the encrypted SQL and client side input value to server side by Ajax for execution and get the result
-	//$row["Keterangan"].val(result); // Set the result (manipulate it first if necessary) to the target field
-	//var result = ew_Ajax(ewVar.MyCustomSql, $(this).val());
-	//alert($('#sv_x_siswa_id').val());
-	//window.location = "t09_bayarmasteradd.php?showdetail=t10_bayardetail&siswa_id="+$(this).val();
-	//window.location = "t09_bayarmasteradd.php?showdetail=t10_bayardetail&siswa_id="+$(this).val();
-
-});
+});*/
 $('[data-table=t09_bayarmaster][data-field=x_siswa_id]').change(function() {
-
-	//var $row = $(this).fields();
-	//var result = ew_Ajax(ewVar.MyCustomSql, $(this).val()); // Send the encrypted SQL and client side input value to server side by Ajax for execution and get the result
-	//$row["Keterangan"].val(result); // Set the result (manipulate it first if necessary) to the target field
-	//alert($(this).val());
-
 	window.location = "t09_bayarmasteradd.php?showdetail=t10_bayardetail&tahunajaran_id="+$("#x_tahunajaran_id").val()+"&siswa_id="+$(this).val()+"&siswa_id_value="+$('#sv_x_siswa_id').val();
 });
 </script>

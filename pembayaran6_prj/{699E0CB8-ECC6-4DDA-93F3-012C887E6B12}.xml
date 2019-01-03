@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <configuration date="2019/01/03" author="e.World Technology Ltd.">
-  <project id="{699E0CB8-ECC6-4DDA-93F3-012C887E6B12}" file="C:\xampp\htdocs\pembayaran6\pembayaran6_prj.pmp" name="pembayaran6_prj" product="PHPMaker" version="13.0" datetime="2019/01/03 19:33:00" languagefolder="phplang" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0">
+  <project id="{699E0CB8-ECC6-4DDA-93F3-012C887E6B12}" file="C:\xampp\htdocs\pembayaran6\pembayaran6_prj.pmp" name="pembayaran6_prj" product="PHPMaker" version="13.0" datetime="2019/01/03 22:28:04" languagefolder="phplang" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0">
     <table id="cf01_home_php" name="cf01_home.php" caption="Home" userlevel="-2,&quot;Anonymous&quot;,8;0,&quot;Default&quot;,0" priv="1" />
     <table id="t01_tahunajaran" name="t01_tahunajaran" caption="Tahun Ajaran" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
     <table id="t02_sekolah" name="t02_sekolah" caption="Sekolah" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />

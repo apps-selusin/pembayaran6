@@ -869,13 +869,13 @@
         <phrase id="fldcaption" value="Iuran" />
       </field>
       <field id="keterangan">
-        <phrase id="fldcaption" value="Keterangan" />
+        <phrase id="fldcaption" value="Mulai Periode" />
       </field>
       <field id="keterangan2">
-        <phrase id="fldcaption" value="Keterangan 2" />
+        <phrase id="fldcaption" value="s/d Periode" />
       </field>
       <field id="keterangan3">
-        <phrase id="fldcaption" value="Keterangan 3" />
+        <phrase id="fldcaption" value="Keterangan" />
       </field>
       <field id="jumlah">
         <phrase id="fldcaption" value="Jumlah" />

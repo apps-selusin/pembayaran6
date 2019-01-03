@@ -718,9 +718,11 @@ class ct10_bayardetail extends cTable {
 		// Keterangan2
 		if (strval($this->Keterangan2->CurrentValue) <> "") {
 			$sFilterWrk = "`Periode`" . ew_SearchString("=", $this->Keterangan2->CurrentValue, EW_DATATYPE_STRING, "");
-		$sSqlWrk = "SELECT `Periode`, `Periode` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `t95_periode`";
+		$sSqlWrk = "SELECT `Periode`, `Periode` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `v03_kartuspp`";
 		$sWhereWrk = "";
 		$this->Keterangan2->LookupFilters = array();
+		$lookuptblfilter = (is_null($this->siswaspp_id->CurrentValue)) ? "`Tanggal` is null " : "`Tanggal` is null and siswaspp_id = ".$this->siswaspp_id->CurrentValue."";
+		ew_AddFilter($sWhereWrk, $lookuptblfilter);
 		ew_AddFilter($sWhereWrk, $sFilterWrk);
 		$this->Lookup_Selecting($this->Keterangan2, $sWhereWrk); // Call Lookup selecting
 		if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
@@ -1141,6 +1143,8 @@ class ct10_bayardetail extends cTable {
 	function Row_Inserted($rsold, &$rsnew) {
 
 		//echo "Row Inserted"
+		$tot_det = ew_ExecuteScalar("SELECT SUM(Jumlah) FROM t10_bayardetail WHERE bayarmaster_id = ".$rsnew["bayarmaster_id"]."");
+		ew_Execute("UPDATE t09_bayarmaster SET Jumlah = ".$tot_det." WHERE id = ".$rsnew["bayarmaster_id"]."");
 	}
 
 	// Row Updating event
@@ -1156,6 +1160,8 @@ class ct10_bayardetail extends cTable {
 	function Row_Updated($rsold, &$rsnew) {
 
 		//echo "Row Updated";
+		$tot_det = ew_ExecuteScalar("SELECT SUM(Jumlah) FROM t10_bayardetail WHERE bayarmaster_id = ".$rsold["bayarmaster_id"]."");
+		ew_Execute("UPDATE t09_bayarmaster SET Jumlah = ".$tot_det." WHERE id = ".$rsold["bayarmaster_id"]."");
 	}
 
 	// Row Update Conflict event
@@ -1210,6 +1216,14 @@ class ct10_bayardetail extends cTable {
 	function Row_Deleted(&$rs) {
 
 		//echo "Row Deleted";
+		$rec_cnt_det = ew_ExecuteScalar("SELECT COUNT(*) FROM t10_bayardetail WHERE bayarmaster_id = ".$rs["bayarmaster_id"]."");
+		if ($rec_cnt_det > 0) {
+			$tot_det = ew_ExecuteScalar("SELECT SUM(Jumlah) FROM t10_bayardetail WHERE bayarmaster_id = ".$rs["bayarmaster_id"]."");
+			ew_Execute("UPDATE t09_bayarmaster SET Jumlah = ".$tot_det." WHERE id = ".$rs["bayarmaster_id"]."");
+		}
+		else {
+			ew_Execute("UPDATE t09_bayarmaster SET Jumlah = 0 WHERE id = ".$rs["bayarmaster_id"]."");
+		}
 	}
 
 	// Email Sending event
@@ -1231,6 +1245,8 @@ class ct10_bayardetail extends cTable {
 	function Row_Rendering() {
 
 		// Enter your code here
+		// tentukan data iuran berdasarkan masing2 siswa di detail list
+
 		if($this->PageID == "grid") {
 			$grid_count = $this->GridAddRowCount;
 			$grid_num = $this->GridCnt;
@@ -1241,9 +1257,14 @@ class ct10_bayardetail extends cTable {
 				if(($grid_count >= $grid_num) && is_int($grid_num) && ($grid_num >= 1)) {
 					$offseter = $grid_num - 1;
 
-					//get & set product details
-					$product = ew_ExecuteRow("SELECT id FROM v01_siswaspp limit 1 OFFSET $offseter");
-					$this->siswaspp_id->CurrentValue = $product["id"];
+					// ambil data iuran
+					$r = ew_ExecuteRow("select * from v01_siswaspp where siswa_id = ".$_GET["siswa_id"]." and tahunajaran_id = ".$_GET["tahunajaran_id"]." limit 1 OFFSET $offseter");
+					$this->siswaspp_id->CurrentValue = $r["id"];
+					$this->Jumlah->CurrentValue = $r["Nilai"];
+
+					// ambil data pembayaran
+					$r2 = ew_ExecuteRow("select * from v03_kartuspp where siswa_id = ".$_GET["siswa_id"]." and tahunajaran_id = ".$_GET["tahunajaran_id"]." and siswaspp_id = ".$r["id"]." and Tanggal is null limit 1");
+					$this->Keterangan->CurrentValue = $r2["Periode"];
 
 					//hide grid delete
 					$this->ListOptions->Items["griddelete"]->Visible = FALSE;
@@ -1257,6 +1278,7 @@ class ct10_bayardetail extends cTable {
 
 		// To view properties of field class, use:
 		//var_dump($this-><FieldName>);
+		// readonly kan jenis iuran dan periode awal
 
 		if (CurrentPageID() == "add" && $this->CurrentAction != "F") {
 
