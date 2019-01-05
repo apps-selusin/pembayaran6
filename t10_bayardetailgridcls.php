@@ -954,22 +954,16 @@ class ct10_bayardetail_grid extends ct10_bayardetail {
 		$item->OnLeft = TRUE;
 		$item->Visible = FALSE;
 
-		// "view"
-		$item = &$this->ListOptions->Add("view");
-		$item->CssStyle = "white-space: nowrap;";
-		$item->Visible = $Security->CanView();
-		$item->OnLeft = TRUE;
-
 		// "edit"
 		$item = &$this->ListOptions->Add("edit");
 		$item->CssStyle = "white-space: nowrap;";
 		$item->Visible = $Security->CanEdit();
 		$item->OnLeft = TRUE;
 
-		// "copy"
-		$item = &$this->ListOptions->Add("copy");
+		// "delete"
+		$item = &$this->ListOptions->Add("delete");
 		$item->CssStyle = "white-space: nowrap;";
-		$item->Visible = $Security->CanAdd();
+		$item->Visible = $Security->CanDelete();
 		$item->OnLeft = TRUE;
 
 		// "sequence"
@@ -1038,15 +1032,6 @@ class ct10_bayardetail_grid extends ct10_bayardetail {
 		$oListOpt->Body = ew_FormatSeqNo($this->RecCnt);
 		if ($this->CurrentMode == "view") { // View mode
 
-		// "view"
-		$oListOpt = &$this->ListOptions->Items["view"];
-		$viewcaption = ew_HtmlTitle($Language->Phrase("ViewLink"));
-		if ($Security->CanView()) {
-			$oListOpt->Body = "<a class=\"ewRowLink ewView\" title=\"" . $viewcaption . "\" data-caption=\"" . $viewcaption . "\" href=\"" . ew_HtmlEncode($this->ViewUrl) . "\">" . $Language->Phrase("ViewLink") . "</a>";
-		} else {
-			$oListOpt->Body = "";
-		}
-
 		// "edit"
 		$oListOpt = &$this->ListOptions->Items["edit"];
 		$editcaption = ew_HtmlTitle($Language->Phrase("EditLink"));
@@ -1056,14 +1041,12 @@ class ct10_bayardetail_grid extends ct10_bayardetail {
 			$oListOpt->Body = "";
 		}
 
-		// "copy"
-		$oListOpt = &$this->ListOptions->Items["copy"];
-		$copycaption = ew_HtmlTitle($Language->Phrase("CopyLink"));
-		if ($Security->CanAdd()) {
-			$oListOpt->Body = "<a class=\"ewRowLink ewCopy\" title=\"" . $copycaption . "\" data-caption=\"" . $copycaption . "\" href=\"" . ew_HtmlEncode($this->CopyUrl) . "\">" . $Language->Phrase("CopyLink") . "</a>";
-		} else {
+		// "delete"
+		$oListOpt = &$this->ListOptions->Items["delete"];
+		if ($Security->CanDelete())
+			$oListOpt->Body = "<a class=\"ewRowLink ewDelete\"" . "" . " title=\"" . ew_HtmlTitle($Language->Phrase("DeleteLink")) . "\" data-caption=\"" . ew_HtmlTitle($Language->Phrase("DeleteLink")) . "\" href=\"" . ew_HtmlEncode($this->DeleteUrl) . "\">" . $Language->Phrase("DeleteLink") . "</a>";
+		else
 			$oListOpt->Body = "";
-		}
 		} // End View mode
 		if ($this->CurrentMode == "edit" && is_numeric($this->RowIndex)) {
 			$this->MultiSelectKey .= "<input type=\"hidden\" name=\"" . $KeyName . "\" id=\"" . $KeyName . "\" value=\"" . $this->id->CurrentValue . "\">";
@@ -2015,6 +1998,13 @@ class ct10_bayardetail_grid extends ct10_bayardetail {
 	function Page_Render() {
 
 		//echo "Page Render";
+		$is_master_table = CurrentMasterTable();
+		if(@$is_master_table == NULL){
+
+			//$this->OtherOptions["addedit"]->Items["add"]->Visible = FALSE;
+			//$this->OtherOptions["addedit"]->Items["addblankrow"]->Visible = FALSE;
+
+		}
 	}
 
 	// Page Data Rendering event
@@ -2023,8 +2013,14 @@ class ct10_bayardetail_grid extends ct10_bayardetail {
 		// Example:
 		//$header = "your header";
 		// sembunyikan tombol add blank row
+		//$this->OtherOptions["addedit"]->Items["addblankrow"]->Visible = FALSE;
 
-		$this->OtherOptions["addedit"]->Items["addblankrow"]->Visible = FALSE;
+		$is_master_table = CurrentMasterTable();
+		if(@$is_master_table == NULL){
+
+			//$this->OtherOptions["addedit"]->Items["add"]->Visible = FALSE;
+			$this->OtherOptions["addedit"]->Items["addblankrow"]->Visible = FALSE;
+		}
 	}
 
 	// Page Data Rendered event

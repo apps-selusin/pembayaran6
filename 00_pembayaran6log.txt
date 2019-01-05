@@ -1,6 +1,28 @@
+10:41 PM 1/4/2019
+- mulai ada banyak "view", perlu dicatat fungsi dan maksud pembuatan view, agar tidak lupa dan bingung di kemudian hari;
+- v01_siswaspp
+	- gabungan antara tabel t08_siswaspp dengan tabel t07_spp
+	- tujuannya ::
+		- agar nama iuran dan jenis iuran langsung tampil dalam sebuah tabel
+		- agar tidak perlu lagi left join untuk mengetahui nama iuran dan jenis iuran (rutin dan non-rutin)
+
+- v02_pembayaran
+	- gabungan antara tabel t09_bayarmaster dengan tabel t10_bayardetail
+	- agar data pembayaran tergabung dalam satu tabel
+	- antara data master dengan data detail
+
+- v03_kartuspp
+	- 
+
+
+
+
 9:48 AM 1/3/2019
 - pembayaran :
 	- untuk periode apakah dibuat "sampai dengan" atau tetap "per baris per periode" ?
+
+
+
 
 9:33 AM 1/3/2019
 <!-- periode -->
@@ -13,8 +35,14 @@
 <!-- potensi uang masuk -->
 <pre><?php //echo "<strong>Potensi Uang Masuk</strong>:<br>".number_format(ew_ExecuteScalar("select sum(Nilai) from v05_potensi")); ?></pre>
 
+
+
+
 9:24 AM 1/3/2019
 - nanti kerjakan PEMBAYARAN
+
+
+
 
 2:27 PM 12/29/2018
 untuk startup awal atau ganti tahun ajaran :: "tabel" yang perlu digenerate otomatis adalah ::
