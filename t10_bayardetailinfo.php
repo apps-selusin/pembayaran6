@@ -1143,6 +1143,8 @@ class ct10_bayardetail extends cTable {
 	function Row_Inserted($rsold, &$rsnew) {
 
 		//echo "Row Inserted"
+		// update total jumlah detail ke jumlah master
+
 		$tot_det = ew_ExecuteScalar("SELECT SUM(Jumlah) FROM t10_bayardetail WHERE bayarmaster_id = ".$rsnew["bayarmaster_id"]."");
 		ew_Execute("UPDATE t09_bayarmaster SET Jumlah = ".$tot_det." WHERE id = ".$rsnew["bayarmaster_id"]."");
 	}
@@ -1160,6 +1162,8 @@ class ct10_bayardetail extends cTable {
 	function Row_Updated($rsold, &$rsnew) {
 
 		//echo "Row Updated";
+		// update total jumlah detail ke jumlah master
+
 		$tot_det = ew_ExecuteScalar("SELECT SUM(Jumlah) FROM t10_bayardetail WHERE bayarmaster_id = ".$rsold["bayarmaster_id"]."");
 		ew_Execute("UPDATE t09_bayarmaster SET Jumlah = ".$tot_det." WHERE id = ".$rsold["bayarmaster_id"]."");
 	}
@@ -1216,6 +1220,8 @@ class ct10_bayardetail extends cTable {
 	function Row_Deleted(&$rs) {
 
 		//echo "Row Deleted";
+		// update total jumlah detail ke jumlah master
+
 		$rec_cnt_det = ew_ExecuteScalar("SELECT COUNT(*) FROM t10_bayardetail WHERE bayarmaster_id = ".$rs["bayarmaster_id"]."");
 		if ($rec_cnt_det > 0) {
 			$tot_det = ew_ExecuteScalar("SELECT SUM(Jumlah) FROM t10_bayardetail WHERE bayarmaster_id = ".$rs["bayarmaster_id"]."");
@@ -1267,7 +1273,8 @@ class ct10_bayardetail extends cTable {
 					$this->Keterangan->CurrentValue = $r2["Periode"];
 
 					//hide grid delete
-					$this->ListOptions->Items["griddelete"]->Visible = FALSE;
+					//$this->ListOptions->Items["griddelete"]->Visible = FALSE;
+
 				}
 			}
 		}

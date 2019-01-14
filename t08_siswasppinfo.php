@@ -1150,6 +1150,7 @@ class ct08_siswaspp extends cTable {
 	function Row_Inserted($rsold, &$rsnew) {
 
 		//echo "Row Inserted"
+		f_createsiswabayar($rsnew);
 	}
 
 	// Row Updating event

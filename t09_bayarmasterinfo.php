@@ -1161,6 +1161,9 @@ class ct09_bayarmaster extends cTable {
 	function Row_Inserted($rsold, &$rsnew) {
 
 		//echo "Row Inserted"
+		// update di tabel t11_siswabayar
+
+		f_updatesiswabayar($rsnew);
 	}
 
 	// Row Updating event
@@ -1176,6 +1179,9 @@ class ct09_bayarmaster extends cTable {
 	function Row_Updated($rsold, &$rsnew) {
 
 		//echo "Row Updated";
+		// update di tabel t11_siswabayar
+
+		f_updatesiswabayar($rsold);
 	}
 
 	// Row Update Conflict event

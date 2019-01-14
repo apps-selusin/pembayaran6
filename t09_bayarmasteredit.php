@@ -1101,7 +1101,7 @@ class ct09_bayarmaster_edit extends ct09_bayarmaster {
 		case "x_siswa_id":
 			$sSqlWrk = "";
 			$sSqlWrk = "SELECT `siswa_id`, `NIS` AS `DispFld`, `Nama` AS `Disp2Fld` FROM `v04_daftarsiswa`";
-			$sWhereWrk = "(`NIS` LIKE '{query_value}%' OR CONCAT(`NIS`,'" . ew_ValueSeparator(1, $this->siswa_id) . "',`Nama`) LIKE '{query_value}%') AND ({filter})";
+			$sWhereWrk = "(`NIS` LIKE '%{query_value}%' OR `Nama` LIKE '%{query_value}%' OR CONCAT(`NIS`,'" . ew_ValueSeparator(1, $this->siswa_id) . "',`Nama`) LIKE '{query_value}%') AND ({filter})";
 			$this->siswa_id->LookupFilters = array();
 			$lookuptblfilter = "`siswa_id` is not null";
 			ew_AddFilter($sWhereWrk, $lookuptblfilter);

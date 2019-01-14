@@ -1863,6 +1863,9 @@ class ct10_bayardetail_list extends ct10_bayardetail {
 		// Example: 
 		//$this->ListOptions->Items["new"]->Body = "xxx";
 
+		$this->ListOptions->Items["edit"]->Body = "";
+
+		//$this->ListOptions->Items["delete"]->Body = "";
 	}
 
 	// Row Custom Action event

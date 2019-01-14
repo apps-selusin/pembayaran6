@@ -1094,7 +1094,7 @@ class ct10_bayardetail_edit extends ct10_bayardetail {
 		case "x_siswaspp_id":
 			$sSqlWrk = "";
 			$sSqlWrk = "SELECT `id`, `SPP` AS `DispFld` FROM `v01_siswaspp`";
-			$sWhereWrk = "`SPP` LIKE '{query_value}%'";
+			$sWhereWrk = "`SPP` LIKE '%{query_value}%'";
 			$this->siswaspp_id->LookupFilters = array();
 			$fld->LookupFilters += array("s" => $sSqlWrk, "d" => "");
 			$sSqlWrk = "";

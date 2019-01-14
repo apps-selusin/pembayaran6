@@ -2524,6 +2524,13 @@ fv03_kartuspplistsrch.Lists["x_siswaspp_id"] = {"LinkField":"x_id","Ajax":true,"
 		else
 			$v03_kartuspp_list->setWarningMessage($Language->Phrase("NoRecord"));
 	}
+
+	// Audit trail on search
+	if ($v03_kartuspp_list->AuditTrailOnSearch && $v03_kartuspp_list->Command == "search" && !$v03_kartuspp_list->RestoreSearch) {
+		$searchparm = ew_ServerVar("QUERY_STRING");
+		$searchsql = $v03_kartuspp_list->getSessionWhere();
+		$v03_kartuspp_list->WriteAuditTrailOnSearch($searchparm, $searchsql);
+	}
 $v03_kartuspp_list->RenderOtherOptions();
 ?>
 <?php if ($Security->CanSearch()) { ?>
